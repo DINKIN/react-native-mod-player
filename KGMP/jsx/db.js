@@ -1,9 +1,6 @@
 var sqlite   = require('react-native-sqlite');
 
 
-
-
-
 module.exports = {
     stack    : [],
     revStack : [],

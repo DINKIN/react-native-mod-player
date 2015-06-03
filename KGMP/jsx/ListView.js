@@ -1,5 +1,5 @@
-var React    = require('react-native'),
-    Player   = require('./player/Player');
+var React      = require('react-native'),
+    ListPlayer = require('./player/ListPlayer');
 
 var { 
         MCFsTool,
@@ -18,6 +18,7 @@ var {
 } = React;
 
 
+// TODO: Invesitgate this patttern. It seems *really dirty*
 var generateWebivew = function(cfg) {
     return React.createClass({
         render : function() {
@@ -30,7 +31,7 @@ var generateWebivew = function(cfg) {
 var generatePlayer = function(cfg) {
     return React.createClass({
         render : function() {
-            return (<Player {...cfg}/>);
+            return (<ListPlayer {...cfg}/>);
         }
     })
 }

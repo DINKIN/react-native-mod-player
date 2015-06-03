@@ -15,24 +15,10 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     PatternView           = require('./PatternView'),
     RowNumberView         = require('./RowNumberView'),
-    styles                = require('./AbstractPlayerStyles');
+    styles                = require('./AbstractPlayerStyles'),
+    BaseComponent         = require('../BaseComponent');
 
-class AbstractPlayer extends React.Component {
-    constructor(opts) {
-        super(opts);   
-        this.bindMethods();
-    }   
-
-    bindMethods() {
-        if (! this.bindableMethods) {
-            return;
-        }
-
-        for (var methodName in this.bindableMethods) {
-            this[methodName] = this.bindableMethods[methodName].bind(this);
-        }
-    }
-
+class AbstractPlayer extends BaseComponent {
     render() {
         // debugger;
         var state     = this.state,
@@ -106,7 +92,6 @@ class AbstractPlayer extends React.Component {
         );
     }
 
-
     componentWillMount() {
         this.patterns = this.props.patterns;
 
@@ -178,10 +163,10 @@ class AbstractPlayer extends React.Component {
 
 
 AbstractPlayer.propTypes = {
-        modObject : React.PropTypes.object,
-        ownerList : React.PropTypes.object,
-        patterns  : React.PropTypes.object
-    }
+    modObject : React.PropTypes.object,
+    ownerList : React.PropTypes.object,
+    patterns  : React.PropTypes.object
+}
 
 Object.assign(AbstractPlayer.prototype, {
     data     : null,  // Used to paint out the view (song title, num tracks, etc)

@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react-native');
+var React         = require('react-native'),
+    BaseComponent = require('../BaseComponent');
 
 
 var {
@@ -15,13 +16,8 @@ var deviceWidth = 375;
 
 var styles = StyleSheet.create({
     patternContainer : {
-        // alignSelf : 'stretch',
-        overflow  : 'hidden',
+        overflow        : 'hidden',
         backgroundColor : '#000000',
-        // color           : '#FF0000',
-
-        // borderWidth : .5,
-        // borderColor : '#FF0000'
     },
 
     patternRow : {
@@ -30,34 +26,25 @@ var styles = StyleSheet.create({
         backgroundColor : '#000000',
         color           : '#FFFFFF',
         fontWeight      : 'bold'
-        // alignSelf  : 'stretch'
     },
 
     highlightedRow : {
         backgroundColor : '#99FF00'
-    },
-    rowContainer : {
-        // width : '2000'
     }
-   
 });
 
-
-// TODO: Convert to ES6 class
-module.exports  = React.createClass({
-    fileTypeObj : null, // used for wiki reading
-
-    props : {
-        rows : React.PropTypes.array
-    },
-
-    render : function() {
+class PatternView extends BaseComponent {
+    render() {
         var data  = this.props.rows,
             state = this.state,
             i     = 0;
 
         if (! data) {
-            return <View><Text>"No Pattern in memory!"</Text></View>;
+            return (
+                <View>
+                   <Text>"No Pattern in memory!"</Text>
+                </View>
+            );
         }
 
         var len     = data.length,
@@ -80,4 +67,88 @@ module.exports  = React.createClass({
             </View>
         );
     }
-});
+
+}
+
+
+Object.assign(PatternView.prototype, {
+    fileTypeObj : null,
+
+    bindableMethods : {
+        onRandomPress : function() {
+            var  navigator = this.props.navigator;
+
+            window.db.clear();
+
+            window.db.getNextRandom((rowData) => {
+                // console.log(rowData);
+                var filePath = window.bundlePath + rowData.path + rowData.file_name;
+
+                MCModPlayerInterface.loadFile(
+                    filePath,
+                    //failure
+                    (data) => {
+                        alert('Apologies. This file could not be loaded.');
+                        console.log(data);
+                    },        
+                    //success
+                    (modObject) => {
+                        // debugger;
+
+                        if (modObject) {
+                            var fileName   = rowData.file_name,
+                                rtBtnText,
+                                rtBtnHandler;
+
+                            modObject.fileName = fileName;
+                           
+                            var cmp = generatePlayer({
+                                modObject : modObject,
+                                patterns  : modObject.patterns
+                            });
+
+                            navigator.push({
+                                title            : 'Player',
+                                rightButtonTitle : rtBtnText,
+                                component        : cmp,
+                                // onRightButtonPress : rtBtnHandler
+                            });
+      
+                        }
+                        else {
+                            alert('Woah. Something hit the fan!');
+                        }
+
+                    }
+                );
+
+            });
+        },
+        
+        onBrowsePress : function() {
+            this.props.navigator.push({
+                title    : 'Browse Groups',
+                component : ListView
+            });
+        },
+        
+        onFavoritesPress : function() {
+            // this.props.onFavoritesPress();
+        },
+        
+        onAboutPress : function() {
+            // this.props.onAboutPress();
+        },
+        
+        onSearchPress : function() {
+            // this.props.onSearchPress();
+        }
+    }
+})
+
+PatternView.propTypes = {
+    rows : React.PropTypes.array
+}
+
+module.exports  = PatternView;
+

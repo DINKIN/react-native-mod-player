@@ -33,8 +33,8 @@ MCFsTool.getBundlePath((bundlepath) => {
     window.bundlePath = bundlepath;
 });
 
-var KGMP = React.createClass({
-    render : function() {
+class KGMP extends React.Component{
+    render() {
         var initialRoute = {
             title     : 'KeyGen Music Player',
             component : MainView
@@ -44,7 +44,7 @@ var KGMP = React.createClass({
             <NavigatorIOS style={styles.container} initialRoute={initialRoute}/>            
         );
     }
-});
+};
 
 
 AppRegistry.registerComponent('KGMP', () => KGMP);

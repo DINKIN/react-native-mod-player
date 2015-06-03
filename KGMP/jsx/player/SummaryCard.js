@@ -38,28 +38,12 @@ var styles = StyleSheet.create({
 
 
 module.exports  = React.createClass({
-    fileTypeObj : null, // used for wiki reading
 
     props : {
         data    : React.PropTypes.object,
         onPress : React.PropTypes.func
     },
 
-    // TODO: Add more 
-    fileTypeMap : {
-        // 'NSF'  : {
-        //     text : <Text>Nintendo Sound Format</Text>,
-        //     wiki : 'http://en.wikipedia.org/wiki/NES_Sound_Format'
-        // },
-        // 'NSFE' : {
-        //     text : <Text>Extended Nintendo Sound Format</Text>,
-        //     wiki : 'http://en.wikipedia.org/wiki/NES_Sound_Format#NSFE'
-        // },
-        // 'SPC'  : {
-        //     text : '',
-        //     wiki : 'http://en.wikipedia.org/wiki/Nintendo_S-SMP#Format'
-        // }
-    },
 
     onFormatPress : function() {
         this.props.onPress && this.props.onPress(this.fileTypeObj);
@@ -67,10 +51,7 @@ module.exports  = React.createClass({
 
     render : function() {
         var data        = this.props.data;
-        //     fileTypeObj = this.fileTypeMap[fileType],
-        //     formatText  = fileTypeObj ? fileTypeObj.text : ''
 
-        // this.fileTypeObj = fileTypeObj;
 
 
         return (

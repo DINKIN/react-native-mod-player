@@ -5,7 +5,7 @@ var MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
     AbstractPlayer       = require('./AbstractPlayer');
 
 
-class Player extends AbstractPlayer {
+class ListPlayer extends AbstractPlayer {
 
     previousTrack() {
         var state     = this.state,
@@ -33,12 +33,11 @@ class Player extends AbstractPlayer {
     
     // Todo: clean this up
     nextTrack() {
-        var state = this.state,
-            rowID = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
+        var state     = this.state,
+            rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
             ownerList = this.props.ownerList,
-            record = ownerList.getNextRecord(rowID);
+            record    = ownerList.getNextRecord(rowID);
 
-        // console.log('nextTrack :: ' + rowID);
 
         if (! record) {
             rowID  = 0;
@@ -134,6 +133,7 @@ class Player extends AbstractPlayer {
 
         this.patterns = {};
         this.forceUpdate();
+        
         MCModPlayerInterface.loadFile(
             record.path,
             //failure
@@ -163,4 +163,4 @@ class Player extends AbstractPlayer {
 }
 
 
-module.exports = Player
+module.exports = ListPlayer
