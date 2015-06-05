@@ -14,13 +14,11 @@ var React    = require('react-native'),
 window.db = require('./db.js');
 
 var {
-    AppRegistry,
-    NavigatorIOS,
-    View,
-    Text
-} = React;
-
-
+        AppRegistry,
+        NavigatorIOS,
+        View,
+        Text
+    } = React;
 
 var { 
         MCFsTool,

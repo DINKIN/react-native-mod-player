@@ -5,6 +5,9 @@ class BaseComponent extends React.Component {
     constructor(opts) {
         super(opts);   
         this.bindMethods();
+
+        this.setInitialState && this.setInitialState();
+
     }   
 
     bindMethods() {

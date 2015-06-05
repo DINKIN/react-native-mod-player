@@ -15,9 +15,7 @@ var {
 
 
 class MusicControlButton extends BaseComponent {    
-    constructor(props) {
-        super(props);
-
+    setInitialState() {
         this.state = this.btnStates.up;
     }
   
