@@ -199,21 +199,37 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
     /** Remote control management**/
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
     
-    [[commandCenter playCommand] setEnabled:YES];
-    [[commandCenter pauseCommand] setEnabled:YES];
-    [[commandCenter seekForwardCommand] setEnabled:YES];
-    [[commandCenter seekBackwardCommand] setEnabled:YES];
-    [[commandCenter nextTrackCommand] setEnabled:YES];
-    [[commandCenter previousTrackCommand] setEnabled:YES];
+//    [[commandCenter playCommand] setEnabled:YES];
+//    [[commandCenter pauseCommand] setEnabled:YES];
+//    [[commandCenter seekForwardCommand] setEnabled:YES];
+//    [[commandCenter seekBackwardCommand] setEnabled:YES];
+//    [[commandCenter nextTrackCommand] setEnabled:YES];
+//    [[commandCenter previousTrackCommand] setEnabled:YES];
     
 //    [[commandCenter stopCommand] setEnabled:YES];
+    
+    [commandCenter.togglePlayPauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+        [player resume];
+        
+        
+        NSLog(@"playPause");
+//        [[commandCenter playCommand] setEnabled:NO];
+//        [[commandCenter pauseCommand] setEnabled:YES];
+        
+        
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+            @"eventType" : @"playPause"
+        }];
+        
+        return MPRemoteCommandHandlerStatusSuccess;
+    }];
     
     [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         [player resume];
         
         NSLog(@"playCommand");
-        [[commandCenter playCommand] setEnabled:NO];
-        [[commandCenter pauseCommand] setEnabled:YES];
+//        [[commandCenter playCommand] setEnabled:NO];
+//        [[commandCenter pauseCommand] setEnabled:YES];
         
         
         [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
@@ -251,7 +267,7 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
         NSLog(@"previousTrackCommand");
         
        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"previous"
+            @"eventType" : @"prev"
         }];
         return MPRemoteCommandHandlerStatusSuccess;
     }];

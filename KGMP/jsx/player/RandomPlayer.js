@@ -55,7 +55,8 @@ class RandomPlayer extends AbstractPlayer {
         }
       
     }
-    
+
+   
     pauseTrack(callback) {
         var state = this.state;
 
@@ -85,8 +86,8 @@ class RandomPlayer extends AbstractPlayer {
     dislike () {
         window.db.updateLikeViaCurrentItem(-1, () => {
             window.db.getNewRandomCurrentItem((rowData) => {
-                var filePath = window.bundlePath + rowData.path + rowData.file_name;
-                this.loadFile(filePath);
+                // var filePath = window.bundlePath + rowData.path + rowData.file_name;
+                this.loadFile(rowData);
             });
         });
     }

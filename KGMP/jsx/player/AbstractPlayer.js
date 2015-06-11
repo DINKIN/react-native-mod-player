@@ -140,6 +140,17 @@ class AbstractPlayer extends BaseComponent {
         // EXTEND
     }
 
+    playPause() {
+        var state = this.state;
+        // debugger; 
+        if (state.playingSong) {
+            this.pauseTrack();
+        }
+        else {
+            this.playTrack();
+        }
+    }
+
     playTrack() {
         // EXTEND
     }
@@ -195,14 +206,15 @@ Object.assign(AbstractPlayer.prototype, {
     
     // Event handler function keys 
     audioControlMethodMap : {
-        prev     : 'previousTrack',
-        next     : 'nextTrack',
-        play     : 'playTrack',
-        pause    : 'pauseTrack',
-        like     : 'like',
-        dislike  : 'dislike',
-        seekBack : () => {},
-        seekFwd  : () => {} 
+        prev      : 'previousTrack',
+        next      : 'nextTrack',
+        play      : 'playTrack',
+        pause     : 'pauseTrack',
+        like      : 'like',
+        dislike   : 'dislike',
+        playPause : 'playPause',
+        seekBack  : () => {},
+        seekFwd   : () => {} 
     },
 
     bindableMethods : {
@@ -218,15 +230,16 @@ Object.assign(AbstractPlayer.prototype, {
 
         
         onButtonPress : function(buttonType) {
-
             var methodName = this.audioControlMethodMap[buttonType];
             this[methodName] && this[methodName]();
         },
 
+
+
         onCommandCenterEvent : function(event) {
+            // debugger;
             console.log('onCommandCenterEvent ' + event.eventType);
-            this.onbuttonPress(event.eventType);
-            
+            this.onButtonPress(event.eventType);
         },
         
         onPatternUpdateEvent : function(position) {
