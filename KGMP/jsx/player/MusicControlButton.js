@@ -26,8 +26,8 @@ class MusicControlButton extends BaseComponent {
             pressedState    = this.state.pressed,
             btnPressedStyle = pressedState ? styles[btnChar + 'ButtonPressed'] : '',
             txtPressedStyle = pressedState ? styles.buttonPressedText : {},
-            fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
-
+            fontStyle       = styles.buttonFont;
+            // fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
 
         return (
             <View style={[styles.button, styles[props.btnStyle], btnPressedStyle]}>
@@ -35,9 +35,17 @@ class MusicControlButton extends BaseComponent {
                     onPress={this.onButtonPress}
                     onPressIn={this.onButtonPressIn}
                     onPressOut={this.onButtonPressOut}>
-                        <Text style={[fontStyle, txtPressedStyle]}>
-                            {this.buttonChars[btnChar]}
-                        </Text>
+                        {/* 
+                            This nesting is setup as such to facilitate centering of the font,
+                            while allowing for greater tap area than just the generic text element itself.
+                            At the current writing of this application, TouchableWithoutFeedback does not allow
+                            for styling. #sadface
+                        */}
+                        <View style={styles.buttonInnerContainer}>
+                            <Text style={[fontStyle, txtPressedStyle]}>
+                                {this.buttonChars[btnChar]}
+                            </Text>
+                        </View>
                 </TouchableWithoutFeedback>
             </View>
         )

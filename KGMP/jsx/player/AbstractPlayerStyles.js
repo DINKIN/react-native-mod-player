@@ -68,11 +68,11 @@ module.exports = StyleSheet.create({
 
 
     imageContainer : {
-        height          : 508,
+        height          : 498, 
         flexDirection   : 'row',
         overflow        : 'hidden',
         // width       : 375,
-        alignSelf       : 'stretch',
+        alignSelf       : 'stretch',  // This doesn't effing work!
         borderTopWidth  : .5,
         borderColor     : '#AEAEAE',
         backgroundColor : '#000000'

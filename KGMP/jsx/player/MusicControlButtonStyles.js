@@ -14,40 +14,51 @@ module.exports =  StyleSheet.create({
 
     button : {
         width    : 50,
-        height   : 50,
+        height   : 34,
         position : 'absolute',
-        top      : top
+        top      : top,
+                // borderWidth    : 1,
+        // borderColor    : '#000000',
+
+    },
+
+    buttonInnerContainer : {
+        width          : 49,
+        flexDirection  : 'row',
+        justifyContent : 'center',
+        // borderWidth : 1,
+        // borderColor : '#FF3300',
     },
 
     prevButton : {
-        left : 100
+        left : 95
     },
     prevButtonPressed : {
-        left  : 100.5,
+        left  : 95.5,
         top   : top
     },
   
     playButton : {
-        left : 175
+        left : 170
     },
     playButtonPressed : {
-        left : 175.5,
+        left : 170.5,
         top  : top          
     },
 
     pauseButton : {
-        left : 175
+        left : 170
     },
     pauseButtonPressed : {
-        left : 175.5,
+        left : 170.5,
         top  : top          
     },
 
     nextButton : {
-        left : 255
+        left : 240
     },
     nextButtonPressed : {
-        left : 255.5,
+        left : 240.5,
         top  : top         
     },
 
@@ -56,33 +67,35 @@ module.exports =  StyleSheet.create({
     },
 
     buttonFont : {
-        fontFamily : 'fontello', 
-        fontSize   : 30,
+        fontFamily  : 'fontello', 
+        fontSize    : 30
     },
 
 
     likeButtonFont : {
-        fontFamily : 'fontello', 
-        fontSize   : 20
-
+        fontFamily  : 'fontello', 
+        fontSize    : 30,
+        width       : 49,
+        borderWidth : 1,
+        borderColor : '#FF3300'
     },
 
     dislikeButton : {
         left : 15,
-        top  : 15
+        top  : top
     },
     dislikeButtonPressed : {
         left : 15.5,
-        top  : 15.5        
+        top  : top
     },
 
     likeButton : {
-        left : 345,
-        top  : 15
+        left : 310,
+        top  : top
     },
     likeButtonPressed : {
-        left : 345.5,
-        top  : 15.5
+        left : 310.5,
+        top  : top
     },
 
 });

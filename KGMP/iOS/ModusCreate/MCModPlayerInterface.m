@@ -19,7 +19,7 @@ RCT_EXPORT_MODULE();
             NSLog(@"MCModPlayerInterface init");
         
         MCModPlayerInterface *interface = self;
-        NSString *formatString = @"%i";
+//        NSString *formatString = @"%i";
         
         
         self.then = CACurrentMediaTime();
