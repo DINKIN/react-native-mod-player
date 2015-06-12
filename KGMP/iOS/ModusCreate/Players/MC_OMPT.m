@@ -24,7 +24,6 @@
     [self unloadFile];
     
     char *loadedFileData;
-    
    
     FILE *file = fopen([path cStringUsingEncoding:NSASCIIStringEncoding], "rb");
     
@@ -41,6 +40,7 @@
     
    	openmpt_module * mod = 0;
 	mod = openmpt_module_create_from_memory(loadedFileData, loadedFileSize, NULL, NULL, NULL);
+    
     openmpt_module_set_repeat_count(mod, 100);
     
     self.mod = mod;
@@ -242,7 +242,7 @@
     
     int numOrders   = openmpt_module_get_num_orders(modFile),
         numChannels = openmpt_module_get_num_channels(modFile),
-        orderNum  = 0,
+        orderNum    = 0,
         chanWidth   = 13,
         orderPattern,
         patternNumRows;

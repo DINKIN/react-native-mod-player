@@ -1,7 +1,7 @@
 'use strict';
 
 var React        = require('react-native'),
-    ListView     = require('./ListView'),
+    BrowseView   = require('./BrowseView'),
     RandomPlayer = require('./player/RandomPlayer'),
     BaseComponent = require('./BaseComponent');
 
@@ -168,7 +168,7 @@ Object.assign(MainView.prototype, {
         onBrowsePress : function() {
             this.props.navigator.push({
                 title    : 'Browse Groups',
-                component : ListView
+                component : BrowseView
             });
         },
         

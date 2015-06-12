@@ -42,7 +42,8 @@ class AbstractPlayer extends BaseComponent {
         // <RCEzAudioPlotGlView style={styles.vizItem}/>
 
         var name = modObject.file_name ? modObject.file_name : modObject.fileName,
-            pattern;
+            pattern,
+            newTopPosition;
 
         if (state.currentPattern != null) {
             pattern = this.patterns[state.currentPattern];
@@ -54,15 +55,11 @@ class AbstractPlayer extends BaseComponent {
 
         pattern = pattern || [];
 
-        var newTopPosition;
-      
         if (state.currentRow) {
             newTopPosition = {
                 top : (508 / 2) - (state.currentRow * 11)
             }
         }
-
-
       
         return (
             <View style={styles.container}>
@@ -248,14 +245,10 @@ Object.assign(AbstractPlayer.prototype, {
                 row     = position[2],
                 numRows = position[3];
 
-            // console.log('Ord: ' + order, ' Pat: ' + pattern, ' Row: ' + row, ' #Rows: ' + numRows);
-
-            // return;
             var patterns       = this.patterns,
                 state          = this.state,
                 currentPattern = state.currentPattern,
-                targetPattern  = this.patterns[pattern],
-                shldGetPattern = (row >=  (numRows / 4)); 
+                targetPattern  = patterns[pattern]; 
 
             if (state.playingSong == 0) {
                 return;
@@ -263,9 +256,7 @@ Object.assign(AbstractPlayer.prototype, {
 
             if (this.modObject) {
 
-                var patterns       = this.patterns,
-                    state          = this.state,
-                    positionOrder  = position[0],
+                var positionOrder  = position[0],
                     positionPattrn = position[1],
                     positionRow    = position[2];
                 

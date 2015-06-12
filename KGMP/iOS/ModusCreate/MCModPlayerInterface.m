@@ -25,20 +25,13 @@ RCT_EXPORT_MODULE();
         self.then = CACurrentMediaTime();
         
         [[MCModPlayer sharedManager] registerInfoCallback:^(int32_t *playerState) {
-            int ord     = (int)playerState[0];
-            int pat     = (int)playerState[1];
-            int row     = (int)playerState[2];
-            int numRows = (int)playerState[3];
-            
-            double now = CACurrentMediaTime();
-            int diff = (now - interface.then) * 1000;
+            int ord     = (int)playerState[0],
+                pat     = (int)playerState[1],
+                row     = (int)playerState[2],
+                numRows = (int)playerState[3];
             
             if (interface.currentOrder != ord || interface.currentPattern != pat || interface.currentRow != row) {
-//                printf("Emitting event O:%i P:%i R:%i    Time Diff: %i(ms)\n", ord, pat, row, diff);
-//                fflush(stdout);
-                interface.then = now;
-                
-                
+
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"rowPatternUpdate" body:@[
                     
                     [[NSNumber alloc] initWithInt:ord],
@@ -48,11 +41,9 @@ RCT_EXPORT_MODULE();
                     
                 ]];
                 
-                
                 interface.currentRow     = row;
                 interface.currentOrder   = ord;
                 interface.currentPattern = pat;
-            
             }
             
         }];

@@ -60,7 +60,6 @@
     self.updateInterfaceBlock = updateInterfaceBlock;
 }
 
-// Executed within a different context (not this class);
 void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer) {
 
     MCModPlayer *player = (__bridge MCModPlayer*)data;
@@ -68,15 +67,12 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     int32_t *playerState = [player.modPlayer fillBuffer:mBuffer];
     
     AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
-//    printf("+Ord: %i     Pat: %i     Row: %i\n", playerState[0], playerState[1], playerState[2]);
-
     
     if (player.appActive) {
         // TODO: Should we use GCD to execute this method in the main queue??
         [player notifyInterface:playerState];
     }
 }
-
 
 
 - (void) notifyInterface:(int32_t *) playerState {
