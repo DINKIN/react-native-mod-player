@@ -33,3 +33,9 @@
 .icon-thumbs-down-alt:before { content: '\e81f'; } /* '' */
 .icon-thumbs-up-1:before { content: '\e820'; } /* '' */
 .icon-thumbs-down-1:before { content: '\e821'; } /* '' */
+.icon-down-open-big:before { content: '\e822'; } /* '' */
+.icon-down-open:before { content: '\e823'; } /* '' */
+.icon-down-open-1:before { content: '\e824'; } /* '' */
+.icon-down-open-2:before { content: '\e825'; } /* '' */
+.icon-angle-down:before { content: '\e826'; } /* '' */
+.icon-angle-double-down:before { content: '\e827'; } /* '' */

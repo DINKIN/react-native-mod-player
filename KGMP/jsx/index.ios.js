@@ -1,15 +1,9 @@
-/**
- * Copyright 2004-present Facebook. All Rights Reserved.
- *
- * @providesModule KGMP
- * @flow
- */
 'use strict';
 
 var React    = require('react-native'),
     styles   = require('./Styles'),
-    MainView = require('./MainView'),
-    sqlite   = require('react-native-sqlite');
+    sqlite   = require('react-native-sqlite'),
+    Main     = require('./Main')
 
 window.db = require('./db.js');
 
@@ -17,7 +11,7 @@ var {
         AppRegistry,
         NavigatorIOS,
         View,
-        Text
+        StatusBarIOS,
     } = React;
 
 var { 
@@ -31,15 +25,12 @@ MCFsTool.getBundlePath((bundlepath) => {
     window.bundlePath = bundlepath;
 });
 
+
 class KGMP extends React.Component{
     render() {
-        var initialRoute = {
-            title     : 'KeyGen Music Player',
-            component : MainView
-        };
-
+        StatusBarIOS.setStyle('light-content', true);
         return (
-            <NavigatorIOS style={styles.container} initialRoute={initialRoute}/>            
+            <Main/>
         );
     }
 };

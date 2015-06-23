@@ -142,8 +142,6 @@ var generateView = function(cfg) {
 
                 rowData = this.extractNamesForRow(rawData);
 
-                // debugger;
-
                 this.setState({
                     dataSource : this.state.dataSource.cloneWithRows(rowData)
                 });
@@ -159,7 +157,7 @@ var generateView = function(cfg) {
         render: function() {
             return (
                 this.rowData ? 
-                        <ListView dataSource={this.state.dataSource} initialListSize={20} pageSize={60} scrollRenderAheadDistance={500} renderRow={this._renderRow}/>
+                        <ListView style={styles.listView} dataSource={this.state.dataSource} initialListSize={20} pageSize={30} scrollRenderAheadDistance={100} renderRow={this._renderRow}/>
                     :
                         <Text>Loading...</Text>
 
@@ -175,22 +173,12 @@ var generateView = function(cfg) {
                 vgmIcon     = '\uE80A',
                 playingIcon = '\uE80D',
                 emptyIcon   = '\uE999';
-                // wikiIcon  = '\uE808',
-                // picIcon   = '\uE809';
-
-
-            if (! isDir) {
-                // console.log((record.file_name || record.name) + ' ' + record.isPlaying);;
-
-            }   
 
             if (isDir) {
                 prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
             }
 
             else if (record.isPlaying) {
-                // console.log('PLAYING');
-                // console.log(record);
                 prefix = <Text style={styles.rowPrefix}>{playingIcon}</Text>;
             }
             else {
@@ -297,18 +285,14 @@ var generateView = function(cfg) {
 
                         modObject.fileName = fileName;
                        
-                        cmp = generatePlayer({
-                            modObject : modObject,
-                            rowID     : rowID,
-                            ownerList : this,
-                            patterns  : modObject.patterns
-                        });
-
-                        navigator.push({
+                        window.mainNavigator.push({
                             title            : 'Player',
-                            rightButtonTitle : rtBtnText,
-                            component        : cmp,
-                            // onRightButtonPress : rtBtnHandler
+                            component        : ListPlayer,
+                            componentConfig  : {
+                                ownerList : this,
+                                modObject : modObject,
+                                patterns  : modObject.patterns
+                            }
                         });
   
                     }
@@ -325,16 +309,21 @@ var generateView = function(cfg) {
 
 
 var styles = StyleSheet.create({
+    listView : {
+        backgroundColor : '#000000',
+
+    },
     row : {
         flexDirection   : 'row',
         justifyContent  : 'center',
         padding         : 10,
-        backgroundColor : '#F6F6F6',
+        backgroundColor : '#000000',
+        // backgroundColor : '#F6F6F6',
     },
     
     separator  : {
         height          : 1,
-        backgroundColor : '#CCCCCC',
+        backgroundColor : '#222222',
     },
 
     thumb : {
@@ -343,12 +332,16 @@ var styles = StyleSheet.create({
     },
 
     rowText : {
-        flex     : 1,
-        fontSize : 18
+        fontFamily : 'courier',
+        fontWeight : 'bold',
+        color      : '#00FF00',
+        flex       : 1,
+        fontSize   : 18
     },
     
     rowPrefix : {
-        fontFamily  : 'fontello', 
+        fontFamily  : 'fontello',
+        color       : '#FFFFFF', 
         fontSize    : 15,
         marginRight : 5,
         marginTop   : 2
@@ -359,7 +352,8 @@ var styles = StyleSheet.create({
         fontSize    : 15,
         marginRight : 5,
         marginTop   : 2,
-        color       : '#F6F6F6'
+        color       : '#000000'
+        // color       : '#F6F6F6'
     },
     
     rowSuffix : {

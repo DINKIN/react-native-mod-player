@@ -14,21 +14,31 @@ module.exports = StyleSheet.create({
     soundFormat : {
         flexDirection  : 'row',
     },
+
     container : {
-        backgroundColor : '#ffffff',
-        paddingTop      : 45,
+        backgroundColor : '#000000',
+        // borderWidth     : .5,
+        // borderColor     : '#000000',
+        paddingTop      : 35,
         flexDirection   : 'column',
-        alignSelf       : 'stretch'
+        flex : 1,
     },
 
     titleBar : {
-        height         : 40,
-        width          : 375,
-        paddingTop     : 3,
-        paddingLeft    : 3,
+        height            : 40,
+        width             : 375,
+        paddingTop        : 3,
+        paddingLeft       : 3,
+        borderTopWidth    : .5,
+        borderBottomWidth : .5,
+        borderColor       : '#AEAEAE'
+    },
+    
+    titleBarItem: {
         flexDirection  : 'row',
         justifyContent : 'center'
     },
+
 
 
 
@@ -112,6 +122,19 @@ module.exports = StyleSheet.create({
         left        : 0,
         borderWidth : .5,
         borderColor : '#FF0000'
+    },
+
+    songName : {
+        fontFamily : 'courier',
+        fontSize   : 16, 
+        color      : '#FFFFFF'
+    },
+
+
+    fileName : {
+        fontFamily : 'courier',
+        fontSize   : 12, 
+        color      : '#FFFFFF',
+        fontWeight : 'bold'
     }
-  
 });

@@ -17,7 +17,7 @@ module.exports =  StyleSheet.create({
         height   : 34,
         position : 'absolute',
         top      : top,
-                // borderWidth    : 1,
+        // borderWidth    : 1,
         // borderColor    : '#000000',
 
     },
@@ -63,12 +63,13 @@ module.exports =  StyleSheet.create({
     },
 
     buttonPressedText : {
-        color : '#AEAEAE'       
+        color : '#FFFFFF'       
     },
 
     buttonFont : {
-        fontFamily  : 'fontello', 
-        fontSize    : 30
+        fontFamily : 'fontello', 
+        fontSize   : 30,
+        color      : '#FEFEFE'
     },
 
 
@@ -76,8 +77,8 @@ module.exports =  StyleSheet.create({
         fontFamily  : 'fontello', 
         fontSize    : 30,
         width       : 49,
-        borderWidth : 1,
-        borderColor : '#FF3300'
+        // borderWidth : 1,
+        // borderColor : '#FF3300'
     },
 
     dislikeButton : {

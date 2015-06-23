@@ -115,6 +115,24 @@
       "src": "fontawesome"
     },
     {
+      "uid": "ccddff8e8670dcd130e3cb55fdfc2fd0",
+      "css": "down-open-2",
+      "code": 59429,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e4dde1992f787163e2e2b534b8c8067d",
+      "css": "angle-down",
+      "code": 59430,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "dfec4ffa849d8594c2e4b86f6320b8a6",
+      "css": "angle-double-down",
+      "code": 59431,
+      "src": "fontawesome"
+    },
+    {
       "uid": "ce06b5805120d0c2f8d60cd3f1a4fdb5",
       "css": "play",
       "code": 59393,
@@ -181,6 +199,12 @@
       "src": "entypo"
     },
     {
+      "uid": "289b5f92f23acf1059c93fbf401c1ad5",
+      "css": "down-open-big",
+      "code": 59426,
+      "src": "entypo"
+    },
+    {
       "uid": "d02a803276d9e1f42b7393964aa22ce9",
       "css": "heart",
       "code": 59403,
@@ -190,6 +214,12 @@
       "uid": "862129f833b09f3d34ae39acf8484a7b",
       "css": "heart-broken",
       "code": 59404,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "d9be617b7f2fe7843118ca2d3a1b8cca",
+      "css": "down-open-1",
+      "code": 59428,
       "src": "mfglabs"
     },
     {
@@ -208,6 +238,12 @@
       "uid": "3849753858193b4d6e07afa834aff979",
       "css": "thumbs-down-1",
       "code": 59425,
+      "src": "elusive"
+    },
+    {
+      "uid": "616b755d0f4c7d2dc7a1dcc2e5427039",
+      "css": "down-open",
+      "code": 59427,
       "src": "elusive"
     }
   ]

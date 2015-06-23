@@ -10,14 +10,14 @@ var StyleSheet = require('react-native').StyleSheet;
 
 module.exports = StyleSheet.create({
     container : {
-        backgroundColor : '#ffffff',
+        backgroundColor : '#000000',
         // borderWidth     : 3,
         // borderColor     : '#0000FF',
-        marginTop : 20,
+        // marginTop       : 20,
         overflow        : 'visible',
         flexDirection   : 'column',
-        flex : 1,
-        alignSelf      : 'stretch'
+        flex            : 1,
+        alignSelf       : 'stretch'
     },
     addNewItemContainer : {
         marginTop     : 20,

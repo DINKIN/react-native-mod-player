@@ -1,8 +1,6 @@
-'use strict';
-
-var React        = require('react-native'),
-    BrowseView   = require('./BrowseView'),
-    RandomPlayer = require('./player/RandomPlayer'),
+var React         = require('react-native'),
+    BrowseView    = require('./BrowseViewNavigator'),
+    RandomPlayer  = require('./player/RandomPlayer'),
     BaseComponent = require('./BaseComponent');
 
 
@@ -15,10 +13,10 @@ var {
 
 
 var {
-    Image,
     TouchableHighlight,
     StyleSheet,
     Text,
+    StatusBarIOS,
     View
 } = React;
 
@@ -28,10 +26,10 @@ var deviceWidth = 375;
 var styles = StyleSheet.create({
 
     mainCt : {
-        paddingTop     : 150,
-        alignSelf      : 'stretch',
+        flex           : 1,
         flexDirection  : 'column',
         justifyContent : 'center',
+        backgroundColor : '#000000',
         // borderWidth    : 2,
         // borderColor    : '#00FF00'
     },
@@ -55,21 +53,28 @@ var styles = StyleSheet.create({
     },  
 
     label : {
-        fontSize : 30
-    }
+        fontFamily : 'courier',
+        fontSize   : 30, 
+        fontWeight : 'bold',
+        color      : '#EFEFEF'
+    },
 
+    titleRed : {
+        fontFamily : 'courier', 
+        fontSize   : 30,
+        fontWeight : 'bold',
+        color      : '#FF0000'
+    },
+
+    titleGreen : {
+        fontFamily : 'courier', 
+        fontSize   : 30,
+        color      : '#00FF00'
+    }
 });
 
 
-var generatePlayer = function(cfg) {
-    return React.createClass({
-        render : function() {
-            return (<RandomPlayer {...cfg}/>);
-        }
-    });
-}
-
-class MainView extends BaseComponent {
+class HomeMenu extends BaseComponent {
 
     createButton(fn, text) {
         return (
@@ -77,7 +82,7 @@ class MainView extends BaseComponent {
                 <TouchableHighlight
                     activeOpacity={1}
                     animationVelocity={0}
-                    underlayColor="rgb(210, 230, 255)" 
+                    underlayColor="rgb(150,150,150)" 
                     style={styles.highlightCt} 
                     onPress={fn}>
                         <Text style={styles.label}>{text}</Text>
@@ -89,6 +94,18 @@ class MainView extends BaseComponent {
     render() {
         return (
             <View style={styles.mainCt}>
+                <View style={{flexDirection:'row', justifyContent : 'center'}}>
+                    <Text style={styles.titleRed}>K</Text>
+                    <Text style={styles.titleGreen}>ey</Text>
+                    <Text style={styles.titleRed}>G</Text>
+                    <Text style={styles.titleGreen}>en</Text>
+                    <Text style={styles.titleRed}>M</Text>
+                    <Text style={styles.titleGreen}>usic</Text>
+                </View>
+                <View style={{flexDirection:'row', justifyContent : 'center', marginBottom : 30}}>
+                    <Text style={styles.titleRed}>P</Text>
+                    <Text style={styles.titleGreen}>layer</Text>
+                </View>
                 {[
                     this.createButton(this.onRandomPress,    "Random"),
                     this.createButton(this.onBrowsePress,    "Browse"),
@@ -103,7 +120,7 @@ class MainView extends BaseComponent {
 
 }
 
-MainView.propTypes = {
+HomeMenu.propTypes = {
     onRandomPress    : React.PropTypes.func,
     onBrowsePress    : React.PropTypes.func,
     onFavoritesPress : React.PropTypes.func,
@@ -111,7 +128,7 @@ MainView.propTypes = {
     onSearchPress    : React.PropTypes.func
 };
 
-Object.assign(MainView.prototype, {
+Object.assign(HomeMenu.prototype, {
     bindableMethods : {
 
         onRandomPress : function() {
@@ -135,29 +152,26 @@ Object.assign(MainView.prototype, {
                         // debugger;
 
                         if (modObject) {
-                            var fileName   = rowData.file_name,
+                            var fileName  = rowData.file_name,
                                 rtBtnText,
                                 rtBtnHandler;
 
                             modObject.fileName = fileName;
-                           
-                            var cmp = generatePlayer({
-                                modObject : modObject,
-                                patterns  : modObject.patterns
-                            });
-
-                            navigator.push({
+                            
+                            window.mainNavigator.push({
                                 title            : 'Player',
                                 rightButtonTitle : rtBtnText,
-                                component        : cmp,
-                                // onRightButtonPress : rtBtnHandler
+                                component        : RandomPlayer,
+                                componentConfig  : {
+                                    modObject : modObject,
+                                    patterns  : modObject.patterns
+                                }
                             });
       
                         }
                         else {
                             alert('Woah. Something hit the fan!');
                         }
-
                     }
                 );
 
@@ -167,8 +181,9 @@ Object.assign(MainView.prototype, {
         
         onBrowsePress : function() {
             this.props.navigator.push({
-                title    : 'Browse Groups',
-                component : BrowseView
+                title          : 'Browse Groups',
+                component      : BrowseView,
+                transitionType : 'PushFromRight'
             });
         },
         
@@ -187,5 +202,5 @@ Object.assign(MainView.prototype, {
 });
 
 
-module.exports = MainView;
+module.exports = HomeMenu;
 

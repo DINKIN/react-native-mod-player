@@ -15,20 +15,30 @@ var deviceWidth = 375;
 
 var styles = StyleSheet.create({
 
-    soundFormat : {
-        flexDirection  : 'row',
-        // justifyContent : '',       
+    summaryRow : {
+        flexDirection  : 'row'
     },
 
     fileSummary : {
         alignSelf  : 'stretch',
 
         // height : 374,
-        width   : 375,
         padding : 20
     },
+    title : {
+        fontFamily      : 'Courier',
+        fontSize        : 16,
+        backgroundColor : '#000000',
+        color           : '#00FF00',
+        fontWeight      : 'bold'
+    },
+
     text : {
-        fontSize : 18
+        fontFamily      : 'Courier',
+        fontSize        : 16,
+        backgroundColor : '#000000',
+        color           : '#FFFFFF',
+        fontWeight      : 'bold'
     },
     textLink : {
         fontSize : 18,
@@ -44,27 +54,101 @@ module.exports  = React.createClass({
         onPress : React.PropTypes.func
     },
 
+    getInitialState : function() {
+        return {
+            pattern : 0,
+            order   : 0,
+            row     : 0
+        }
+    },
 
     onFormatPress : function() {
         this.props.onPress && this.props.onPress(this.fileTypeObj);
     },
 
     render : function() {
-        var data        = this.props.data;
+        var data  = this.props.data,
+            state = this.state;
 
 
 
         return (
             <View style={styles.fileSummary}>
-                <Text style={styles.text}>Name: {data.name}</Text>
-                <Text style={styles.text}>Type: {data.type}</Text>
-                <Text style={styles.text}>Patterns: {data.numPatterns}</Text>
-                <Text style={styles.text}>Tracks: {data.tracks}</Text>
-                <Text style={styles.text}>Instruments: {data.instruments}</Text>
-                <Text style={styles.text}>Samples: {data.samples}</Text>
-                <Text style={styles.text}>Speed: {data.speed}</Text>
-                <Text style={styles.text}>BPM: {data.bpm}</Text>
-                <Text style={styles.text}>Length: {data.length}</Text>
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Name: </Text>
+                    <Text style={styles.text}>{data.name}</Text>
+                </View>
+
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Type: </Text>
+                    <Text style={styles.text}>{data.type}</Text>
+                </View>
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Patterns: </Text>
+                    <Text style={styles.text}>{data.numPatterns}</Text>
+                </View>                
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Tracks: </Text>
+                    <Text style={styles.text}>{data.tracks}</Text>
+                </View>   
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Insruments: </Text>
+                    <Text style={styles.text}>{data.instruments}</Text>
+                </View>  
+
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Samples: </Text>
+                    <Text style={styles.text}>{data.samples}</Text>
+                </View>  
+
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Speed: </Text>
+                    <Text style={styles.text}>{data.speed}</Text>
+                </View>  
+
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>BMP: </Text>
+                    <Text style={styles.text}>{data.bpm}</Text>
+                </View>  
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Length: </Text>
+                    <Text style={styles.text}>{data.length}</Text>
+                </View>  
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Tracker: </Text>
+                    <Text style={styles.text}>{data.tracker}</Text>
+                </View>  
+
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Current Order: </Text>
+                    <Text style={styles.text}>{state.order}</Text>
+                </View>  
+                
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Current Pattern: </Text>
+                    <Text style={styles.text}>{state.pattern}</Text>
+                </View>  
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Pattern Rows: </Text>
+                    <Text style={styles.text}>{state.numRows}</Text>
+                </View>                  
+                
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Current Row: </Text>
+                    <Text style={styles.text}>{state.row}</Text>
+                </View>
+
 
                 {/* 
                 <View style={styles.soundFormat}>

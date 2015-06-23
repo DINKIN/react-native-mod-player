@@ -6,7 +6,8 @@ var {
     StyleSheet,
     Text,
     View,
-    VibrationIOS
+    VibrationIOS,
+    TouchableWithoutFeedback
 } = React;
 
 var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
@@ -16,15 +17,18 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     PatternView           = require('./PatternView'),
     RowNumberView         = require('./RowNumberView'),
     styles                = require('./AbstractPlayerStyles'),
-    BaseComponent         = require('../BaseComponent');
+    BaseComponent         = require('../BaseComponent'),
+    CloseButton           = require('./CloseButton');
+
 
 class AbstractPlayer extends BaseComponent {
+
+
     render() {
         // debugger;
         var state     = this.state,
             props     = this.props,
             modObject = this.modObject || props.modObject,
-            images    = [<SummaryCard data={modObject} onPress={this.onSummaryItemPress}/>],
             dictInfo  = props.dictInfo;
 
         var buttonChars = this.buttonChars,
@@ -32,19 +36,20 @@ class AbstractPlayer extends BaseComponent {
             centerBtnStyle;
 
         if (state.playingSong) {
-            centerBtnChar = "pause";
+            centerBtnChar  = "pause";
             centerBtnStyle = "pauseButton";
         }
         else {
-            centerBtnChar = "play";
+            centerBtnChar  = "play";
             centerBtnStyle = "playButton";
         }
-        // <RCEzAudioPlotGlView style={styles.vizItem}/>
 
-        var name = modObject.file_name ? modObject.file_name : modObject.fileName,
+        // debugger;
+        var fileName = modObject.file_name ? modObject.file_name : modObject.fileName,
             pattern,
             newTopPosition;
 
+        /*
         if (state.currentPattern != null) {
             pattern = this.patterns[state.currentPattern];
         }
@@ -60,22 +65,34 @@ class AbstractPlayer extends BaseComponent {
                 top : (508 / 2) - (state.currentRow * 11)
             }
         }
-      
+        */
+
         return (
             <View style={styles.container}>
+                <CloseButton onPress={this.onClosebuttonPress} />
+
                 <View style={styles.titleBar}>
-                    <Text style={{fontSize: 16}}>{name}</Text>
+                    <View style={styles.titleBarItem}>
+                        <Text style={styles.songName}>{modObject.name}</Text>
+                    </View>
+                    <View style={styles.titleBarItem}>
+                        <Text style={styles.fileName}>{fileName}</Text>
+                    </View>
                 </View>
 
                 <View style={styles.imageContainer}>
+                    <SummaryCard data={modObject} ref={"summaryCard"}/>
+                    {/*
                     <View style={[styles.rowNumberz, newTopPosition]}>
                         <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
                     </View>
+                   
                     <View style={[styles.patternView, newTopPosition]}>
                         <PatternView ref={"patternView"} rows={pattern}/>
                     </View>
                     <View style={styles.playerBarTop}/>
                     <View style={styles.playerBarBottom}/>
+                    */}
                 </View>
 
                 <View style={styles.controlsContainer}>
@@ -173,7 +190,8 @@ class AbstractPlayer extends BaseComponent {
 AbstractPlayer.propTypes = {
     modObject : React.PropTypes.object,
     ownerList : React.PropTypes.object,
-    patterns  : React.PropTypes.object
+    patterns  : React.PropTypes.object,
+    navigator : React.PropTypes.object
 }
 
 Object.assign(AbstractPlayer.prototype, {
@@ -215,7 +233,10 @@ Object.assign(AbstractPlayer.prototype, {
     },
 
     bindableMethods : {
-
+        onClosebuttonPress : function() {
+            window.mainNavigator.pop();
+        },
+ 
         onSummaryItemPress : function(fileTypeObj) {
             var wiki = fileTypeObj.wiki;
 
@@ -240,6 +261,15 @@ Object.assign(AbstractPlayer.prototype, {
         },
         
         onPatternUpdateEvent : function(position) {
+            this.refs.summaryCard.setState({
+                order   : position[0],
+                pattern : position[1],
+                row     : position[2],
+                numRows : position[3]
+            });
+
+            return;
+            /** For the pattern view, which is disabled for now **/
             var order   = position[0], 
                 pattern = position[1],
                 row     = position[2],
