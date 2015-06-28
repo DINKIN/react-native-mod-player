@@ -15,7 +15,7 @@ var deviceWidth = 375;
 
 var styles = StyleSheet.create({
     patternRow : {
-        fontFamily     : 'Courier',
+        fontFamily     : 'PerfectDOSVGA437Win',
         fontSize        : 11,
         backgroundColor : '#000000',
         color           : '#66FF66'

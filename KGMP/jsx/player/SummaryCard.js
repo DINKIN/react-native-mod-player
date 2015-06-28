@@ -26,7 +26,7 @@ var styles = StyleSheet.create({
         padding : 20
     },
     title : {
-        fontFamily      : 'Courier',
+        fontFamily      : 'PerfectDOSVGA437Win',
         fontSize        : 16,
         backgroundColor : '#000000',
         color           : '#00FF00',
@@ -34,7 +34,7 @@ var styles = StyleSheet.create({
     },
 
     text : {
-        fontFamily      : 'Courier',
+        fontFamily      : 'PerfectDOSVGA437Win',
         fontSize        : 16,
         backgroundColor : '#000000',
         color           : '#FFFFFF',

@@ -125,14 +125,14 @@ module.exports = StyleSheet.create({
     },
 
     songName : {
-        fontFamily : 'courier',
+        fontFamily : 'PerfectDOSVGA437Win',
         fontSize   : 16, 
         color      : '#FFFFFF'
     },
 
 
     fileName : {
-        fontFamily : 'courier',
+        fontFamily : 'PerfectDOSVGA437Win',
         fontSize   : 12, 
         color      : '#FFFFFF',
         fontWeight : 'bold'

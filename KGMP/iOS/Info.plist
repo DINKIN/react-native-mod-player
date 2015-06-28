@@ -26,6 +26,7 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Perfect DOS VGA 437 Win.ttf</string>
 		<string>fontello.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>

@@ -35,10 +35,10 @@ var styles = StyleSheet.create({
     },
 
     highlightCt : {
-        width          : 140,
-        borderWidth    : .1,
-        borderColor    : '#9E9E9E',
-        borderRadius   : 3,
+        width          : 175,
+        borderWidth    : .5,
+        borderColor    : '#333333',
+        // borderRadius   : 3,
         flexDirection  : 'row',
         justifyContent : 'center',
     },
@@ -53,21 +53,21 @@ var styles = StyleSheet.create({
     },  
 
     label : {
-        fontFamily : 'courier',
-        fontSize   : 30, 
+        fontFamily : 'PerfectDOSVGA437Win',
+        fontSize   : 28, 
         fontWeight : 'bold',
         color      : '#EFEFEF'
     },
 
     titleRed : {
-        fontFamily : 'courier', 
+        fontFamily : 'PerfectDOSVGA437Win', 
         fontSize   : 30,
         fontWeight : 'bold',
         color      : '#FF0000'
     },
 
     titleGreen : {
-        fontFamily : 'courier', 
+        fontFamily : 'PerfectDOSVGA437Win', 
         fontSize   : 30,
         color      : '#00FF00'
     }
@@ -82,7 +82,7 @@ class HomeMenu extends BaseComponent {
                 <TouchableHighlight
                     activeOpacity={1}
                     animationVelocity={0}
-                    underlayColor="rgb(150,150,150)" 
+                    underlayColor="rgb(00,200,00)" 
                     style={styles.highlightCt} 
                     onPress={fn}>
                         <Text style={styles.label}>{text}</Text>
@@ -99,7 +99,7 @@ class HomeMenu extends BaseComponent {
                     <Text style={styles.titleGreen}>ey</Text>
                     <Text style={styles.titleRed}>G</Text>
                     <Text style={styles.titleGreen}>en</Text>
-                    <Text style={styles.titleRed}>M</Text>
+                    <Text style={[styles.titleRed, {marginLeft: 10}]}>M</Text>
                     <Text style={styles.titleGreen}>usic</Text>
                 </View>
                 <View style={{flexDirection:'row', justifyContent : 'center', marginBottom : 30}}>

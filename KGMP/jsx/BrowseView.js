@@ -332,7 +332,7 @@ var styles = StyleSheet.create({
     },
 
     rowText : {
-        fontFamily : 'courier',
+        fontFamily : 'PerfectDOSVGA437Win',
         fontWeight : 'bold',
         color      : '#00FF00',
         flex       : 1,

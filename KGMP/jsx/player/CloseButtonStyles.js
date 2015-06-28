@@ -43,7 +43,7 @@ module.exports =  StyleSheet.create({
     },
 
     buttonFont : {
-        fontFamily : 'courier',
+        fontFamily : 'PerfectDOSVGA437Win',
         fontSize   : 20,
         width      : 75,
         color      : '#FF0000',

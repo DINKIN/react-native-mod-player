@@ -25,6 +25,7 @@
 		71442ABB1B0B86E600904FD7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 71442ABA1B0B86E600904FD7 /* libsqlite3.dylib */; };
 		71442AC11B0C19E000904FD7 /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 71442AC01B0C19E000904FD7 /* keygenmusicplayer.db */; };
 		715B7F281B08EF21003114FC /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 715B7F271B08EE11003114FC /* libRCTWebSocket.a */; };
+		71A62B061B3B40F200B018F7 /* Perfect DOS VGA 437 Win.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A62B051B3B40F200B018F7 /* Perfect DOS VGA 437 Win.ttf */; };
 		71DE031F1AEA5A14009CD536 /* MCFsTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 71DE031A1AEA5A14009CD536 /* MCFsTool.m */; };
 		71DE03201AEA5A14009CD536 /* MCModPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 71DE031C1AEA5A14009CD536 /* MCModPlayer.m */; };
 		71DE03211AEA5A14009CD536 /* MCModPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 71DE031E1AEA5A14009CD536 /* MCModPlayerInterface.m */; };
@@ -166,6 +167,7 @@
 		71442ABA1B0B86E600904FD7 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		71442AC01B0C19E000904FD7 /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = db/keygenmusicplayer.db; sourceTree = "<group>"; };
 		715B7F221B08EE10003114FC /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
+		71A62B051B3B40F200B018F7 /* Perfect DOS VGA 437 Win.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Perfect DOS VGA 437 Win.ttf"; sourceTree = "<group>"; };
 		71DE03191AEA5A14009CD536 /* MCFsTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCFsTool.h; path = iOS/ModusCreate/MCFsTool.h; sourceTree = "<group>"; };
 		71DE031A1AEA5A14009CD536 /* MCFsTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCFsTool.m; path = iOS/ModusCreate/MCFsTool.m; sourceTree = "<group>"; };
 		71DE031B1AEA5A14009CD536 /* MCModPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCModPlayer.h; path = iOS/ModusCreate/MCModPlayer.h; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				71442AC01B0C19E000904FD7 /* keygenmusicplayer.db */,
+				71A62B051B3B40F200B018F7 /* Perfect DOS VGA 437 Win.ttf */,
 				71DE033F1AEA5C77009CD536 /* fontello.ttf */,
 				71DE03411AEA6156009CD536 /* KEYGENMUSiC MusicPack */,
 				13B07FAE1A68108700A75B9A /* KGMP */,
@@ -673,6 +676,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71A62B061B3B40F200B018F7 /* Perfect DOS VGA 437 Win.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				71DE03421AEA6156009CD536 /* KEYGENMUSiC MusicPack in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
