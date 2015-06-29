@@ -38,4 +38,3 @@ class KGMP extends React.Component{
 
 AppRegistry.registerComponent('KGMP', () => KGMP);
 
-module.exports = KGMP;

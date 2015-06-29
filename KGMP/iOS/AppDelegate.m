@@ -34,18 +34,19 @@
   // $ curl 'http://localhost:8081/jsx/index.ios.bundle?dev=false&minify=true' -o iOS/main.jsbundle
   //
   // and uncomment the next following line
-//  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  //jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"KGMP"
                                                    launchOptions:launchOptions];
+
+  rootView.backgroundColor = [UIColor blackColor];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   
   UIViewController *rootViewController = [[UIViewController alloc] init];
   rootViewController.view = rootView;
   
-  rootView.backgroundColor = [UIColor blackColor];
     
   self.window.rootViewController = rootViewController;
   
