@@ -133,6 +133,7 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
     [self updateInfoCenter];
 
     AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
+//    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 0);
     AudioQueueStart(mAudioQueue, NULL);
     self.isPrimed = false;
 }

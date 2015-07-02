@@ -111,19 +111,23 @@ var AboutView = React.createClass({
     afterLoadModFile : function(modObject) {
         this.modObject = modObject;
         this.patterns  = modObject.patterns;
-        console.log(modObject)
+        // console.log(modObject)
+
         this.state.modFileLoaded = true;
         this.setState(this.state);
-        MCModPlayerInterface.resume(() => {
-            this.registerPatternUpdateHandler();
-        });
-
-
+        setTimeout(() => {
+            MCModPlayerInterface.resume(() => {
+                this.registerPatternUpdateHandler();
+            });
+        }, 1500);
     },
 
     onClosebuttonPress : function() {
         this.deregisterPatternUpdateHandler();
-        window.mainNavigator.pop();
+        MCModPlayerInterface.pause(() => {
+            window.mainNavigator.pop();
+
+        });
     },
 
 
@@ -145,15 +149,18 @@ var AboutView = React.createClass({
         );
     }, 
 
+    jsCallArgs : [null, null, null],
  
     onPatternUpdateEvent : function(position) {
         // console.log(position[0],position[1],position[2],position[3])
 
 
-        var order   = position[0], 
-            pattNum = position[1],
-            rowNum  = position[2],
-            numRows = position[3];
+        var order      = position[0], 
+            pattNum    = position[1],
+            rowNum     = position[2],
+            numRows    = position[3],
+            jsCallArgs = this.jsCallArgs,
+            jsCall;
 
         var patterns = this.patterns,
             state    = this.state,
@@ -161,32 +168,44 @@ var AboutView = React.createClass({
             row      = pattern[rowNum],
             channels = row.split('|');
 
-        var chan      = channels[2],
-            chanSplit = chan.split(' '),
-            note      = chanSplit[0],
-            jsCall;
+        var chan3      = channels[2],
+            chan3Split = chan3.split(' '),
+            chan3Note  = chan3Split[0]
+
+        var chan2      = channels[1],
+            chan2Split = chan2.split(' '),
+            chan2Note  = chan2Split[0];
+
 
         // console.log(channels[2])
         // console.log(chan0Split[0]);
 
-        if (note == 'D#6') {
-            jsCall = "particleCount = 200; particles.drawcalls[ 0 ].count = particleCount;";
+
+
+        if (chan3Note == 'D#6') {
+            jsCallArgs[0] = 200;
         }
         else {
-            jsCall = "particleCount = 50; particles.drawcalls[ 0 ].count = particleCount;";
+            jsCallArgs[0] = null;
+        }
+
+        if (chan2Note == 'C-6') {
+            jsCallArgs[2] = 50;
+        }
+        else {
+            jsCallArgs[2] = null;
         }
 
 
+        jsCall = 'u(' +  jsCallArgs[0] + ',' + jsCallArgs[1] + ',' + jsCallArgs[2] + ')';
+
+        // console.log(jsCall);
 
 
-        var wv = this.refs.webView;
+        this.refs.webView.execJsCall(jsCall);
 
 
-        // debugger;
-        // this.state.js = true;
-        // var call = "particleCount = 200;particles.drawcalls[ 0 ].count = particleCount;";
-        wv.execJsCall(jsCall);
-
+        
         return;
         this.refs.summaryCard.setState({
             order   : position[0],

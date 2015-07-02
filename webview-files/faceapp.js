@@ -269,11 +269,12 @@ function u(numParticles, showLines, particleSize) {
 
     if (numParticles == null) {
         numParticles = 50;
-        showLines = true;
-    }
-    else {
         showLines = false;
     }
+    else {
+        showLines = true;
+    }
+    
     particleCount = particles.drawcalls[ 0 ].count = numParticles;
 
     if (showLines == null) {
