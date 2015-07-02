@@ -1,7 +1,8 @@
 var React         = require('react-native'),
     BrowseView    = require('./BrowseViewNavigator'),
     RandomPlayer  = require('./player/RandomPlayer'),
-    BaseComponent = require('./BaseComponent');
+    BaseComponent = require('./BaseComponent'),
+    AboutView     = require('./about/AboutView.js');
 
 
 
@@ -192,7 +193,11 @@ Object.assign(HomeMenu.prototype, {
         },
         
         onAboutPress : function() {
-            // this.props.onAboutPress();
+            window.mainNavigator.push({
+                title          : 'About',
+                component      : AboutView,
+                transitionType : 'PushFromRight'
+            });        
         },
         
         onSearchPress : function() {

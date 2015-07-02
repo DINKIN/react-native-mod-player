@@ -55,31 +55,6 @@ RCT_EXPORT_MODULE();
 }
 
 
-// DEPRECATED
-RCT_EXPORT_METHOD(playFile:(NSString *)path
-                 errorCallback:(RCTResponseSenderBlock)errorCallback
-                 callback:(RCTResponseSenderBlock)callback) {
-    
-    printf("                  ---------          \n");
-    MCModPlayer *player = [MCModPlayer sharedManager];
-    
-    NSDictionary *modInfo = [player initializeSound:path];
-    
-    self.currentRow     = nil;
-    self.currentPattern = nil;
-    self.currentOrder   = nil;
-    
-    if (modInfo == nil) {
-        errorCallback(@[@"Could not initialize audio."]);
-    }
-    else {
-        callback(@[@""]);
-    }
-    
-    
-}
-
-
 RCT_EXPORT_METHOD(loadFile:(NSString *)path
                  errorCallback:(RCTResponseSenderBlock)errorCallback
                  callback:(RCTResponseSenderBlock)callback) {
@@ -138,8 +113,6 @@ RCT_EXPORT_METHOD(getAllPatterns:(NSString *)path
 }
 
 
-
-
 RCT_EXPORT_METHOD(pause:(RCTResponseSenderBlock)callback) {
     [[MCModPlayer sharedManager] pause];
     
@@ -164,9 +137,8 @@ RCT_EXPORT_METHOD(resume:(RCTResponseSenderBlock)callback) {
 }
 
 RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
-            errorCallback:(RCTResponseSenderBlock)errorCallback
-             callback:(RCTResponseSenderBlock)callback) {
-    
+                errorCallback:(RCTResponseSenderBlock)errorCallback
+                     callback:(RCTResponseSenderBlock)callback) {
     
     NSMutableDictionary *gameObject = [[MCModPlayer sharedManager] getInfo:path];
     
@@ -178,6 +150,26 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
     else {
         callback(@[gameObject]);
     }
+}
+
+RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
+                           callback:(RCTResponseSenderBlock)callback) {
+
+    
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath],
+             *fileToLoad = @"KEYGENMUSiC MusicPack/!!Modus Create/ModusCreate.xm",
+             *filePath   = [NSString stringWithFormat:@"%@/%@", bundlePath, fileToLoad];
+ 
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    
+    NSDictionary *modInfo = [player initializeSound:filePath],
+                 *patterns = [player getAllPatterns:filePath];
+    
+    NSMutableDictionary *allModInfo = [[NSMutableDictionary alloc] initWithDictionary:modInfo];
+    
+    [allModInfo setObject:patterns forKey:@"patterns"];
+    
+    callback(@[allModInfo]);
 }
 
 

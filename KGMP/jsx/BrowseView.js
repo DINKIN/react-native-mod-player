@@ -264,6 +264,7 @@ var generateView = function(cfg) {
             
             var navigator = this.props.navigator;
             
+            // console.log(record.path);
             MCModPlayerInterface.loadFile(
                 record.path,
                 //failure

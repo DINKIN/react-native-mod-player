@@ -49,7 +49,4 @@ module.exports =  StyleSheet.create({
         color      : '#FF0000',
         marginLeft : 20
     }
-  
-
-
 });

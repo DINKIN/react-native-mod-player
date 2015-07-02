@@ -147,7 +147,7 @@ var BridgedWebView = React.createClass({
             // webViewStyles.push(styles.hidden);
         }
 
-        console.log(this.props)
+        // console.log(this.props)
         return (
             <View style={styles.container}>
                 <MCBridgedWebView
@@ -220,7 +220,7 @@ var BridgedWebView = React.createClass({
     },
 
     execJsCall : function(jsCallAsString) {
-        console.log('execJsCall(%s)', jsCallAsString);
+        // console.log('execJsCall(%s)', jsCallAsString);
         MCBridgedWebViewManager.exec(this.getWebWiewHandle(), jsCallAsString);
  
     }
@@ -228,40 +228,40 @@ var BridgedWebView = React.createClass({
 
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // borderWidth : 1,
-    // borderColor : '#00FF00'
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: BGWASH,
-  },
-  errorText: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 2,
-  },
-  errorTextTitle: {
-    fontSize: 15,
-    fontWeight: '500',
-    marginBottom: 10,
-  },
-  hidden: {
-    height: 0,
-    flex: 0, // disable 'flex:1' when hiding a View
-  },
-  loadingView: {
-    backgroundColor: BGWASH,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  webView: {
-    backgroundColor: '#ffffff',
-  }
+    container: {
+        flex: 1,
+        // borderWidth : 1,
+        // borderColor : '#00FF00'
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor : 'rgba(0,0,0,0)',
+    },
+    errorText: {
+        fontSize: 14,
+        textAlign: 'center',
+        marginBottom: 2,
+    },
+    errorTextTitle: {
+        fontSize: 15,
+        fontWeight: '500',
+        marginBottom: 10,
+    },
+    hidden: {
+        height: 0,
+        flex: 0, // disable 'flex:1' when hiding a View
+    },
+    loadingView: {
+        backgroundColor: BGWASH,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    webView: {
+        backgroundColor: '#ffffff',
+    }
 });
 
 var MCBridgedWebView = requireNativeComponent('MCBridgedWebView', BridgedWebView);
