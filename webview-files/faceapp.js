@@ -8,9 +8,10 @@ var particlePositions;
 var linesMesh;
 
 var maxParticleCount = 1000;
-var particleCount = 500;
+var particleCount = 50;
 var r = 800;
 var rHalf = r / 2;
+var pMaterial;
 
 var effectController = {
     showDots: true,
@@ -72,13 +73,15 @@ function init() {
     positions = new Float32Array( segments * 3 );
     colors = new Float32Array( segments * 3 );
 
-    var pMaterial = new THREE.PointCloudMaterial( {
+    pMaterial = new THREE.PointCloudMaterial( {
         color: 0xFFFFFF,
         size: 3,
         blending: THREE.AdditiveBlending,
         transparent: true,
         sizeAttenuation: false
-    } );
+    });
+
+    window.m = pMaterial;
 
     particles = new THREE.BufferGeometry();
     particlePositions = new Float32Array( maxParticleCount * 3 );
@@ -97,7 +100,7 @@ function init() {
         particlesData.push( {
             velocity: new THREE.Vector3( -1 + Math.random() * 2, -1 + Math.random() * 2,  -1 + Math.random() * 2 ),
             numConnections: 0
-        } );
+        });
 
     }
 
@@ -135,6 +138,8 @@ function init() {
     linesMesh = new THREE.Line( geometry, material, THREE.LinePieces );
     group.add( linesMesh );
 
+    linesMesh.visible = false;
+
     //
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -148,10 +153,10 @@ function init() {
 
     //
 
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.top = '0px';
-    container.appendChild( stats.domElement );
+    // stats = new Stats();
+    // stats.domElement.style.position = 'absolute';
+    // stats.domElement.style.top = '0px';
+    // container.appendChild( stats.domElement );
 
     window.addEventListener( 'resize', onWindowResize, false );
 
@@ -193,8 +198,9 @@ function animate() {
         if ( particlePositions[ i * 3 + 2 ] < -rHalf || particlePositions[ i * 3 + 2 ] > rHalf )
             particleData.velocity.z = -particleData.velocity.z;
 
-        if ( effectController.limitConnections && particleData.numConnections >= effectController.maxConnections )
+        if ( effectController.limitConnections && particleData.numConnections >= effectController.maxConnections ) {
             continue;
+        }
 
         // Check collision
         for ( var j = i + 1; j < particleCount; j++ ) {
@@ -245,16 +251,49 @@ function animate() {
 
     requestAnimationFrame( animate );
 
-    stats.update();
+    // stats.update();
     render();
 
 }
 
 function render() {
-
     var time = Date.now() * 0.001;
 
     group.rotation.y = time * 0.1;
+    group.rotation.z = time * 0.3;
+    group.rotation.x = time * -0.2;
     renderer.render( scene, camera );
+}
 
+function u(numParticles, showLines, particleSize) {
+
+    if (numParticles == null) {
+        numParticles = 50;
+        showLines = true;
+    }
+    else {
+        showLines = false;
+    }
+    particleCount = particles.drawcalls[ 0 ].count = numParticles;
+
+    if (showLines == null) {
+        showLines = false;
+    }
+
+    linesMesh.visible = showLines;
+
+
+    if (particleSize == null) {
+        pMaterial.size = 3;
+        pMaterial.color.red = 1 
+        pMaterial.color.green = 1 
+        pMaterial.color.blue = 1
+    }
+    else {
+        pMaterial.color.red = 1 
+        pMaterial.color.green = 1 
+        pMaterial.color.blue = 0
+        pMaterial.size = particleSize;
+
+    }
 }
