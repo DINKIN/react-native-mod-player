@@ -1,5 +1,4 @@
-var React      = require('react-native'),
-    ListPlayer = require('./player/ListPlayer');
+var React      = require('react-native');
 
 var { 
         MCFsTool,
@@ -17,296 +16,175 @@ var {
     View,
 } = React;
 
-
-// TODO: Invesitgate this patttern. It seems *really dirty*
-var generateWebivew = function(cfg) {
-    return React.createClass({
-        render : function() {
-            return (<WebView {...cfg}/>);
-        }
-    });
-}
-
-// TODO: Invesitgate this patttern. It seems *really dirty*
-var generatePlayer = function(cfg) {
-    return React.createClass({
-        render : function() {
-            return (<ListPlayer {...cfg}/>);
-        }
-    })
-}
-
-var generateView = function(cfg) {
-    return React.createClass({
+var BrowseView = React.createClass({
         
-        data      : null,
-        fileNames : null,
+    data      : null,
+    fileNames : null,
 
-        getDirectories : function() {
-            MCFsTool.getDirectoriesAsJson(
-                cfg.path,
-                // failure
-                () => {
-                    console.log('An Error Occurred');
-                },
-                // Success
-                (response) =>  {
-                    this.rowData = response;                    
+    extractNamesForRow : function(daters) {
+        var rowData  = [],
+            itemType = 'dir',
+            len      = daters.length,
+            i        = 0,
+            dataItem,
+            name;
 
-                    if (this.rowData) {
-                        this.state = this.getInitialState();
-                        this.forceUpdate();
-                    }
-                }
-            );
-        },
+        for (; i < len; i++) {
+            dataItem = daters[i];
+            name     = dataItem.file_name ? dataItem.file_name : dataItem.name;
 
-        showWebView : function(url) {
-            this.props.navigator.push({
-                title     : 'Wikipedia',
-                component : generateWebivew({
-                    url : url
-                })
-            });
-        },
-
-        extractNamesForRow : function(daters) {
-            var rowData  = [],
-                itemType = 'dir',
-                len      = daters.length,
-                i        = 0,
-                dataItem,
-                name;
-
-            for (; i < len; i++) {
-                dataItem = daters[i];
-                name     = dataItem.file_name ? dataItem.file_name : dataItem.name;
-
-                if (dataItem.type == 'dir') {
-                    name += '/';
-                }
-
-                rowData.push(name);
+            if (dataItem.type == 'dir') {
+                name += '/';
             }
 
-            return rowData;
-
-        },
-
-        getInitialState: function() {
-            var daters     = this.rowData,
-                dataSource = new ListView.DataSource({
-                    rowHasChanged: function(r1, r2) {
-                        var index = rowData.indexOf(r1);
-                        // debugger;
-                        // if (daters[index].isPlaying) {
-                            // console.log(daters[index]);
-                        // }; 
-
-                        return (typeof daters[index].isPlaying != 'undefined'); 
-                    }
-                }),
-                rowData;
-                
-
-            
-            if (daters) {
-                rowData = this.extractNamesForRow(daters);
-                
-                return {
-                    dataSource : dataSource.cloneWithRows(rowData),
-                };
-
-            }  
-
-            return {};
-        },
-
-        setRecordIsPlaying: function(rowID, isPlaying) {
-            // debugger;
-            var rawData = this.rowData,
-                record  = rawData[rowID],
-                len     = rawData.length,
-                i       = 0, 
-                r,
-                rowData;
-                
-            for (; i < len; i++) {
-                if (rawData[i].isPlaying) {
-                    rawData[i].isPlaying = false;
-                };
-            }
-
-            if (record) {
-                record.isPlaying = isPlaying;
-
-                rowData = this.extractNamesForRow(rawData);
-
-                this.setState({
-                    dataSource : this.state.dataSource.cloneWithRows(rowData)
-                });
-            } 
-        },
-
-        componentWillMount: function() {
-            this._pressData = {};
-
-            this.getDirectories();
-        },
-
-        render: function() {
-            return (
-                this.rowData ? 
-                        <ListView style={styles.listView} dataSource={this.state.dataSource} initialListSize={20} pageSize={30} scrollRenderAheadDistance={100} renderRow={this._renderRow}/>
-                    :
-                        <Text>Loading...</Text>
-
-            );
-        },
-
-        _renderRow: function(rowData, sectionID, rowID) {
-            
-            var record      = this.rowData[rowID],
-                isDir       = (record.type == 'dir'),
-                prefix      = null,
-                folder      = '\uE805',
-                vgmIcon     = '\uE80A',
-                playingIcon = '\uE80D',
-                emptyIcon   = '\uE999';
-
-            if (isDir) {
-                prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
-            }
-
-            else if (record.isPlaying) {
-                prefix = <Text style={styles.rowPrefix}>{playingIcon}</Text>;
-            }
-            else {
-                prefix = <Text style={styles.rowPrefixHidden}>{playingIcon}</Text>;
-            }
-           
-            return (
-                <TouchableHighlight key={rowID} onPress={() => this._pressRow(rowID)}>
-                    <View>
-                        <View style={styles.row}>
-                            {prefix}
-                            
-                            <Text style={styles.rowText}>{rowData}</Text>
-
-                        </View>
-                        <View style={styles.separator} />
-                    </View>
-                </TouchableHighlight>
-            );
-        },
-
-        getRowDataCount : function() {
-            return this.rowData.length - 1;
-        },
-        getFirstRecord : function() {
-            return this.rowData[0];
-        },
-        getLastRecord : function() {
-            this.rowData[this.rowData.length - 1];
-        },
-        getPreviousRecord : function(rowID) {
-            var record    = this.rowData[--rowID];
-            
-            if (record) {
-                return record;
-            }
-            else {
-                return null;
-                // this.rowData[this.rowData.length - 1];
-            }
-        },
-
-        getNextRecord : function(rowID) {
-            // console.log(rowID);
-            // console.log(this.rowData);
-            var record    = this.rowData[++rowID];
-            if (record) {
-                return record;
-            }
-            else {
-                return null;
-                // this.rowData[0];
-            }
-        },
-        _pressRow: function(rowID) {
-            // TODO: Setup color for selected item
-            var record    = this.rowData[rowID],
-                isDir     = (record.type == 'dir'),
-                navigator = this.props.navigator,
-                cmp;
-
-            // console.log(record);
-
-
-            if (isDir) {
-                title = record.name + '/';
-                cmp   = generateView(record);
-
-                navigator.push({
-                    title     : title,
-                    component : cmp
-                });
-            }
-            else {
-                this.loadModFile(record, rowID);                
-            }
-        },
-
-        // Todo:  Clean this method up. Shit, it's a mess!
-        loadModFile : function(record, rowID) {
-            // console.log(files);
-            //gger;
-            
-            var navigator = this.props.navigator;
-            
-            // console.log(record.path);
-            MCModPlayerInterface.loadFile(
-                record.path,
-                //failure
-                (data) => {
-                    alert('Apologies. This file could not be loaded.');
-                    console.log(data);
-                },        
-                //success
-                (modObject) => {
-                    if (modObject) {
-
-                        modObject.path = record.path;
-
-                        var fileName = modObject.path.split('/'),
-                            rtBtnText,
-                            rtBtnHandler;
-
-                        fileName = fileName[fileName.length - 1];
-
-                        modObject.fileName = fileName;
-                       
-                        window.mainNavigator.push({
-                            title            : 'Player',
-                            component        : ListPlayer,
-                            componentConfig  : {
-                                ownerList : this,
-                                modObject : modObject,
-                                patterns  : modObject.patterns
-                            }
-                        });
-  
-                    }
-                    else {
-                        alert('Woah. Something hit the fan!');
-                    }
-
-                }
-            );
-
+            rowData.push(name);
         }
-    });
-};
+
+        return rowData;
+
+    },
+
+    getInitialState: function() {
+        var daters     = this.props.rowData,
+            dataSource = new ListView.DataSource({
+                rowHasChanged: function(r1, r2) {
+                    var index = rowData.indexOf(r1);
+                    return (typeof daters[index].isPlaying != 'undefined'); 
+                }
+            }),
+            rowData;
+            
+        
+        if (daters) {
+            rowData = this.extractNamesForRow(daters);
+
+            var dSrc = dataSource.cloneWithRows(rowData);
+            return {
+                dataSource : dSrc
+            };
+
+        }  
+
+        return {};
+    },
+
+    setRecordIsPlaying: function(rowID, isPlaying) {
+        // debugger;
+        var rawData = this.props.rowData,
+            record  = rawData[rowID],
+            len     = rawData.length,
+            i       = 0, 
+            r,
+            rowData;
+            
+        for (; i < len; i++) {
+            if (rawData[i].isPlaying) {
+                rawData[i].isPlaying = false;
+            };
+        }
+
+        if (record) {
+            record.isPlaying = isPlaying;
+
+            rowData = this.extractNamesForRow(rawData);
+
+            this.setState({
+                dataSource : this.state.dataSource.cloneWithRows(rowData)
+            });
+        } 
+    },
+
+    componentWillMount: function() {
+        this._pressData = {};
+
+        // this.getDirectories();
+    },
+
+    render: function() {
+        return (
+            <ListView 
+                style={styles.listView} 
+                dataSource={this.state.dataSource} 
+                initialListSize={30} 
+                pageSize={30} 
+                scrollRenderAheadDistance={100} 
+                renderRow={this._renderRow}
+            />
+        );
+    },
+
+    _renderRow: function(rowData, sectionID, rowID) {
+        
+        var record      = this.props.rowData[rowID],
+            isDir       = (record.type == 'dir'),
+            prefix      = null,
+            folder      = '\uE805',
+            vgmIcon     = '\uE80A',
+            playingIcon = '\uE80D',
+            emptyIcon   = '\uE999';
+
+        if (isDir) {
+            prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
+        }
+        else if (record.isPlaying) {
+            prefix = <Text style={styles.rowPrefix}>{playingIcon}</Text>;
+        }
+        else {
+            prefix = <Text style={styles.rowPrefixHidden}>{playingIcon}</Text>;
+        }
+       
+        return (
+            <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => this._pressRow(rowID)}>
+                <View>
+                    <View style={styles.row}>
+                        {prefix}
+                        
+                        <Text style={styles.rowText}>{rowData}</Text>
+
+                    </View>
+                    <View style={styles.separator} />
+                </View>
+            </TouchableHighlight>
+        );
+    },
+
+    getRowDataCount : function() {
+        return this.props.rowData.length - 1;
+    },
+    getFirstRecord : function() {
+        return this.props.rowData[0];
+    },
+    getLastRecord : function() {
+        this.props.rowData[this.props.rowData.length - 1];
+    },
+    getPreviousRecord : function(rowID) {
+        var record    = this.props.rowData[--rowID];
+        
+        if (record) {
+            return record;
+        }
+        else {
+            return null;
+        }
+    },
+
+    getNextRecord : function(rowID) {
+        var record    = this.props.rowData[++rowID];
+        if (record) {
+            return record;
+        }
+        else {
+            return null;
+        }
+    },
+
+    _pressRow: function(rowID) {
+        var props = this.props;
+
+        props.onRowPress(props.rowData[rowID], props.navigator, this);
+    }
+});
+
 
 
 var styles = StyleSheet.create({
@@ -366,6 +244,4 @@ var styles = StyleSheet.create({
     }
 });
 
-module.exports = generateView({
-    path  : null 
-});
+module.exports = BrowseView;
