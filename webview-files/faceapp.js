@@ -268,13 +268,17 @@ function render() {
 function u(numParticles, showLines, particleSize) {
 
     if (numParticles == null) {
-        numParticles = 50;
+        numParticles = 75;
         showLines = false;
     }
     else {
         showLines = true;
+        pMaterial.color.r = 0
+        pMaterial.color.g = 0 
+        pMaterial.size    = 10;
+        pMaterial.color.b = 1;
     }
-    
+
     particleCount = particles.drawcalls[ 0 ].count = numParticles;
 
     if (showLines == null) {
@@ -286,15 +290,14 @@ function u(numParticles, showLines, particleSize) {
 
     if (particleSize == null) {
         pMaterial.size = 3;
-        pMaterial.color.red = 1 
-        pMaterial.color.green = 1 
-        pMaterial.color.blue = 1
+        pMaterial.color.r = 1 
+        pMaterial.color.g = 1 
+        pMaterial.color.b = 1
     }
     else {
-        pMaterial.color.red = 1 
-        pMaterial.color.green = 1 
-        pMaterial.color.blue = 0
-        pMaterial.size = particleSize;
-
+        pMaterial.color.r = 0;
+        pMaterial.color.g = 1;
+        pMaterial.color.b = 0;
+        pMaterial.size    = particleSize;
     }
 }

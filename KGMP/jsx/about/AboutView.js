@@ -183,7 +183,7 @@ var AboutView = React.createClass({
 
 
         if (chan3Note == 'D#6') {
-            jsCallArgs[0] = 200;
+            jsCallArgs[0] = 250;
         }
         else {
             jsCallArgs[0] = null;

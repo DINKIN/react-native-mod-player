@@ -1,0 +1,10 @@
+- enable background app audio
+- change orientation to portrait only
+- rename main.m to main.mm
+- copy fonts to project
+- add fonts to info.plist
+- add custom class files
+- add sound libraries
+- Ensure header search paths are updated
+- move JSX source to jsx/
+- update app delegate accordingly.
