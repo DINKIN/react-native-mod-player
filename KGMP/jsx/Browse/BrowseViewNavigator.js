@@ -2,7 +2,7 @@
 
 var React      = require('react-native'),
     BrowseView = require('./BrowseView'),
-    ListPlayer = require('./player/ListPlayer'),
+    ListPlayer = require('../player/ListPlayer'),
     initialPaths;
 
 var {

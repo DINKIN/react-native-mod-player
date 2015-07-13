@@ -79,7 +79,7 @@ module.exports = StyleSheet.create({
 
     imageContainer : {
         height          : 498, 
-        flexDirection   : 'row',
+        // flexDirection   : 'row',
         overflow        : 'hidden',
         // width       : 375,
         alignSelf       : 'stretch',  // This doesn't effing work!

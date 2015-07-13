@@ -66,10 +66,7 @@ class RandomPlayer extends AbstractPlayer {
                 state.playingSong = 0;
                 this.setState(state);
 
-
-                if (callback) {
-                    callback();
-                }
+                callback && callback();
             });
         }
         else {

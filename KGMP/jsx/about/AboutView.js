@@ -1,8 +1,8 @@
 
 var React                 = require('react-native'),
-    BridgedWKWebView      = require('./BridgedWKWebView'),
-    CloseButton           = require('../player/CloseButton'),
     MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
+    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    CloseButton           = require('../player/CloseButton'),
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
    
 
@@ -33,34 +33,33 @@ var styles = StyleSheet.create({
 });
 
 
+//TODO: Convert to ES6
 var AboutView = React.createClass({
     webViewRef : 'webview',
-    patterns : null,
-    modObject : null,
-
-    getInitialState: function() {
-        return {
-        // url: DEFAULT_URL,
-            localUrl : 'cubetest.html'
-        };
-    },
+    patterns   : null,
+    modObject  : null,
 
     render: function() {
-        var state = this.state;
+        var modObject = this.props.modObject;
 
-        if (! this.state.modFileLoaded) {
-            this.loadModFile();
-        }
+        this.modObject = modObject;
+        this.patterns  = modObject.patterns;
+        // console.log(modObject)
 
-        var webView = state.modFileLoaded ? (<BridgedWKWebView ref={"webView"} style={styles.webView}/>) : null;
-
+        // this.state.modFileLoaded = true;
+        // this.setState(this.state);
+        setTimeout(() => {
+            MCModPlayerInterface.resume(() => {
+                this.registerPatternUpdateHandler();
+            });
+        }, 1000);
 
         return (
             <View style={styles.container}>
                 <View style={styles.closeButton}>
                     <CloseButton onPress={this.onClosebuttonPress}/>
                 </View>
-                {webView}
+                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"cubetest.html"}/>
             </View>
         );
     },
@@ -108,19 +107,6 @@ var AboutView = React.createClass({
         );
     },
 
-    afterLoadModFile : function(modObject) {
-        this.modObject = modObject;
-        this.patterns  = modObject.patterns;
-        // console.log(modObject)
-
-        this.state.modFileLoaded = true;
-        this.setState(this.state);
-        setTimeout(() => {
-            MCModPlayerInterface.resume(() => {
-                this.registerPatternUpdateHandler();
-            });
-        }, 1500);
-    },
 
     onClosebuttonPress : function() {
         this.deregisterPatternUpdateHandler();

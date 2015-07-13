@@ -23,7 +23,7 @@ var styles = StyleSheet.create({
         alignSelf  : 'stretch',
 
         // height : 374,
-        padding : 20
+        padding : 10
     },
     title : {
         fontFamily      : 'PerfectDOSVGA437Win',
@@ -75,37 +75,21 @@ module.exports  = React.createClass({
         return (
             <View style={styles.fileSummary}>
                 <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Name: </Text>
+                    <Text style={styles.title}>Song Title: </Text>
                     <Text style={styles.text}>{data.name}</Text>
                 </View>
+
+                <View style={styles.summaryRow}>
+                    <Text style={styles.title}>Tracker: </Text>
+                    <Text style={styles.text}>{data.tracker}</Text>
+                </View>  
 
 
                 <View style={styles.summaryRow}>
                     <Text style={styles.title}>Type: </Text>
                     <Text style={styles.text}>{data.type}</Text>
                 </View>
-
-                <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Patterns: </Text>
-                    <Text style={styles.text}>{data.numPatterns}</Text>
-                </View>                
-
-                <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Tracks: </Text>
-                    <Text style={styles.text}>{data.tracks}</Text>
-                </View>   
-
-                <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Insruments: </Text>
-                    <Text style={styles.text}>{data.instruments}</Text>
-                </View>  
-
-
-                <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Samples: </Text>
-                    <Text style={styles.text}>{data.samples}</Text>
-                </View>  
-
+                {/* 
 
                 <View style={styles.summaryRow}>
                     <Text style={styles.title}>Speed: </Text>
@@ -119,38 +103,50 @@ module.exports  = React.createClass({
                 </View>  
 
                 <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Length: </Text>
-                    <Text style={styles.text}>{data.length}</Text>
-                </View>  
+                     <View>
+                        <Text style={styles.title}>Tracks: </Text>
+                        <Text style={styles.text}>{data.tracks}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Insruments: </Text>
+                        <Text style={styles.text}>{data.instruments}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Samples: </Text>
+                        <Text style={styles.text}>{data.samples}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Patterns: </Text>
+                        <Text style={styles.text}>{data.numPatterns}</Text>
+                    </View>
+
+                </View>                
+
+
 
                 <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Tracker: </Text>
-                    <Text style={styles.text}>{data.tracker}</Text>
-                </View>  
 
+                </View>   
 
                 <View style={styles.summaryRow}>
                     <Text style={styles.title}>Current Order: </Text>
                     <Text style={styles.text}>{state.order}</Text>
                 </View>  
                 
+
+
                 <View style={styles.summaryRow}>
                     <Text style={styles.title}>Current Pattern: </Text>
                     <Text style={styles.text}>{state.pattern}</Text>
                 </View>  
+              
 
-                <View style={styles.summaryRow}>
-                    <Text style={styles.title}>Pattern Rows: </Text>
-                    <Text style={styles.text}>{state.numRows}</Text>
-                </View>                  
-                
                 <View style={styles.summaryRow}>
                     <Text style={styles.title}>Current Row: </Text>
                     <Text style={styles.text}>{state.row}</Text>
                 </View>
 
 
-                {/* 
                 <View style={styles.soundFormat}>
                     <Text style={styles.text}>Format: </Text>
                     <TouchableHighlight 

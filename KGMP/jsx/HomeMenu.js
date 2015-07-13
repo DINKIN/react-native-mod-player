@@ -1,5 +1,5 @@
 var React         = require('react-native'),
-    BrowseView    = require('./BrowseViewNavigator'),
+    BrowseView    = require('./Browse/BrowseViewNavigator'),
     RandomPlayer  = require('./player/RandomPlayer'),
     BaseComponent = require('./BaseComponent'),
     AboutView     = require('./about/AboutView.js');
@@ -184,7 +184,7 @@ Object.assign(HomeMenu.prototype, {
             this.props.navigator.push({
                 title          : 'Browse Groups',
                 component      : BrowseView,
-                transitionType : 'PushFromRight'
+                // transitionType : 'PushFromRight'
             });
         },
         
@@ -193,11 +193,33 @@ Object.assign(HomeMenu.prototype, {
         },
         
         onAboutPress : function() {
-            window.mainNavigator.push({
-                title          : 'About',
-                component      : AboutView,
-                transitionType : 'PushFromRight'
-            });        
+
+
+            MCModPlayerInterface.loadModusAboutMod(
+                //failure
+                (data) => {
+                    alert('Apologies. This file could not be loaded.');
+                    console.log(data);
+                },        
+                //success
+                (modObject) => {
+                    // debugger;
+                    if (modObject) {
+                        window.mainNavigator.push({
+                            title           : 'About',
+                            component       : AboutView,
+                            componentConfig : {
+                                modObject : modObject
+                            }
+                        });
+
+                    }
+                    else {
+                        alert('Woah. Something hit the fan!');
+                    }
+
+                }
+            );        
         },
         
         onSearchPress : function() {

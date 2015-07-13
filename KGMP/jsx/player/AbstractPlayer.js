@@ -11,14 +11,16 @@ var {
 } = React;
 
 var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
+    RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./SummaryCard'),
     MusicControlButton    = require('./MusicControlButton'),
-    RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     PatternView           = require('./PatternView'),
     RowNumberView         = require('./RowNumberView'),
     styles                = require('./AbstractPlayerStyles'),
+    CloseButton           = require('./CloseButton'),
     BaseComponent         = require('../BaseComponent'),
-    CloseButton           = require('./CloseButton');
+    BridgedWKWebView      = require('../Extension/MCBridgedWebView');
+
 
 
 class AbstractPlayer extends BaseComponent {
@@ -82,6 +84,8 @@ class AbstractPlayer extends BaseComponent {
 
                 <View style={styles.imageContainer}>
                     <SummaryCard data={modObject} ref={"summaryCard"}/>
+                    <BridgedWKWebView ref={"webView"} style={{flex:1}} localUrl={"cubetest.html"}/>
+
                     {/*
                     <View style={[styles.rowNumberz, newTopPosition]}>
                         <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>

@@ -33,10 +33,9 @@
     _eventDispatcher = eventDispatcher;
     
     WKWebViewConfiguration *wkConfig = [[WKWebViewConfiguration alloc] init];
-    [wkConfig.userContentController addScriptMessageHandler:self name:@"interOp"];
+    [wkConfig.userContentController addScriptMessageHandler:self name:@"bridge"];
 
     _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration:wkConfig];
-    
     
 //    _webView.delegate = self;
     
@@ -49,10 +48,8 @@
 
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    NSDictionary *sentData = (NSDictionary*)message.body;
-    long aCount = [sentData[@"count"] integerValue];
-    aCount++;
-    [_webView evaluateJavaScript:[NSString stringWithFormat:@"storeAndShow(%ld)", aCount] completionHandler:nil];
+    [_eventDispatcher sendInputEventWithName:@"WKWebViewBridgeEvent" body:message.body];
+
 }
 
 
@@ -60,38 +57,14 @@
 - (void)executeJSCall:(NSString *)method {// method:(NSString *)method arguments:(NSArray *)arguments {
     NSLog(@"executeJSCall");
     
-//    [_webView stringByEvaluatingJavaScriptFromString:@"alert('here!');"];
-    
-    
-//        NSError *error;
-//    NSString *argsString = RCTJSONStringify(arguments, &error);
-//    if (!argsString) {
-//      RCTReportError(onComplete, @"Cannot convert argument to string: %@", error);
-//      return;
-//    }
-//    NSString *execString = [NSString stringWithFormat:@"JSON.stringify(require('%@').%@.apply(null, %@));", name, method, argsString];
-//    if (ret.length == 0) {
-//      RCTReportError(onComplete, @"Empty return string: JavaScript error running script: %@", execString);
-//      return;
-//    }
-//
-//    id objcValue = RCTJSONParse(ret, &error);
-//    if (!objcValue) {
-//      RCTReportError(onComplete, @"Cannot parse json response: %@", error);
-//      return;
-//    }
-//
-
-  
   [_webView evaluateJavaScript:method completionHandler:^(id result, NSError * error) {
       NSLog(@"Result -> %@", result);
       NSLog(@"Error -> %@", error);
   }];
   
 
-    
-
 }
+
 
 
 

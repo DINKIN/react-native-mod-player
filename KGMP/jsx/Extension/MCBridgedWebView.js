@@ -226,6 +226,8 @@ var BridgedWebView = React.createClass({
     }
 });
 
+var black = 'rgba(0,0,0,0)',
+    center = 'center';
 
 var styles = StyleSheet.create({
     container: {
@@ -235,13 +237,13 @@ var styles = StyleSheet.create({
     },
     errorContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor : 'rgba(0,0,0,0)',
+        justifyContent: center,
+        alignItems: center,
+        backgroundColor : black,
     },
     errorText: {
         fontSize: 14,
-        textAlign: 'center',
+        textAlign: center,
         marginBottom: 2,
     },
     errorTextTitle: {
@@ -254,13 +256,13 @@ var styles = StyleSheet.create({
         flex: 0, // disable 'flex:1' when hiding a View
     },
     loadingView: {
-        backgroundColor: BGWASH,
+        backgroundColor: black,
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: center,
+        alignItems: center,
     },
     webView: {
-        backgroundColor: '#ffffff',
+        backgroundColor: black,
     }
 });
 
