@@ -45,12 +45,11 @@ RCT_EXPORT_METHOD(getBundlePath:(RCTResponseSenderBlock)callback) {
     NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
     
     
-    NSArray *enumerator = [fileManager
-                         contentsOfDirectoryAtURL   : directoryUrl
-                         includingPropertiesForKeys : keys
-                         options : 0
-                         error   : nil
-                        ];
+    NSArray *enumerator = [fileManager contentsOfDirectoryAtURL   : directoryUrl
+                                       includingPropertiesForKeys : keys
+                                       options                    : 0
+                                       error                      : nil
+                          ];
     
     
     NSArray *pathSplit = [path componentsSeparatedByString:@"/"];

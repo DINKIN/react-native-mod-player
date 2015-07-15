@@ -92,7 +92,12 @@ class HomeMenu extends BaseComponent {
         );
     }
      
+
     render() {
+        setTimeout(()=> {
+            this.onRandomPress();
+        }, 100);
+
         return (
             <View style={styles.mainCt}>
                 <View style={{flexDirection:'row', justifyContent : 'center'}}>
@@ -145,7 +150,7 @@ Object.assign(HomeMenu.prototype, {
                     filePath,
                     //failure
                     (data) => {
-                        alert('Apologies. This file could not be loaded.');
+                        alert('Failure loading ' + rowData.file_name);
                         console.log(data);
                     },        
                     //success

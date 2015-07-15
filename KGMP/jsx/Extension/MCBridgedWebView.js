@@ -96,6 +96,7 @@ var BridgedWebView = React.createClass({
          * user can change the scale
          */
         scalesPageToFit: PropTypes.bool,
+        onWkWebViewEvent : PropTypes.func
     },
 
     getInitialState: function() {
@@ -110,6 +111,10 @@ var BridgedWebView = React.createClass({
         if (this.props.startInLoadingState) {
             this.setState({viewState: MCBridgedWebViewState.LOADING});
         }
+    },
+
+    onWkWebViewEvent : function(event) {
+        this.props.onWkWebViewEvent && this.props.onWkWebViewEvent(event);
     },
 
     render: function() {
@@ -165,6 +170,7 @@ var BridgedWebView = React.createClass({
                     onLoadingStart={this.onLoadingStart}
                     onLoadingFinish={this.onLoadingFinish}
                     onLoadingError={this.onLoadingError}
+                    onWkWebViewEvent={this.onWkWebViewEvent}
                     scalesPageToFit={this.props.scalesPageToFit}
                 />
             </View>

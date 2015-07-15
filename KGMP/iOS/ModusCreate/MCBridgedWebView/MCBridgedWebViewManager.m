@@ -28,6 +28,15 @@ RCT_EXPORT_VIEW_PROPERTY(shouldInjectAJAXHandler, BOOL);
     return [[MCBridgedWebView alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
 }
 
+-(NSDictionary *) customDirectEventTypes {
+    NSDictionary *eventTypes = @{
+        @"wkWebViewEvent" : @{
+            @"registrationName" : @"onWkWebViewEvent"
+        }
+    };
+
+    return eventTypes;
+}
 
 
 RCT_EXPORT_METHOD(exec:(NSNumber *)reactTag JSCall:(NSString *)jsCall)

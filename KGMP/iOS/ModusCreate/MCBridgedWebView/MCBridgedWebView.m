@@ -40,6 +40,7 @@
 //    _webView.delegate = self;
     
 //    _executor = [[RCTWebViewExecutor alloc] initWithWebView:_webView];
+    _webView.scrollView.scrollEnabled = false;
     
     [self addSubview:_webView];
   }
@@ -48,8 +49,14 @@
 
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
-    [_eventDispatcher sendInputEventWithName:@"WKWebViewBridgeEvent" body:message.body];
+    NSDictionary *event = @{
+        @"target" : self.reactTag,
+        @"body"   : message.body
+    };
+    
+    [_eventDispatcher sendInputEventWithName:@"wkWebViewEvent" body:event];
 
+    NSLog(@"wkwv message %@", message.body);
 }
 
 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>pattern_view.html</title>
+        <style>
+                body {
+                    color: #FFFFFF;
+                    font-family:Monospace;
+                    font-size:13px;
+                    background-color: #000000;
+                    margin: 0px;
+                    overflow: hidden;
+                    scroll: none;
+                }
+                div {
+                    white-space: nowrap;
+                    color: white;
+                    font-weight: bold;
+                }
+                .highlight {
+                    color : red;
+                }
+                span {
+                    color: green;
+                    display: inline-block;
+                    width: 20px;
+                }
+                #indicator {
+                    height : 14px;
+                    position : absolute;
+                    width : 99.9%;
+                    border : 1px solid #FF0000;
+                }
+
+                #container {
+                    overflow-x: scroll;
+                    -webkit-transform-style: preserve-3d;
+                    transform-style: preserve-3d;
+
+                }
+                #main {
+                    height : 100vh;
+                    width  : 100vw;
+
+                    overflow-x: scroll;
+                }
+
+        </style>
+    </head>
+    <body>
+        <div id="main">
+            <div id="container"></div>
+        </div>
+        <div id="indicator"></div>
+
+        <script>
+            // These are here for speed. Reusable values to save RAM & CPU.
+            var divStart  = '<div>',
+                divEnd    = '</div>',
+                spanStart = '<span style="rowNumber">',
+                spanEnd   = '</span>',
+                pipe      = '|',
+                sixteen   = 16,
+                eleven    = 11,
+                six       = 6,
+                zero      = '0',
+                emptyString = '',
+                highlightClass = 'highlight',
+                transformPrefix = 'translate3d(0,',
+                transformSuffix = 'px,0)',
+                rowHeight = 14,
+                windowHeight,
+                targetTopPosition,
+                windowWidth,
+                windowCenterHeight,
+                bodyHeight,
+                indicatorEl;
+
+            var bridge,
+                patterns, // to be set by the bridge
+                currentPosition,
+                currentPattern,
+                currentRow,
+                currentRowEl,
+                containerEl;
+
+            var rp = function(p) {
+                patterns = JSON.parse(p);
+                bridge.postMessage('patReg');
+            };
+
+            var up = function(order, pattern, row) {
+                // container.innerHTML= order + ' ' + pattern + ' ' + row;
+
+                // Replace Pattern
+                // Todo: set position accordingly
+                if (pattern != currentPattern)  {
+                    currentRowEl = currentRow = null;
+
+                    currentPattern = pattern;
+
+                    var targetPattern = patterns[pattern],
+                        len = targetPattern.length,
+                        i = 0,
+                        innerHTML = '',
+                        hexVal;
+
+                    for (; i < len; i++) {
+                        hexVal = i.toString(sixteen).toUpperCase();
+
+                        // Padding
+                        if (i < sixteen) {
+                            hexVal = (zero + hexVal).substring(-1)
+                        }
+
+                        innerHTML += divStart + spanStart + hexVal  + spanEnd + pipe +  targetPattern[i] + divEnd;
+
+                    }
+
+                    containerEl.innerHTML = innerHTML;
+                    var position = (windowCenterHeight - (row * rowHeight)) - 6;
+
+                    containerEl.style.webkitTransform = transformPrefix + position + transformSuffix;
+                    return;
+
+                }
+
+                // Highlight row
+                // TODO: animate movement
+                if (row != currentRow) {
+                    if (currentRowEl) {
+                        currentRowEl.className = emptyString;
+                    }
+
+                    currentRowEl = container.childNodes[row];
+                    currentRowEl.className = highlightClass;
+                    currentRow = row;
+
+                    var position = (windowCenterHeight - (row * rowHeight)) - 6;
+
+                    containerEl.style.webkitTransform = transformPrefix + position + transformSuffix;
+                }
+            };
+
+
+
+            var init = function() {
+                bridge = window.webkit.messageHandlers.bridge;
+
+                bridge.postMessage('init');
+
+                containerEl = document.getElementById('container');
+                // containerEl.innerHTML='ready';
+
+                windowWidth  = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+                indicatorEl = document.getElementById('indicator');
+
+                windowCenterHeight = windowHeight / 2;
+                targetTopPosition  = windowCenterHeight - 7;
+                indicatorEl.style.top =  targetTopPosition +'px';
+
+
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        </script>
+    </body>
+</html>

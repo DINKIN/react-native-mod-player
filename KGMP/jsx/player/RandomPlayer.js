@@ -91,7 +91,7 @@ class RandomPlayer extends AbstractPlayer {
 
     loadFile(rowData) {
         this.patterns = {};
-
+        this.patternsRegistered = false;
         var filePath = window.bundlePath + rowData.path + rowData.file_name;
 
         MCModPlayerInterface.loadFile(
@@ -109,13 +109,31 @@ class RandomPlayer extends AbstractPlayer {
 
                     // this.forceUpdate();   
 
-                    this.patterns = modObject.patterns;;
-
+                    this.patterns = modObject.patterns;
+                    this.onWkWebViewInit();
                     this.playTrack();
                 }
             }
         );
     }
+    // Register patterns
+    onWkWebViewInit() {
+        console.log('onWkWebViewInit');
+
+        var patterns = JSON.stringify(this.modObject.patterns);
+
+        this.refs.webView.execJsCall('rp(\'' + patterns + '\')');
+    }
+
+    onWkWebViewPatternsRegistered() {
+        console.log('onWkWebViewPatternsRegistered');
+        this.patternsRegistered = true;
+        this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
+        // debugger;
+    }
+
+
+
 }
 
 

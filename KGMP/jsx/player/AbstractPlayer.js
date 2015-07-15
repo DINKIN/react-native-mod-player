@@ -68,7 +68,6 @@ class AbstractPlayer extends BaseComponent {
             }
         }
         */
-
         return (
             <View style={styles.container}>
                 <CloseButton onPress={this.onClosebuttonPress} />
@@ -84,7 +83,7 @@ class AbstractPlayer extends BaseComponent {
 
                 <View style={styles.imageContainer}>
                     <SummaryCard data={modObject} ref={"summaryCard"}/>
-                    <BridgedWKWebView ref={"webView"} style={{flex:1}} localUrl={"cubetest.html"}/>
+                    <BridgedWKWebView ref={"webView"} style={{flex:1}} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
 
                     {/*
                     <View style={[styles.rowNumberz, newTopPosition]}>
@@ -206,6 +205,7 @@ Object.assign(AbstractPlayer.prototype, {
     rowID     : null,
     modObject : null, // used to override the props. TODO= figure out how to overwite props
 
+    patternsRegistered : null, // used to check if patterns are registered by wkwebview
 
     commandCenterEventHandler : null, 
     patternUpdateHandler      : null,
@@ -236,6 +236,11 @@ Object.assign(AbstractPlayer.prototype, {
         seekFwd   : () => {} 
     },
 
+    wkWebViewEventMatrix : {
+        init   : 'onWkWebViewInit',
+        patReg : 'onWkWebViewPatternsRegistered'
+    },
+
     bindableMethods : {
         onClosebuttonPress : function() {
             window.mainNavigator.pop();
@@ -264,7 +269,14 @@ Object.assign(AbstractPlayer.prototype, {
             this.onButtonPress(event.eventType);
         },
         
-        onPatternUpdateEvent : function(position) {
+        onPatternUpdateEvent : function(pos) {
+            var comma = ',';
+            console.log('onPatternUpdateEvent')
+            console.log(pos)
+            this.refs.webView.execJsCall('up(' + pos[0] + comma + pos[1] + comma + pos[2] + ')');
+
+
+            return;
             this.refs.summaryCard.setState({
                 order   : position[0],
                 pattern : position[1],
@@ -311,7 +323,38 @@ Object.assign(AbstractPlayer.prototype, {
                 this.setState(state);
             }
 
+        },
+
+        onWkWebViewEvent : function(event) {
+            var body   = event.nativeEvent.body,
+                matrix = this.wkWebViewEventMatrix;
+
+            console.log('WK WEBVIEW EVENT:');
+            console.log(body);
+
+            if (matrix[body]) {
+                this[matrix[body]](body);
+            }
+        },
+
+        // Register patterns
+        onWkWebViewInit : function() {
+            console.log('onWkWebViewInit');
+
+            var patterns = JSON.stringify(this.modObject.patterns);
+
+            this.refs.webView.execJsCall('rp(\'' + patterns + '\')');
+        },
+
+        onWkWebViewPatternsRegistered : function() {
+            console.log('onWkWebViewPatternsRegistered');
+            this.patternsRegistered = true;
+            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
+            // debugger;
         }
+
+
+
     }
 });
 
