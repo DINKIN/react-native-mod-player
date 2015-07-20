@@ -16,7 +16,7 @@ RCT_EXPORT_MODULE();
 - (instancetype) init {
     if (self = [super init]) {
         [self configureCommandCenter];
-            NSLog(@"MCModPlayerInterface init");
+//        NSLog(@"MCModPlayerInterface init");
         
         MCModPlayerInterface *interface = self;
 //        NSString *formatString = @"%i";

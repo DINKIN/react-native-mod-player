@@ -22,6 +22,9 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     BridgedWKWebView      = require('../Extension/MCBridgedWebView');
 
 
+var updateStart = 'up(',
+    updateEnd   = ')'
+    comma       = ',';
 
 class AbstractPlayer extends BaseComponent {
 
@@ -270,10 +273,9 @@ Object.assign(AbstractPlayer.prototype, {
         },
         
         onPatternUpdateEvent : function(pos) {
-            var comma = ',';
-            console.log('onPatternUpdateEvent')
-            console.log(pos)
-            this.refs.webView.execJsCall('up(' + pos[0] + comma + pos[1] + comma + pos[2] + ')');
+            // console.log('onPatternUpdateEvent')
+            // console.log(pos)
+            this.refs.webView.execJsCall(''.concat(updateStart , pos[1], comma, pos[2], updateEnd));
 
 
             return;
@@ -341,15 +343,22 @@ Object.assign(AbstractPlayer.prototype, {
         onWkWebViewInit : function() {
             console.log('onWkWebViewInit');
 
-            var patterns = JSON.stringify(this.modObject.patterns);
+            var newModObj = {},
+                modObject = this.modObject;
 
-            this.refs.webView.execJsCall('rp(\'' + patterns + '\')');
+            newModObj.patterns    = modObject.patterns;
+            newModObj.patternOrds = modObject.patternOrds;
+            newModObj.currentPat  = modObject.currentPat;
+            
+            newModObj = JSON.stringify(newModObj);
+
+            this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
         },
 
         onWkWebViewPatternsRegistered : function() {
             console.log('onWkWebViewPatternsRegistered');
             this.patternsRegistered = true;
-            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
+            // this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
             // debugger;
         }
 

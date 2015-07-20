@@ -116,14 +116,7 @@ class RandomPlayer extends AbstractPlayer {
             }
         );
     }
-    // Register patterns
-    onWkWebViewInit() {
-        console.log('onWkWebViewInit');
 
-        var patterns = JSON.stringify(this.modObject.patterns);
-
-        this.refs.webView.execJsCall('rp(\'' + patterns + '\')');
-    }
 
     onWkWebViewPatternsRegistered() {
         console.log('onWkWebViewPatternsRegistered');
