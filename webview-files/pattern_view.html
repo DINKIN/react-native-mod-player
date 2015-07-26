@@ -13,46 +13,58 @@
                     margin: 0px;
                     overflow: hidden;
                     scroll: none;
+                    -webkit-user-select: none;
                 }
                 div {
                     white-space: nowrap;
                     color: white;
                     font-weight: bold;
                 }
+
                 .highlight {
-                    color : red;
+                    color : yellow;
                 }
                 span {
                     color: green;
                     display: inline-block;
-                    width: 20px;
+                    width: 18px;
                 }
+
                 #indicator {
-                    height : 14px;
+                    height : 13px;
                     position : absolute;
                     width : 99.9%;
-                    border : 1px solid #FF0000;
+                    border-top : 1px solid #FFFF00;
+                    border-bottom : 1px solid #FFFF00;
                 }
 
-                #container {
-                    overflow-x: scroll;
+                .container {
+                    overflow-x: visible;
                     -webkit-transform-style: preserve-3d;
                     transform-style: preserve-3d;
-
                 }
                 #main {
                     height : 100vh;
                     width  : 100vw;
-
                     overflow-x: scroll;
+                    overflow-y: hidden;
                 }
+
+                .hidden {
+                    display : none;
+                }
+
+                #width-holder {
+                    height:  0px;
+                    /*border: 2px solid #0000FF;*/
+                }
+
 
         </style>
     </head>
     <body>
-        <div id="main">
-            <div id="container"></div>
-        </div>
+        <div id="main"><div id="width-holder"></div></div>
+
         <div id="indicator"></div>
 
         <script>
@@ -60,23 +72,27 @@
             var divStart  = '<div>',
                 divEnd    = '</div>',
                 spanStart = '<span style="rowNumber">',
-                spanEnd   = '</span>',
+                spanEnd   = '</span>|',
                 pipe      = '|',
                 sixteen   = 16,
                 eleven    = 11,
                 six       = 6,
+                zeroNumber = 0,
                 zero      = '0',
-                emptyString = '',
-                highlightClass = 'highlight',
+                emptyString     = '',
+                highlightClass  = 'highlight',
                 transformPrefix = 'translate3d(0,',
                 transformSuffix = 'px,0)',
-                rowHeight = 14,
-                windowHeight,
-                targetTopPosition,
-                windowWidth,
-                windowCenterHeight,
-                bodyHeight,
-                indicatorEl;
+                rowHeight       = 14,
+                negativeOne     = -1,
+                // containerStart  = '<div class="container">',
+                // containerEnd    = '</div>',
+                patternElements = {},
+                classNameContainer = 'container',
+                classNameContainerHidden = 'container hidden',
+                intervalID                = null,
+                patternOrds               = [];
+                
 
             var bridge,
                 patterns, // to be set by the bridge
@@ -84,64 +100,175 @@
                 currentPattern,
                 currentRow,
                 currentRowEl,
-                containerEl;
+                modObject,
+                windowHeight,
+                targetTopPosition,
+                windowWidth,
+                windowCenterHeight,
+                bodyHeight,
+                indicatorEl,
+                mainEl,
+                strz,
+                widthHolderEl;
 
-            var rp = function(p) {
-                patterns = JSON.parse(p);
+            var cls = function() {
+                if (intervalID != null) {
+                    window.clearInterval(intervalID);
+                    intervalID = null;
+                }
+                patternElements[currentPattern].className = classNameContainerHidden;
+
+            }
+
+            var fillPatternElementBuffer = function() {
+                if (patternOrds.length == 0) {
+                    window.clearInterval(intervalID);
+                    intervalID = null;
+                    return;
+                }
+
+                var patternNumber = patternOrds.shift();
+                    
+                if (patternElements[patternNumber]) {
+                    console.log('DUP ' + patternNumber + ' ... skipping ...');
+                    return;
+                }
+
+                console.log('CREATE pattern ' + patternNumber)
+                createPatternEl(patternNumber);
+            }
+
+            var rp = function(str, x) {
+                strz = str;
+            
+                if (intervalID != null) {
+                    window.clearInterval(intervalID);
+                    intervalID = null;
+                }
+
+
+                var childNodes = mainEl.childNodes;
+
+           
+                while (childNodes.length >= 2) {
+                    // console.log('remove');
+                    // console.log(childNodes[childNodes.length - 1])
+                    mainEl.removeChild(childNodes[childNodes.length - 1]);
+                }
+
+
+                console.log('rp()')
+                strz = str;
+
+                modObject = JSON.parse(str);
+                patterns = modObject.patterns;
+
+                patternElements = {};
+                currentPattern  = currentRow = currentPosition = null;
+
+                patternOrds.length = 0;
+
+                patternOrds = patternOrds.concat(modObject.patternOrds);
+
+
+                // Add a first pattern
+                up(patternOrds.shift(), zeroNumber);
+                // Add a second pattern immediately for performance
+                createPatternEl(patternOrds.shift()); 
+
+                intervalID = setInterval(fillPatternElementBuffer, 250);
                 bridge.postMessage('patReg');
             };
 
-            var up = function(order, pattern, row) {
-                // container.innerHTML= order + ' ' + pattern + ' ' + row;
+            var generatePatternString = function(patternNumber) {
+                var targetPattern = patterns[patternNumber],
+                    len = targetPattern.length,
+                    i   = zeroNumber,
+                    str = '',
+                    hexVal;
+
+                for (; i < len; i++) {
+                    hexVal = i.toString(sixteen).toUpperCase();
+
+                    // Padding
+                    if (i < sixteen) {
+                        hexVal = (zero + hexVal).substring(negativeOne)
+                    }
+
+                    // Tab indented to mimic HTML
+                    str = str.concat(divStart, 
+                                        spanStart, hexVal, spanEnd, targetPattern[i], 
+                                    divEnd);
+
+                }
+                return str;
+            }
+
+            var createPatternEl = function(patternNumber) {
+
+
+
+                var id = 'pattern-' + patternNumber,
+                    el = document.getElementById(id);
+
+                if (el) {
+                    mainEl.removeChild(el);
+                }
+
+                el = document.createElement('div');
+
+                el.className = classNameContainerHidden;
+                el.id        = id;
+                el.innerHTML = generatePatternString(patternNumber);
+
+                patternElements[patternNumber] = el;
+                mainEl.appendChild(el);
+
+                return el; 
+            }
+
+            var up = function(pattern, row) {
+                var patternEl = patternElements[pattern],
+                    position;
+
 
                 // Replace Pattern
-                // Todo: set position accordingly
                 if (pattern != currentPattern)  {
                     currentRowEl = currentRow = null;
 
+                    if (patternElements[currentPattern]) {
+                        patternElements[currentPattern].className = classNameContainerHidden;
+                    }
+
+                    if (! patternEl) {
+                        patternEl = createPatternEl(pattern);
+                    }
+
+                    patternEl.childNodes[patternEl.childNodes.length - 1].className = '';
                     currentPattern = pattern;
+                    row = 0;
+                }
 
-                    var targetPattern = patterns[pattern],
-                        len = targetPattern.length,
-                        i = 0,
-                        innerHTML = '',
-                        hexVal;
-
-                    for (; i < len; i++) {
-                        hexVal = i.toString(sixteen).toUpperCase();
-
-                        // Padding
-                        if (i < sixteen) {
-                            hexVal = (zero + hexVal).substring(-1)
-                        }
-
-                        innerHTML += divStart + spanStart + hexVal  + spanEnd + pipe +  targetPattern[i] + divEnd;
-
-                    }
-
-                    containerEl.innerHTML = innerHTML;
-                    var position = (windowCenterHeight - (row * rowHeight)) - 6;
-
-                    containerEl.style.webkitTransform = transformPrefix + position + transformSuffix;
+                if (! patternEl) {
                     return;
-
                 }
 
-                // Highlight row
-                // TODO: animate movement
-                if (row != currentRow) {
-                    if (currentRowEl) {
-                        currentRowEl.className = emptyString;
-                    }
+                position  = (windowCenterHeight - (row * rowHeight)) - six;
 
-                    currentRowEl = container.childNodes[row];
-                    currentRowEl.className = highlightClass;
-                    currentRow = row;
-
-                    var position = (windowCenterHeight - (row * rowHeight)) - 6;
-
-                    containerEl.style.webkitTransform = transformPrefix + position + transformSuffix;
+                if (currentRowEl) {
+                    currentRowEl.className = emptyString;
                 }
+
+                currentRowEl = patternEl.childNodes[row];
+                currentRowEl.className = highlightClass;
+                currentRow = row;
+
+                patternEl.style.webkitTransform = transformPrefix + position + transformSuffix;
+
+                if (row == 0) {
+                    patternEl.className = classNameContainer;
+                }
+
             };
 
 
@@ -149,21 +276,20 @@
             var init = function() {
                 bridge = window.webkit.messageHandlers.bridge;
 
-                bridge.postMessage('init');
-
-                containerEl = document.getElementById('container');
+                mainEl      = document.getElementById('main');
+                indicatorEl = document.getElementById('indicator');
+                widthHolderEl = document.getElementById('width-holder');
                 // containerEl.innerHTML='ready';
 
-                windowWidth  = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-                windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+                windowWidth  = Math.max(document.documentElement.clientWidth, window.innerWidth || zeroNumber);
+                windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || zeroNumber);
 
-                indicatorEl = document.getElementById('indicator');
 
-                windowCenterHeight = windowHeight / 2;
-                targetTopPosition  = windowCenterHeight - 7;
+                windowCenterHeight    = windowHeight / 2;
+                targetTopPosition     = windowCenterHeight - 8;
                 indicatorEl.style.top =  targetTopPosition +'px';
 
-
+                bridge.postMessage('init');
             }
 
             document.addEventListener('DOMContentLoaded', init);

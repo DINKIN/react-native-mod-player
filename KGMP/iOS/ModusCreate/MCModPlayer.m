@@ -25,8 +25,8 @@
     NSLog(@"MCModPlayer init");
     
     if (self = [super init]) {
-        self.floatDataLt = malloc(sizeof(float) * 512);
-        self.floatDataRt = malloc(sizeof(float) * 512);
+//        self.floatDataLt = malloc(sizeof(float) * 512);
+//        self.floatDataRt = malloc(sizeof(float) * 512);
         
         
         // This is here to suppress messages from
@@ -141,14 +141,13 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
 
 - (NSDictionary *) initializeSound:(NSString *)path  {
     
-//    int sample_rate = 44100; // number of samples per second
     if (self.modPlayer) {
+    
         [self pause];
 
         AudioQueueStop(mAudioQueue, YES);
         AudioQueueReset(mAudioQueue);
         AudioQueueDispose(mAudioQueue, YES);
-       
     }
     else {
         BOOL success = [self initAudioSession];
@@ -204,7 +203,7 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
 
     
     /* Create associated buffers */
-    mBuffers = (AudioQueueBufferRef*) malloc( sizeof(AudioQueueBufferRef) * NUM_BUFFERS );
+    mBuffers = (AudioQueueBufferRef*) malloc( sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
     
     static int zeros[4096 * 2] = {0};
     

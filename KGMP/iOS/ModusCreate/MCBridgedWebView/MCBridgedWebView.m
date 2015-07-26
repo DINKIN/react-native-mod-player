@@ -56,17 +56,17 @@
     
     [_eventDispatcher sendInputEventWithName:@"wkWebViewEvent" body:event];
 
-    NSLog(@"wkwv message %@", message.body);
+//    NSLog(@"wkwv message %@", message.body);
 }
 
 
 
 - (void)executeJSCall:(NSString *)method {// method:(NSString *)method arguments:(NSArray *)arguments {
-    NSLog(@"executeJSCall");
+//    NSLog(@"executeJSCall");
     
   [_webView evaluateJavaScript:method completionHandler:^(id result, NSError * error) {
-      NSLog(@"Result -> %@", result);
-      NSLog(@"Error -> %@", error);
+//      NSLog(@"Result -> %@", result);
+//      NSLog(@"Error -> %@", error);
   }];
   
 

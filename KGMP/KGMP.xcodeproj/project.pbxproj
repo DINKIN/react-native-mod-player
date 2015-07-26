@@ -30,11 +30,9 @@
 		7118B4B71B418AA80071C0F4 /* MCModPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B41B418AA80071C0F4 /* MCModPlayerInterface.m */; };
 		7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */; };
 		7122B4C71B4430B10037D38D /* webview-files in Resources */ = {isa = PBXBuildFile; fileRef = 7122B4C61B4430B10037D38D /* webview-files */; };
-		7122B4C91B4437250037D38D /* mod_files.full.json in Resources */ = {isa = PBXBuildFile; fileRef = 7122B4C81B4437250037D38D /* mod_files.full.json */; };
 		7122B4CF1B443CA40037D38D /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
 		7122B4D01B443CA40037D38D /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
 		7122B4DC1B443DA50037D38D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7122B4DB1B443DA50037D38D /* WebKit.framework */; };
-		716269121B4490F40083F48B /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 716269111B4490F40083F48B /* keygenmusicplayer.db */; };
 		71FF0B6E1B41923D00B3B75C /* libAIBSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B621B41909A00B3B75C /* libAIBSQLite.a */; };
 		71FF0B701B41925400B3B75C /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */; };
 		71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */; };
@@ -167,13 +165,11 @@
 		7118B4B81B418AAF0071C0F4 /* MC_OMPT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MC_OMPT.h; path = iOS/ModusCreate/Players/MC_OMPT.h; sourceTree = "<group>"; };
 		7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MC_OMPT.m; path = iOS/ModusCreate/Players/MC_OMPT.m; sourceTree = "<group>"; };
 		7122B4C61B4430B10037D38D /* webview-files */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "webview-files"; path = "../webview-files"; sourceTree = "<group>"; };
-		7122B4C81B4437250037D38D /* mod_files.full.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = mod_files.full.json; path = ../db/mod_files.full.json; sourceTree = "<group>"; };
 		7122B4CB1B443CA40037D38D /* MCBridgedWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCBridgedWebView.h; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebView.h; sourceTree = "<group>"; };
 		7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCBridgedWebView.m; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebView.m; sourceTree = "<group>"; };
 		7122B4CD1B443CA40037D38D /* MCBridgedWebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCBridgedWebViewManager.h; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebViewManager.h; sourceTree = "<group>"; };
 		7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCBridgedWebViewManager.m; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebViewManager.m; sourceTree = "<group>"; };
 		7122B4DB1B443DA50037D38D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		716269111B4490F40083F48B /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../db/keygenmusicplayer.db; sourceTree = "<group>"; };
 		71FF0B5D1B41909A00B3B75C /* AIBSQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBSQLite.xcodeproj; path = "node_modules/react-native-sqlite/AIBSQLite.xcodeproj"; sourceTree = "<group>"; };
 		71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
@@ -416,8 +412,6 @@
 			isa = PBXGroup;
 			children = (
 				7122B4DB1B443DA50037D38D /* WebKit.framework */,
-				7122B4C81B4437250037D38D /* mod_files.full.json */,
-				716269111B4490F40083F48B /* keygenmusicplayer.db */,
 				13B07FAE1A68108700A75B9A /* KGMP */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* KGMPTests */,
@@ -669,14 +663,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				716269121B4490F40083F48B /* keygenmusicplayer.db in Resources */,
 				7118B4A51B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7122B4C71B4430B10037D38D /* webview-files in Resources */,
-				7122B4C91B4437250037D38D /* mod_files.full.json in Resources */,
 				7118B4A31B4187B30071C0F4 /* fontello.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

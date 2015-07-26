@@ -8,6 +8,11 @@ var MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
 class RandomPlayer extends AbstractPlayer {
 
     previousTrack() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
         window.db.getPrevRandom((rowData) => {
             if (! rowData) {
                 alert('Sorry. No more items in history.');
@@ -20,6 +25,12 @@ class RandomPlayer extends AbstractPlayer {
 
     // Todo: clean this up
     nextTrack() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
+
         window.db.getNextRandom((rowData) => {
             this.loadFile(rowData);
         });
@@ -94,27 +105,43 @@ class RandomPlayer extends AbstractPlayer {
         this.patternsRegistered = false;
         var filePath = window.bundlePath + rowData.path + rowData.file_name;
 
-        MCModPlayerInterface.loadFile(
-            filePath,
-            //failure
-            (data) => {
-                alert('failure in loading file ' + rowData.file_name);
-                console.log(data);
-            },        
-            //success
-            (modObject) => {
-                if (modObject) {
-                    this.modObject = modObject;
-                    modObject.fileName = rowData.file_name;
+        this.deregisterPatternUpdateHandler();
+        MCModPlayerInterface.pause(() => {
+            this.deregisterPatternUpdateHandler();
+    
+            this.refs.webView.execJsCall('cls()');
 
-                    // this.forceUpdate();   
+            MCModPlayerInterface.loadFile(
+                filePath,
+                //failure
+                (data) => {
+                    alert('failure in loading file ' + rowData.file_name);
+                    console.log(data);
+                    this.loading = false;
 
-                    this.patterns = modObject.patterns;
-                    this.onWkWebViewInit();
-                    this.playTrack();
+                },        
+                //success
+                (modObject) => {
+                    if (modObject) {
+                        this.loading = false;
+
+                        this.refs.progressView.setState({
+                            numberOfCells   : modObject.patternOrds.length,
+                            highlightNumber : 0
+                        });
+
+                        this.modObject = modObject;
+                        modObject.fileName = rowData.file_name;
+
+                        // this.forceUpdate();   
+
+                        this.patterns = modObject.patterns;
+                        this.onWkWebViewInit();
+                        this.playTrack();
+                    }
                 }
-            }
-        );
+            );
+        });
     }
 
 

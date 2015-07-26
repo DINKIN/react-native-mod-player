@@ -65,9 +65,12 @@ RCT_EXPORT_METHOD(loadFile:(NSString *)path
     NSDictionary *modInfo = [player initializeSound:path];
 //    printf("                  ---------          \n");
 
-    self.currentRow     = nil;
-    self.currentPattern = nil;
-    self.currentOrder   = nil;
+    self.currentRow     = 0;
+    self.currentOrder   = 0;
+    
+    NSArray *ords = [modInfo objectForKey:@"patternOrds"];
+    
+    self.currentPattern = [ords objectAtIndex:0];
     
     if (modInfo == nil) {
         errorCallback(@[@"Could not initialize audio."]);

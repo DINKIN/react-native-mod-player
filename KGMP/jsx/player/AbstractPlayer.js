@@ -19,15 +19,16 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./CloseButton'),
     BaseComponent         = require('../BaseComponent'),
-    BridgedWKWebView      = require('../Extension/MCBridgedWebView');
+    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    ProgressView          = require('./ProgressView');
 
 
 var updateStart = 'up(',
     updateEnd   = ')'
-    comma       = ',';
+    comma       = ',',
+    currentPattern = null;
 
 class AbstractPlayer extends BaseComponent {
-
 
     render() {
         // debugger;
@@ -71,22 +72,20 @@ class AbstractPlayer extends BaseComponent {
             }
         }
         */
+
         return (
             <View style={styles.container}>
                 <CloseButton onPress={this.onClosebuttonPress} />
 
                 <View style={styles.titleBar}>
                     <View style={styles.titleBarItem}>
-                        <Text style={styles.songName}>{modObject.name}</Text>
-                    </View>
-                    <View style={styles.titleBarItem}>
                         <Text style={styles.fileName}>{fileName}</Text>
                     </View>
                 </View>
 
-                <View style={styles.imageContainer}>
-                    <SummaryCard data={modObject} ref={"summaryCard"}/>
-                    <BridgedWKWebView ref={"webView"} style={{flex:1}} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
+
+                <SummaryCard data={modObject} ref={"summaryCard"}/>
+                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
 
                     {/*
                     <View style={[styles.rowNumberz, newTopPosition]}>
@@ -99,8 +98,7 @@ class AbstractPlayer extends BaseComponent {
                     <View style={styles.playerBarTop}/>
                     <View style={styles.playerBarBottom}/>
                     */}
-                </View>
-
+                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
                 <View style={styles.controlsContainer}>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
@@ -215,16 +213,17 @@ Object.assign(AbstractPlayer.prototype, {
         
     patterns           : null, // used to store pattern data.
     gettingPatternData : false,
+
+    loading : false, // used to control floods of loading from the UI
     
-    state :  {
+    state : {
         songLoaded     : 0,
         playingSong    : 0,
-        currentTime    : 0,
-        currentRow     : 0,
-        currentPattern : null
+        // currentTime    : 0,
+        // currentRow     : 0,
+        // currentPattern : null,
+        numberPatterns : 0
     },
-
-
     
     // Event handler function keys 
     audioControlMethodMap : {
@@ -264,66 +263,76 @@ Object.assign(AbstractPlayer.prototype, {
             this[methodName] && this[methodName]();
         },
 
-
-
         onCommandCenterEvent : function(event) {
             // debugger;
             console.log('onCommandCenterEvent ' + event.eventType);
             this.onButtonPress(event.eventType);
         },
         
-        onPatternUpdateEvent : function(pos) {
+        onPatternUpdateEvent : function(position) {
             // console.log('onPatternUpdateEvent')
             // console.log(pos)
-            this.refs.webView.execJsCall(''.concat(updateStart , pos[1], comma, pos[2], updateEnd));
+            var refs    = this.refs,
+                order   = position[0], 
+                pattern = position[1],
+                row     = position[2];
 
+            refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
 
-            return;
-            this.refs.summaryCard.setState({
-                order   : position[0],
-                pattern : position[1],
-                row     : position[2],
-                numRows : position[3]
+            refs.summaryCard.setState({
+                order   : order,
+                pattern : pattern,
+                row     : row
             });
 
-            return;
+            // debugger;
+
+            if (pattern != currentPattern) {
+                refs.progressView.setState({
+                    numberOfCells   : this.modObject.patternOrds.length,
+                    highlightNumber : order
+                });    
+            }
+            
+
+            curentPattern = pattern;
             /** For the pattern view, which is disabled for now **/
-            var order   = position[0], 
-                pattern = position[1],
-                row     = position[2],
-                numRows = position[3];
+            // var order   = position[0], 
+            //     pattern = position[1],
+            //     row     = position[2],
+            //     numRows = position[3];
 
-            var patterns       = this.patterns,
-                state          = this.state,
-                currentPattern = state.currentPattern,
-                targetPattern  = patterns[pattern]; 
+            // var patterns       = this.patterns,
+            //     state          = this.state,
+            //     currentPattern = state.currentPattern,
+            //     targetPattern  = patterns[pattern]; 
 
-            if (state.playingSong == 0) {
-                return;
-            }
+            // if (state.playingSong == 0) {
+            //     return;
+            // }
 
-            if (this.modObject) {
+            // if (this.modObject) {
 
-                var positionOrder  = position[0],
-                    positionPattrn = position[1],
-                    positionRow    = position[2];
+            //     var positionOrder  = position[0],
+            //         positionPattrn = position[1],
+            //         positionRow    = position[2];
                 
-                if (patterns && position.pat != state.currentPattern) {
+            //     if (patterns && position.pat != state.currentPattern) {
                     
-                    var pattern = patterns[positionPattrn];
+            //         var pattern = patterns[positionPattrn];
 
-                    if (! pattern) {
-                        return;
-                    }
+            //         if (! pattern) {
+            //             return;
+            //         }
 
-                    var row = pattern[positionRow];
+            //         var row = pattern[positionRow];
                     
-                    state.currentPattern = positionPattrn;
-                }
+            //         state.currentPattern = positionPattrn;
+            //     }
 
-                state.currentRow = positionRow;
-                this.setState(state);
-            }
+            //     state.currentRow = positionRow;
+            //     this.setState(state);
+            // }
 
         },
 
@@ -351,7 +360,9 @@ Object.assign(AbstractPlayer.prototype, {
             newModObj.currentPat  = modObject.currentPat;
             
             newModObj = JSON.stringify(newModObj);
-
+            // window.modObjStr = newModObj;
+            // window.refz = this.refs;
+            // console.log('do it')
             this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
         },
 

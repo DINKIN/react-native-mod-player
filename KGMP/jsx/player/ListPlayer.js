@@ -8,6 +8,11 @@ var MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
 class ListPlayer extends AbstractPlayer {
 
     previousTrack() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
         var state     = this.state,
             rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
             ownerList = this.props.ownerList,
@@ -32,7 +37,15 @@ class ListPlayer extends AbstractPlayer {
     }
     
     // Todo: clean this up
+    // Todo: read from local list (not have to poll the owner component)
     nextTrack() {
+
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
+
         var state     = this.state,
             rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
             ownerList = this.props.ownerList,
@@ -69,6 +82,7 @@ class ListPlayer extends AbstractPlayer {
             MCModPlayerInterface.resume(
                 // SUCCESS callback
                 () => {
+
                     this.registerPatternUpdateHandler();
 
                     state.songLoaded  = 1;
@@ -147,6 +161,12 @@ class ListPlayer extends AbstractPlayer {
 
                 if (modObject) {
                     callback && callback();
+
+                    this.refs.progressView.setState({
+                        numberOfCells   : modObject.patternOrds.length - 1,
+                        highlightNumber : 0
+                    });
+
                     this.modObject = modObject;
                     modObject.fileName = record.file_name;
 

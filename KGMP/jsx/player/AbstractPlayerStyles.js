@@ -6,6 +6,8 @@ var React = require('react-native');
 var {StyleSheet, Image} = React;
 
 
+//TODO: more fluid layouting!!!
+
 
 var deviceWidth = 375;
 
@@ -25,7 +27,7 @@ module.exports = StyleSheet.create({
     },
 
     titleBar : {
-        height            : 40,
+        height            : 20,
         width             : 375,
         paddingTop        : 3,
         paddingLeft       : 3,
@@ -38,9 +40,6 @@ module.exports = StyleSheet.create({
         flexDirection  : 'row',
         justifyContent : 'center'
     },
-
-
-
 
     gameImage : {
         alignSelf   : 'stretch',
@@ -64,11 +63,6 @@ module.exports = StyleSheet.create({
     vizItem : {
         width       : 187,
         alignSelf   : 'stretch'
-    },
-
-    playerText : {
-        position : 'absolute',
-        fontSize : 20
     },
 
     timeText : {
@@ -119,9 +113,7 @@ module.exports = StyleSheet.create({
         height      : 1,
         width       : 375,
         top         : (508/2) + 11,
-        left        : 0,
-        borderWidth : .5,
-        borderColor : '#FF0000'
+        left        : 0
     },
 
     songName : {
@@ -130,11 +122,18 @@ module.exports = StyleSheet.create({
         color      : '#FFFFFF'
     },
 
-
     fileName : {
         fontFamily : 'PerfectDOSVGA437Win',
         fontSize   : 12, 
         color      : '#FFFFFF',
         fontWeight : 'bold'
+    },
+    progressView : {
+        borderTopWidth : 1,
+        borderTopColor : '#FFFFFF',
+        width  : 375
+    },
+    webView : {
+        flex :  1
     }
 });

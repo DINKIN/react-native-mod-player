@@ -130,7 +130,8 @@
     
     NSArray *fileNameSplit = [fileName componentsSeparatedByString:@" - "];
     
-    NSString *file_name    =  [fileNameSplit objectAtIndex:[fileNameSplit count] - 1];
+    NSString *file_name = [fileNameSplit objectAtIndex:[fileNameSplit count] - 1],
+             *group     = [fileNameSplit objectAtIndex:0];
     
     
     NSMutableArray *patternOrders = [[NSMutableArray alloc] init];
@@ -146,6 +147,7 @@
         @"name"        : nsName ?: @"",
         @"message"     : nsMsg  ?: @"",
         @"type"        : nsType ?: @"",
+        @"group"       : group,
         
         @"artist"      : nsArtist,
         @"typeLong"    : nsTypeLong,
@@ -188,6 +190,7 @@
    	openmpt_module * myLoadedMpFile = 0;
 	myLoadedMpFile = openmpt_module_create_from_memory(loadedFileData, loadedFileSize, NULL, NULL, NULL);
     
+    free(loadedFileData);
     fclose(file);
     
     if (!myLoadedMpFile) {
@@ -197,7 +200,6 @@
     NSDictionary *retObj = [self extractInfoFromModFile:myLoadedMpFile withPath:path];
 
     openmpt_module_destroy(myLoadedMpFile);
-    free(loadedFileData);
 
     return retObj;
 }
