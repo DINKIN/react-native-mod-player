@@ -13,6 +13,7 @@ class RandomPlayer extends AbstractPlayer {
         }
 
         this.loading = true;
+        window.main.showSpinner();
         window.db.getPrevRandom((rowData) => {
             if (! rowData) {
                 alert('Sorry. No more items in history.');
@@ -30,7 +31,7 @@ class RandomPlayer extends AbstractPlayer {
         }
 
         this.loading = true;
-
+        window.main.showSpinner();
         window.db.getNextRandom((rowData) => {
             this.loadFile(rowData);
         });
@@ -122,23 +123,22 @@ class RandomPlayer extends AbstractPlayer {
                 },        
                 //success
                 (modObject) => {
-                    if (modObject) {
-                        this.loading = false;
+                    this.loading = false;
 
-                        this.refs.progressView.setState({
-                            numberOfCells   : modObject.patternOrds.length,
-                            highlightNumber : 0
-                        });
+                    this.refs.progressView.setState({
+                        numberOfCells   : modObject.patternOrds.length,
+                        highlightNumber : 0
+                    });
 
-                        this.modObject = modObject;
-                        modObject.fileName = rowData.file_name;
+                    this.modObject = modObject;
+                    modObject.fileName = rowData.file_name;
 
-                        // this.forceUpdate();   
+                    // this.forceUpdate();   
 
-                        this.patterns = modObject.patterns;
-                        this.onWkWebViewInit();
-                        this.playTrack();
-                    }
+                    this.patterns = modObject.patterns;
+                    this.onWkWebViewInit();
+                    this.playTrack();
+                    window.main.hideSpinner();
                 }
             );
         });
