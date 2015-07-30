@@ -27,6 +27,11 @@ MCFsTool.getBundlePath((bundlepath) => {
 
 StatusBarIOS.setStyle('light-content', true);
 
+var KGMP = React.createClass({
+    render : function() {
+        return (<Main />);
+    }
+})
 
-AppRegistry.registerComponent('KGMP', () => Main);
+AppRegistry.registerComponent('KGMP', () => KGMP);
 

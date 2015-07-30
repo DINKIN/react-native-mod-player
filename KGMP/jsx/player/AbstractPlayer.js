@@ -87,7 +87,6 @@ class AbstractPlayer extends BaseComponent {
 
         return (
             <View style={styles.container}>
-                <View style={{height:35}} /> 
                 <CloseButton onPress={this.onClosebuttonPress} />
 
                 <View style={styles.titleBar}>

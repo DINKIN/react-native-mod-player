@@ -45,12 +45,13 @@ getDirectories(null, function(rowData) {
 class BrowseViewNavigator extends React.Component{
     render() {
         var initialRoute = {
-            title           : 'KeyGen Music Player',
+            title           : 'Browse',
             leftButtonTitle : 'Close',
             component       : BrowseView,
             passProps       : {
                 rowData    : initialPaths,
                 onRowPress : (record, childNavigator, ownerList) => {
+                    // debugger;
                     this.onRowPress(record, childNavigator, ownerList);
                 }
             },
@@ -70,7 +71,8 @@ class BrowseViewNavigator extends React.Component{
             initialRoute   : initialRoute,
             tintColor      : "#FF0000",
             barTintColor   : "#000000",
-            titleTextColor : "#00FF00"
+            titleTextColor : "#00FF00",
+            translucent    : false
         });
 
         return navigatorIOS;
@@ -83,7 +85,7 @@ class BrowseViewNavigator extends React.Component{
 
         if (isDir) {
             title = record.name + '/';
-            
+            window.main.showSpinner();
             getDirectories(record.path, (rowData)=> {
                 var route = {
                     title     : title,
@@ -97,6 +99,7 @@ class BrowseViewNavigator extends React.Component{
                 };
 
                 childNavigator.push(route);
+                window.main.hideSpinner();
             });
 
         }
@@ -109,43 +112,44 @@ class BrowseViewNavigator extends React.Component{
 
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
+        window.main.showSpinner();
+
         MCModPlayerInterface.loadFile(
             record.path,
             //failure
             (data) => {
+                window.main.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
                 console.log(data);
             },        
             //success
             (modObject) => {
-                if (modObject) {
 
-                    modObject.path = record.path;
+                modObject.path = record.path;
 
-                    var fileName = modObject.path.split('/');
+                var fileName = modObject.path.split('/');
 
-                    modObject.fileName = fileName[fileName.length - 1];
-                    // var cn = childNavigator;
-                    // var ol = ownerList;
-                    // debugger;
-                    var rowData = ownerList.props.rowData;
-                    this.props.navigator.push({
-                        title            : 'Player',
-                        component        : ListPlayer,
-                        componentConfig  : {
-                            ownerList : ownerList,
-                            modObject : modObject,
-                            patterns  : modObject.patterns,
-                            rowData   : rowData,
-                            rowID     : rowData.indexOf(record),
-                            record    : record
-                        }
-                    });
+                modObject.fileName = fileName[fileName.length - 1];
+                // var cn = childNavigator;
+                // var ol = ownerList;
+                // debugger;
+                var rowData = ownerList.props.rowData;
+                
+                this.props.navigator.push({
+                    title            : 'Player',
+                    component        : ListPlayer,
+                    componentConfig  : {
+                        ownerList : ownerList,
+                        modObject : modObject,
+                        patterns  : modObject.patterns,
+                        rowData   : rowData,
+                        rowID     : rowData.indexOf(record),
+                        record    : record
+                    }
+                });
+                window.main.hideSpinner();
 
-                }
-                else {
-                    alert('Woah. Something hit the fan!');
-                }
+               
 
             }
         );

@@ -59,44 +59,41 @@ class FavoritesViewNavigator extends React.Component{
 
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
-
+        window.main.showSpinner();
         MCModPlayerInterface.loadFile(
             bundlePath + record.path + record.file_name,
             //failure
             (data) => {
+                window.main.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
                 console.log(data);
             },        
             //success
             (modObject) => {
-                if (modObject) {
 
-                    modObject.path = record.path;
+                modObject.path = record.path;
 
-                    var fileName = modObject.path.split('/');
+                var fileName = modObject.path.split('/');
 
-                    modObject.fileName = fileName[fileName.length - 1];
-                    // var cn = childNavigator;
-                    // var ol = ownerList;
-                    // debugger;
-                    var rowData = ownerList.props.rowData;
-                    this.props.navigator.push({
-                        title            : 'Player',
-                        component        : ListPlayer,
-                        componentConfig  : {
-                            ownerList : ownerList,
-                            modObject : modObject,
-                            patterns  : modObject.patterns,
-                            rowData   : rowData,
-                            rowID     : rowData.indexOf(record),
-                            record    : record
-                        }
-                    });
-
-                }
-                else {
-                    alert('Woah. Something hit the fan!');
-                }
+                modObject.fileName = fileName[fileName.length - 1];
+                // var cn = childNavigator;
+                // var ol = ownerList;
+                // debugger;
+                var rowData = ownerList.props.rowData;
+                
+                this.props.navigator.push({
+                    title            : 'Player',
+                    component        : ListPlayer,
+                    componentConfig  : {
+                        ownerList : ownerList,
+                        modObject : modObject,
+                        patterns  : modObject.patterns,
+                        rowData   : rowData,
+                        rowID     : rowData.indexOf(record),
+                        record    : record
+                    }
+                });
+                window.main.hideSpinner();
 
             }
         );

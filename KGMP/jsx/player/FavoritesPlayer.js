@@ -1,20 +1,23 @@
 var React                = require('react-native'),
     MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
-    ListPlayer           = require('./ListPlayer');
+    FavoritesPlayer      = require('./ListPlayer');
 
 
-class ListPlayer extends ListPlayer {
+class ListPlayer extends FavoritesPlayer {
 
-    loadFile(record, callback) {
+     loadFile(record, callback) {
 
         this.patterns = {};
         this.forceUpdate();
         this.refs.webView.execJsCall('cls()');
-
+        
+        window.main.showSpinner();
+        
         MCModPlayerInterface.loadFile(
-            record.path,
+            bundlePath + record.path + record.file_name,
             //failure
             (data) => {
+                window.main.hideSpinner();
                 var pathSplit = record.path.split('/');
                 alert('Failure in loading file ' + pathSplit[pathSplit.length - 1]);
                 console.log(data);
@@ -22,7 +25,6 @@ class ListPlayer extends ListPlayer {
             //success
             (modObject) => {
                 this.loading = false;
-
                 callback && callback();
 
                 this.refs.progressView.setState({
@@ -33,9 +35,13 @@ class ListPlayer extends ListPlayer {
                 this.modObject = modObject;
                 modObject.fileName = record.file_name;
 
+                // this.forceUpdate();   
+
                 this.patterns = modObject.patterns;
                 this.onWkWebViewInit();
                 this.playTrack();
+                window.main.hideSpinner();
+
             }
         );
     }

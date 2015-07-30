@@ -140,6 +140,7 @@ Object.assign(HomeMenu.prototype, {
 
         onRandomPress : function() {
             var  navigator = this.props.navigator;
+            window.main.showSpinner();
 
             window.db.clear();
 
@@ -151,34 +152,30 @@ Object.assign(HomeMenu.prototype, {
                     filePath,
                     //failure
                     (data) => {
+                        window.main.hideSpinner();
                         alert('Failure loading ' + rowData.file_name);
                         console.log(data);
                     },        
                     //success
                     (modObject) => {
                         // debugger;
+                        var fileName  = rowData.file_name,
+                            rtBtnText,
+                            rtBtnHandler;
 
-                        if (modObject) {
-                            var fileName  = rowData.file_name,
-                                rtBtnText,
-                                rtBtnHandler;
-
-                            modObject.fileName = fileName;
-                            
-                            window.mainNavigator.push({
-                                title            : 'Player',
-                                rightButtonTitle : rtBtnText,
-                                component        : RandomPlayer,
-                                componentConfig  : {
-                                    modObject : modObject,
-                                    patterns  : modObject.patterns
-                                }
-                            });
+                        modObject.fileName = fileName;
+                        
+                        window.mainNavigator.push({
+                            title            : 'Player',
+                            rightButtonTitle : rtBtnText,
+                            component        : RandomPlayer,
+                            componentConfig  : {
+                                modObject : modObject,
+                                patterns  : modObject.patterns
+                            }
+                        });
       
-                        }
-                        else {
-                            alert('Woah. Something hit the fan!');
-                        }
+                        window.main.hideSpinner();
                     }
                 );
 
@@ -195,7 +192,7 @@ Object.assign(HomeMenu.prototype, {
         },
         
         onFavoritesPress : function() {
-
+            window.main.showSpinner();
             window.db.getFavorites((rowData) => {
                 window.mainNavigator.push({
                     component       : FavsViewNav,
@@ -203,13 +200,15 @@ Object.assign(HomeMenu.prototype, {
                         rowData : rowData
                     }
                 });
+
+                window.main.hideSpinner();
             });
                 // console.log(rowData);
         },
         
         onAboutPress : function() {
 
-
+            window.main.showSpinner();
             MCModPlayerInterface.loadModusAboutMod(
                 //failure
                 (data) => {
@@ -219,20 +218,14 @@ Object.assign(HomeMenu.prototype, {
                 //success
                 (modObject) => {
                     // debugger;
-                    if (modObject) {
-                        window.mainNavigator.push({
-                            title           : 'About',
-                            component       : AboutView,
-                            componentConfig : {
-                                modObject : modObject
-                            }
-                        });
-
-                    }
-                    else {
-                        alert('Woah. Something hit the fan!');
-                    }
-
+                    window.mainNavigator.push({
+                        title           : 'About',
+                        component       : AboutView,
+                        componentConfig : {
+                            modObject : modObject
+                        }
+                    });
+                    window.main.hideSpinner();
                 }
             );        
         },

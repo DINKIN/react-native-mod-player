@@ -94,7 +94,7 @@ var styles =  StyleSheet.create({
     closeButton : {
         width       : 70,
         marginLeft  : 10,
-
+        marginTop   : 5,
         fontSize    : 20
     },
 

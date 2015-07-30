@@ -86,6 +86,9 @@ class ListPlayer extends AbstractPlayer {
                     state.playingSong = 1;
                     this.registerPatternUpdateHandler();
                     this.setState(state);
+
+                    //TODO: Show "now Playing" in top toolbar
+                    //this.props.navigator.navigationContext.currentRoute
                 }
             );
             
@@ -133,11 +136,14 @@ class ListPlayer extends AbstractPlayer {
         this.patterns = {};
         this.forceUpdate();
         this.refs.webView.execJsCall('cls()');
-
+        
+        window.main.showSpinner();
+        
         MCModPlayerInterface.loadFile(
-            bundlePath + record.path + record.file_name,
+            record.path,
             //failure
             (data) => {
+                window.main.hideSpinner();
                 var pathSplit = record.path.split('/');
                 alert('Failure in loading file ' + pathSplit[pathSplit.length - 1]);
                 console.log(data);
@@ -145,23 +151,23 @@ class ListPlayer extends AbstractPlayer {
             //success
             (modObject) => {
                 this.loading = false;
-                if (modObject) {
-                    callback && callback();
+                callback && callback();
 
-                    this.refs.progressView.setState({
-                        numberOfCells   : modObject.patternOrds.length,
-                        highlightNumber : 0
-                    });
+                this.refs.progressView.setState({
+                    numberOfCells   : modObject.patternOrds.length,
+                    highlightNumber : 0
+                });
 
-                    this.modObject = modObject;
-                    modObject.fileName = record.file_name;
+                this.modObject = modObject;
+                modObject.fileName = record.file_name;
 
-                    // this.forceUpdate();   
+                // this.forceUpdate();   
 
-                    this.patterns = modObject.patterns;
-                    this.onWkWebViewInit();
-                    this.playTrack();
-                }
+                this.patterns = modObject.patterns;
+                this.onWkWebViewInit();
+                this.playTrack();
+                window.main.hideSpinner();
+
             }
         );
     }

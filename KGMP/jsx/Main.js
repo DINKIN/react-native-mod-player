@@ -1,5 +1,7 @@
-var React = require('react-native'),
-    HomeMenu = require('./HomeMenu');
+var React         = require('react-native'),
+    BaseComponent = require('./BaseComponent'),
+    HomeMenu      = require('./HomeMenu'),
+    Dimensions    = require('Dimensions');
 
 var {
   Navigator,
@@ -9,27 +11,12 @@ var {
   Text,
   View,
   TouchableHighlight,
+  ActivityIndicatorIOS,
 } = React;
 
-/*
-  <NavButton
-    onPress={() => {
-      this.props.navigator.push({
-        message: 'Swipe down to dismiss',
-        sceneConfig: Navigator.SceneConfigs.FloatFromRight,
-
-        sceneConfig: Navigator.SceneConfigs.FloatFromBottom,
-      });
-    }}
-    text="Float in from bottom"
-  />
-*/
-
-/*
-    this.props.navigator.pop();
-    this.props.navigator.popToTop();
-    this.props.navigator.push({ id: 'navbar' });
-*/
+var winder       = Dimensions.get('window'),
+    screenWidth  = winder.width,
+    screenHeight = winder.height;
 
 
 var styles = StyleSheet.create({
@@ -39,15 +26,45 @@ var styles = StyleSheet.create({
         backgroundColor : '#EAEAEA',
 
     },
-    container : {
-        borderWidth: 1,
-        borderColor : '#FF0000'
+    spinnerContainer : {
+        height : screenHeight,
+        width  : screenWidth,
+        position : 'absolute',
+        top : 0,
+        left : 0,
+        backgroundColor : 'rgba(0,0,0,.25)',
+        // borderWidth: 1,
+        // borderColor : '#FF0000',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    spinnerIndicator : {
+
     }
 });
 
+class Spinner extends BaseComponent {
+    render() {
+        console.log('spinner render')
+        return (
+            <View style={styles.spinnerContainer}>
+                <ActivityIndicatorIOS 
+                    style={styles.spinnerIndicator}
+                    animating={true}
+                    size={"large"}
+                    color="#FFFF00"
+                />
+            </View>
+        );
+    }
+}
 
-
-class Main extends React.Component  {
+class Main extends BaseComponent  {
+    setInitialState() {
+        this.state = {
+            spinner : false
+        };
+    }
 
     renderScene(route, nav) {
         window.mainNavigator = nav;
@@ -97,22 +114,40 @@ class Main extends React.Component  {
     }
 
     render() {
-        var initialRoute ={
-            message   : 'dafug',
-            component : HomeMenu
-        };
+        var initialRoute = {
+                component : HomeMenu
+            },
+            spinner;
 
+
+        if (this.state.spinner) {
+            spinner = React.createElement(Spinner);
+        }
+        window.main = this;
         return (
             <View style={{flex: 1}}>
-                <View style={{height: 30, borderWidth: 1, borderColor : '#00FF00'}}/>
                 <Navigator
                     style={styles.container}
                     initialRoute={initialRoute}
                     renderScene={this.renderScene}
                     configureScene={this.configureScene}
                 />
+                
+                {spinner}
             </View>
         );
+    }
+
+    showSpinner() {
+        console.log('showSpinner')
+        this.setState({spinner : true})
+
+    }
+
+    hideSpinner() {
+        console.log('hideSpinner')
+
+        this.setState({spinner : false})
     }
 
 };
