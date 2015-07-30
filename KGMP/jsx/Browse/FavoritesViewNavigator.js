@@ -1,9 +1,8 @@
 'use strict';
 
 var React      = require('react-native'),
-    BrowseView = require('./BrowseView'),
-    ListPlayer = require('../player/ListPlayer'),
-    initialPaths;
+    FavoritesView = require('./FavoritesView'),
+    ListPlayer = require('../player/ListPlayer');
 
 var {
         AppRegistry,
@@ -18,38 +17,15 @@ var {
         MCModPlayerInterface
     } = require('NativeModules');
 
-var getDirectories = function(path, callback) {
-    MCFsTool.getDirectoriesAsJson(
-        path,
-        // failure
-        () => {
-            console.log('An Error Occurred');
-        },
-        // Success
-        (response) =>  {
-            callback(response)               
 
-            // if (this.rowData) {
-            //     this.state = this.getInitialState();
-            //     this.forceUpdate();
-            // }
-        }
-    );
-};
-
-getDirectories(null, function(rowData) {
-    initialPaths = rowData;
-});
-
-
-class BrowseViewNavigator extends React.Component{
+class FavoritesViewNavigator extends React.Component{
     render() {
         var initialRoute = {
-            title           : 'KeyGen Music Player',
+            title           : 'Favorites',
             leftButtonTitle : 'Close',
-            component       : BrowseView,
+            component       : FavoritesView,
             passProps       : {
-                rowData    : initialPaths,
+                rowData    : this.props.rowData,
                 onRowPress : (record, childNavigator, ownerList) => {
                     this.onRowPress(record, childNavigator, ownerList);
                 }
@@ -65,52 +41,27 @@ class BrowseViewNavigator extends React.Component{
         };
 
 
-        var navigatorIOS = React.createElement(NavigatorIOS, {
+        return React.createElement(NavigatorIOS, {
             style          : styles.container, 
             initialRoute   : initialRoute,
             tintColor      : "#FF0000",
             barTintColor   : "#000000",
             titleTextColor : "#00FF00"
         });
-
-        return navigatorIOS;
     }
 
     onRowPress(record, childNavigator, ownerList) {
         // TODO: Setup color for selected item
-        var isDir = (record.type == 'dir'),
-            title;
 
-        if (isDir) {
-            title = record.name + '/';
-            
-            getDirectories(record.path, (rowData)=> {
-                var route = {
-                    title     : title,
-                    component : BrowseView,
-                    passProps : {
-                        rowData    : rowData,
-                        onRowPress : (rec, childNav, ownrList) => {
-                            this.onRowPress(rec, childNav, ownrList);
-                        }
-                    }
-                };
-
-                childNavigator.push(route);
-            });
-
-        }
-        else {
-            // debugger;
-            this.loadModFile(record, childNavigator, ownerList);                
-        }
+        this.loadModFile(record, childNavigator, ownerList);                
 
     }
 
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
+
         MCModPlayerInterface.loadFile(
-            record.path,
+            bundlePath + record.path + record.file_name,
             //failure
             (data) => {
                 alert('Apologies. This file could not be loaded.');
@@ -167,4 +118,4 @@ var styles = StyleSheet.create({
     },
 
 })
-module.exports = BrowseViewNavigator;
+module.exports = FavoritesViewNavigator;

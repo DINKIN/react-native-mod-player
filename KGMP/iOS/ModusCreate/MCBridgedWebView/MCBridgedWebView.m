@@ -21,7 +21,7 @@
   RCTEventDispatcher *_eventDispatcher;
   WKWebView *_webView;
   
-  RCTWebViewExecutor *_executor;
+//  RCTWebViewExecutor *_executor;
 }
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher {

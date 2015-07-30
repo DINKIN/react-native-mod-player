@@ -25,16 +25,8 @@ MCFsTool.getBundlePath((bundlepath) => {
     window.bundlePath = bundlepath;
 });
 
-
-class KGMP extends React.Component{
-    render() {
-        StatusBarIOS.setStyle('light-content', true);
-        return (
-            <Main/>
-        );
-    }
-};
+StatusBarIOS.setStyle('light-content', true);
 
 
-AppRegistry.registerComponent('KGMP', () => KGMP);
+AppRegistry.registerComponent('KGMP', () => Main);
 

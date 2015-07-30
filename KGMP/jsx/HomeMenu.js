@@ -1,5 +1,6 @@
 var React         = require('react-native'),
-    BrowseView    = require('./Browse/BrowseViewNavigator'),
+    BrowseViewNav = require('./Browse/BrowseViewNavigator'),
+    FavsViewNav   = require('./Browse/FavoritesViewNavigator'),
     RandomPlayer  = require('./player/RandomPlayer'),
     BaseComponent = require('./BaseComponent'),
     AboutView     = require('./about/AboutView.js');
@@ -94,9 +95,9 @@ class HomeMenu extends BaseComponent {
      
 
     render() {
-        setTimeout(()=> {
-            this.onRandomPress();
-        }, 100);
+        // setTimeout(()=> {
+        //     this.onRandomPress();
+        // }, 100);
 
         return (
             <View style={styles.mainCt}>
@@ -188,13 +189,22 @@ Object.assign(HomeMenu.prototype, {
         onBrowsePress : function() {
             this.props.navigator.push({
                 title          : 'Browse Groups',
-                component      : BrowseView,
+                component      : BrowseViewNav,
                 // transitionType : 'PushFromRight'
             });
         },
         
         onFavoritesPress : function() {
-            // this.props.onFavoritesPress();
+
+            window.db.getFavorites((rowData) => {
+                window.mainNavigator.push({
+                    component       : FavsViewNav,
+                    componentConfig : {
+                        rowData : rowData
+                    }
+                });
+            });
+                // console.log(rowData);
         },
         
         onAboutPress : function() {

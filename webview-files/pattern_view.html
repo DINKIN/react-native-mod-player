@@ -176,7 +176,7 @@
                 // Add a second pattern immediately for performance
                 createPatternEl(patternOrds.shift()); 
 
-                intervalID = setInterval(fillPatternElementBuffer, 250);
+                intervalID = setInterval(fillPatternElementBuffer, 50);
                 bridge.postMessage('patReg');
             };
 

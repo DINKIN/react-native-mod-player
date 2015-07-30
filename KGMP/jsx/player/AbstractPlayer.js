@@ -14,8 +14,8 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./SummaryCard'),
     MusicControlButton    = require('./MusicControlButton'),
-    PatternView           = require('./PatternView'),
-    RowNumberView         = require('./RowNumberView'),
+    // PatternView           = require('./PatternView'),
+    // RowNumberView         = require('./RowNumberView'),
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./CloseButton'),
     BaseComponent         = require('../BaseComponent'),
@@ -29,6 +29,18 @@ var updateStart = 'up(',
     currentPattern = null;
 
 class AbstractPlayer extends BaseComponent {
+
+
+    setInitialState() {
+        this.state = {
+            songLoaded     : 0,
+            playingSong    : 0,
+            // currentTime    : 0,
+            // currentRow     : 0,
+            // currentPattern : null,
+            numberPatterns : 0
+        }
+    }
 
     render() {
         // debugger;
@@ -75,6 +87,7 @@ class AbstractPlayer extends BaseComponent {
 
         return (
             <View style={styles.container}>
+                <View style={{height:35}} /> 
                 <CloseButton onPress={this.onClosebuttonPress} />
 
                 <View style={styles.titleBar}>
@@ -216,14 +229,7 @@ Object.assign(AbstractPlayer.prototype, {
 
     loading : false, // used to control floods of loading from the UI
     
-    state : {
-        songLoaded     : 0,
-        playingSong    : 0,
-        // currentTime    : 0,
-        // currentRow     : 0,
-        // currentPattern : null,
-        numberPatterns : 0
-    },
+    
     
     // Event handler function keys 
     audioControlMethodMap : {
@@ -244,6 +250,7 @@ Object.assign(AbstractPlayer.prototype, {
     },
 
     bindableMethods : {
+
         onClosebuttonPress : function() {
             window.mainNavigator.pop();
         },
@@ -369,8 +376,8 @@ Object.assign(AbstractPlayer.prototype, {
         onWkWebViewPatternsRegistered : function() {
             console.log('onWkWebViewPatternsRegistered');
             this.patternsRegistered = true;
-            // this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
-            // debugger;
+            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
+           
         }
 
 

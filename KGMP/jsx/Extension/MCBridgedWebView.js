@@ -143,7 +143,7 @@ var BridgedWebView = React.createClass({
             );
         }
 
-        var webViewStyles = [styles.container, styles.webView, this.props.style];
+        var webViewStyles = [styles.container, this.props.style];
         
         if (this.state.viewState === MCBridgedWebViewState.LOADING ||
             this.state.viewState === MCBridgedWebViewState.ERROR) {
@@ -155,24 +155,24 @@ var BridgedWebView = React.createClass({
         // console.log(this.props)
         return (
             <View style={styles.container}>
-                <MCBridgedWebView
-                    ref={RCT_WEBVIEW_REF}
-                    key="webViewKey"
-                    style={webViewStyles}
-                    url={this.props.url}
-                    localUrl={this.props.localUrl}
-                    html={this.props.html}
-                    bounces={this.props.bounces}
-                    scrollEnabled={this.props.scrollEnabled}
-                    shouldInjectAJAXHandler={this.props.shouldInjectAJAXHandler}
-                    contentInset={this.props.contentInset}
-                    automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}
-                    onLoadingStart={this.onLoadingStart}
-                    onLoadingFinish={this.onLoadingFinish}
-                    onLoadingError={this.onLoadingError}
-                    onWkWebViewEvent={this.onWkWebViewEvent}
-                    scalesPageToFit={this.props.scalesPageToFit}
-                />
+            <MCBridgedWebView
+                ref={RCT_WEBVIEW_REF}
+                key="webViewKey"
+                style={webViewStyles}
+                url={this.props.url}
+                localUrl={this.props.localUrl}
+                html={this.props.html}
+                bounces={this.props.bounces}
+                scrollEnabled={this.props.scrollEnabled}
+                shouldInjectAJAXHandler={this.props.shouldInjectAJAXHandler}
+                contentInset={this.props.contentInset}
+                automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}
+                onLoadingStart={this.onLoadingStart}
+                onLoadingFinish={this.onLoadingFinish}
+                onLoadingError={this.onLoadingError}
+                onWkWebViewEvent={this.onWkWebViewEvent}
+                scalesPageToFit={this.props.scalesPageToFit}
+            />
             </View>
         );
     },
@@ -238,6 +238,8 @@ var black = 'rgba(0,0,0,0)',
 var styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: black,
+
         // borderWidth : 1,
         // borderColor : '#00FF00'
     },
@@ -266,9 +268,6 @@ var styles = StyleSheet.create({
         flex: 1,
         justifyContent: center,
         alignItems: center,
-    },
-    webView: {
-        backgroundColor: black,
     }
 });
 

@@ -1,7 +1,5 @@
-var React = require('react-native');
-
-
-var MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
+var React = require('react-native'),
+    MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
     AbstractPlayer       = require('./AbstractPlayer');
 
 
@@ -13,18 +11,20 @@ class ListPlayer extends AbstractPlayer {
         }
 
         this.loading = true;
+
         var state     = this.state,
             rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
             ownerList = this.props.ownerList,
-            record    = ownerList.getPreviousRecord(rowID);
+            record    = this.getPreviousRecord(rowID);
 
         if (! record) {
-            rowID  = ownerList.getRowDataCount();
-            record = ownerList.getLastRecord();
+            rowID  = this.getRowDataCount();
+            record = this.getLastRecord();
 
+            // debugger;
             if (! record) {
                 alert('Apologies! There are no more songs to play in this list.');
-                VibrationIOS.vibrate();
+                // VibrationIOS.vibrate();
                 return;
             }
         }
@@ -49,16 +49,17 @@ class ListPlayer extends AbstractPlayer {
         var state     = this.state,
             rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
             ownerList = this.props.ownerList,
-            record    = ownerList.getNextRecord(rowID);
-
+            record    = this.getNextRecord(rowID);
 
         if (! record) {
             rowID  = 0;
-            record = ownerList.getFirstRecord();
+            record = this.getFirstRecord();
 
             if (! record) {
+                debugger
                 alert('Apologies! There are no more songs to play in this list.');
                 VibrationIOS.vibrate();
+                this.loading = false;
                 return;
             }
         }
@@ -70,33 +71,23 @@ class ListPlayer extends AbstractPlayer {
 
     
     }
-
-
+    
     playTrack() {
         var props = this.props,
             state = this.state;
-
+   
         // TODO: Merge logic into one block below
         if (! state.songLoaded) {
             // debugger;
             MCModPlayerInterface.resume(
                 // SUCCESS callback
                 () => {
-
-                    this.registerPatternUpdateHandler();
-
                     state.songLoaded  = 1;
                     state.playingSong = 1;
-
+                    this.registerPatternUpdateHandler();
                     this.setState(state);
-
-                    var ownerList = props.ownerList,
-                        rowID     = parseInt((this.rowID != null) ? this.rowID : props.rowID);
-
-                    ownerList.setRecordIsPlaying(rowID, true);
                 }
             );
-
             
         } 
         else {
@@ -105,19 +96,13 @@ class ListPlayer extends AbstractPlayer {
                 () => {
                     this.registerPatternUpdateHandler();
                     this.setState(state);
-                    
-                    var ownerList = props.ownerList,
-                        rowID     = parseInt((this.rowID != null) ? this.rowID : props.rowID);
-
-                    ownerList.setRecordIsPlaying(rowID, true);
                 }
-
             );
             
         }
       
     }
-    
+
     pauseTrack(callback) {
         var state = this.state;
 
@@ -147,9 +132,10 @@ class ListPlayer extends AbstractPlayer {
 
         this.patterns = {};
         this.forceUpdate();
-        
+        this.refs.webView.execJsCall('cls()');
+
         MCModPlayerInterface.loadFile(
-            record.path,
+            bundlePath + record.path + record.file_name,
             //failure
             (data) => {
                 var pathSplit = record.path.split('/');
@@ -158,12 +144,12 @@ class ListPlayer extends AbstractPlayer {
             },        
             //success
             (modObject) => {
-
+                this.loading = false;
                 if (modObject) {
                     callback && callback();
 
                     this.refs.progressView.setState({
-                        numberOfCells   : modObject.patternOrds.length - 1,
+                        numberOfCells   : modObject.patternOrds.length,
                         highlightNumber : 0
                     });
 
@@ -172,13 +158,36 @@ class ListPlayer extends AbstractPlayer {
 
                     // this.forceUpdate();   
 
-                    this.patterns = modObject.patterns;;
-
+                    this.patterns = modObject.patterns;
+                    this.onWkWebViewInit();
                     this.playTrack();
-
                 }
             }
         );
+    }
+
+    getRowDataCount() {
+        return this.props.rowData.length - 1;
+    }
+
+    getFirstRecord() {
+        return this.props.rowData[0];
+    }
+
+    getLastRecord() {
+        return this.props.rowData[this.props.rowData.length - 1];
+    }
+
+    getPreviousRecord(rowID) {
+        var record = this.props.rowData[--rowID];
+
+        return record ? record : null;
+    }
+
+    getNextRecord(rowID) {
+        var record = this.props.rowData[++rowID];
+
+        return record ? record : null;
     }
 }
 

@@ -37,6 +37,11 @@ var styles = StyleSheet.create({
         flex            : 1,
         paddingTop      : 20,
         backgroundColor : '#EAEAEA',
+
+    },
+    container : {
+        borderWidth: 1,
+        borderColor : '#FF0000'
     }
 });
 
@@ -98,12 +103,15 @@ class Main extends React.Component  {
         };
 
         return (
-            <Navigator
-                style={styles.container}
-                initialRoute={initialRoute}
-                renderScene={this.renderScene}
-                configureScene={this.configureScene}
-            />
+            <View style={{flex: 1}}>
+                <View style={{height: 30, borderWidth: 1, borderColor : '#00FF00'}}/>
+                <Navigator
+                    style={styles.container}
+                    initialRoute={initialRoute}
+                    renderScene={this.renderScene}
+                    configureScene={this.configureScene}
+                />
+            </View>
         );
     }
 

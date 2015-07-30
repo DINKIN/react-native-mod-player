@@ -1,5 +1,8 @@
-var sqlite   = require('react-native-sqlite');
-
+var sqlite       = require('react-native-sqlite'),
+    randomSQL    = "SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;",
+    favoritesSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY file_name;",
+    emptyArray   = [],
+    emptyFn      = function() {};
 
 module.exports = {
     stack    : [],
@@ -13,34 +16,7 @@ module.exports = {
     },
     
     getRandom : function (successCallback) {
-        var database = sqlite.open("keygenmusicplayer.db", function (error, database) {
-            if (error) {
-                console.log("Failed to open database:", error);
-            }
-
-            var sql = "SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;";
-            
-            database.executeSQL(sql, [], rowCallback, completeCallback);
-            
-            function rowCallback(rowData) {
-                successCallback(rowData);
-                // console.log("Got row data:", rowData);
-            }
-            
-            function completeCallback(error) {
-                if (error) {
-                    console.log("Failed to execute query:", error);
-                    return
-                }
-                                
-                database.close(function (error) {
-                    if (error) {
-                        console.log("Failed to close database:", error);
-                        return
-                    }
-                });
-            }
-        });
+        this.execQuery(randomSQL, successCallback);
     },
 
     getNewRandomCurrentItem : function(cb) {
@@ -72,41 +48,58 @@ module.exports = {
         }
 
         var item = stack.pop();
-
         successCallback(item);
         this.currentItem = item; 
     },
 
-    updateLikeViaCurrentItem : function(likeValue, successCallback) {
-        var id_md5 = this.currentItem.id_md5;
+    getFavorites : function(successCallback) {
+        this.execQuery(favoritesSQL, successCallback);
+    },
 
+
+    updateLikeViaCurrentItem : function(likeValue, successCallback) {
+        var id_md5 = this.currentItem.id_md5,
+            query = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE id_md5 = "' + id_md5 + '";'
+
+
+        this.execQuery(query, function() {
+            successCallback();
+        });
+
+    },
+
+
+    execQuery : function(query, successCallback) {
         var database = sqlite.open("keygenmusicplayer.db", function (error, database) {
             if (error) {
                 console.log("Failed to open database:", error);
             }
-
-            var query = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE id_md5 = "' + id_md5 + '";';
             console.log(query);
 
-            database.executeSQL(query, [], function() {}, completeCallback);
-            
-            
-            function completeCallback(error) {
-                if (error) {
-                    console.log("Failed to execute query:", error);
-                    return
-                }
-                                
-                successCallback();
-
-
-                database.close(function (error) {
+            var data = [],
+                rowCallback = function (rowData) {
+                    data.push(rowData);
+                },
+                completeCallback = function (error) {
+                    // debugger;
                     if (error) {
-                        console.log("Failed to close database:", error);
+                        console.log("Failed to execute query:", error);
                         return
                     }
-                });
-            }
+                                    
+                    database.close(function (error) {
+                        if (error) {
+                            console.log("Failed to close database:", error);
+                            return
+                        }
+                    });
+
+                    var ret = data.length == 1 ? data[0] : data;
+                    successCallback(ret);
+                };
+
+            database.executeSQL(query, emptyArray, rowCallback, completeCallback);
+
         });
     }
 }
