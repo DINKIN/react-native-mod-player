@@ -30,9 +30,9 @@
 		7118B4B71B418AA80071C0F4 /* MCModPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B41B418AA80071C0F4 /* MCModPlayerInterface.m */; };
 		7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */; };
 		7122B4C71B4430B10037D38D /* webview-files in Resources */ = {isa = PBXBuildFile; fileRef = 7122B4C61B4430B10037D38D /* webview-files */; };
-		7122B4CF1B443CA40037D38D /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
-		7122B4D01B443CA40037D38D /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
 		7122B4DC1B443DA50037D38D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7122B4DB1B443DA50037D38D /* WebKit.framework */; };
+		71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
+		71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
 		71FF0B6E1B41923D00B3B75C /* libAIBSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B621B41909A00B3B75C /* libAIBSQLite.a */; };
 		71FF0B701B41925400B3B75C /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */; };
 		71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */; };
@@ -689,12 +689,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7118B4B71B418AA80071C0F4 /* MCModPlayerInterface.m in Sources */,
-				7122B4D01B443CA40037D38D /* MCBridgedWebViewManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				7118B4B61B418AA80071C0F4 /* MCModPlayer.m in Sources */,
 				7118B4B51B418AA80071C0F4 /* MCFsTool.m in Sources */,
-				7122B4CF1B443CA40037D38D /* MCBridgedWebView.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.mm in Sources */,
+				71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */,
+				71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */,
 				7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

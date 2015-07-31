@@ -9,18 +9,25 @@ var {StyleSheet, Image} = React;
 //TODO: more fluid layouting!!!
 
 
-var deviceWidth = 375;
+var deviceWidth = 375,
+    dosFont     = 'PerfectDOSVGA437Win',
+    borderColor = '#AEAEAE',
+    blackColor  = '#000000',
+    whiteColor  = '#FFFFFF',
+    row         = 'row',
+    absolute    = 'absolute',
+    stretch     = 'stretch'
 
 module.exports = StyleSheet.create({
 
     soundFormat : {
-        flexDirection  : 'row',
+        flexDirection  : row,
     },
 
     container : {
-        backgroundColor : '#000000',
+        backgroundColor : blackColor,
         // borderWidth     : .5,
-        // borderColor     : '#000000',
+        // borderColor     : blackColor,
         paddingTop      : 35,
         flexDirection   : 'column',
         flex : 1,
@@ -31,18 +38,16 @@ module.exports = StyleSheet.create({
         width             : 375,
         paddingTop        : 3,
         paddingLeft       : 3,
-        borderTopWidth    : .5,
-        borderBottomWidth : .5,
-        borderColor       : '#AEAEAE'
-    },
-    
-    titleBarItem: {
-        flexDirection  : 'row',
+        borderTopWidth    : 1,
+        borderBottomWidth : 1,
+        borderColor       : borderColor,
+        flexDirection  : row,
         justifyContent : 'center'
     },
 
+
     gameImage : {
-        alignSelf   : 'stretch',
+        alignSelf   : stretch,
         width       : 375,
         resizeMode  : Image.resizeMode.fit
     },
@@ -51,55 +56,55 @@ module.exports = StyleSheet.create({
         height      : 60,
         width       : 375,
         borderTopWidth : 1,
-        borderColor    : "#AEAEAE"
+        borderColor    : borderColor
     },
 
     vizContainer : {
         height         : 50,
         width          : 375,
-        flexDirection  : 'row',
+        flexDirection  : row,
         justifyContent : 'space-around',
     },
     vizItem : {
         width       : 187,
-        alignSelf   : 'stretch'
+        alignSelf   : stretch
     },
 
     timeText : {
-        position : 'absolute',
+        position : absolute,
         // fontSize : 20
     },
 
 
     imageContainer : {
         height          : 498, 
-        // flexDirection   : 'row',
+        // flexDirection   : row,
         overflow        : 'hidden',
         // width       : 375,
-        alignSelf       : 'stretch',  // This doesn't effing work!
+        alignSelf       : stretch,  // This doesn't effing work!
         borderTopWidth  : .5,
-        borderColor     : '#AEAEAE',
-        backgroundColor : '#000000'
+        borderColor     : borderColor,
+        backgroundColor : blackColor
     },
 
     rowNumberz  : {
-        position         : 'absolute',
+        position         : absolute,
         top              : (508/2),
         width            : 20,
         borderRightWidth : .5,
-        borderColor      : '#000000',
+        borderColor      : blackColor,
     },
     
     patternView : {
         // width    : 900,
-        position  : 'absolute',
+        position  : absolute,
         top       : (508/2),
         left      : 20,
-        alignSelf : 'stretch'
+        alignSelf : stretch
     },
 
     playerBarTop : {
-        position    : 'absolute',
+        position    : absolute,
         height      : 1,
         width       : 375,
         top         : (508/2) -1,
@@ -109,7 +114,7 @@ module.exports = StyleSheet.create({
     },
 
     playerBarBottom : {
-        position    : 'absolute',
+        position    : absolute,
         height      : 1,
         width       : 375,
         top         : (508/2) + 11,
@@ -117,23 +122,52 @@ module.exports = StyleSheet.create({
     },
 
     songName : {
-        fontFamily : 'PerfectDOSVGA437Win',
+        fontFamily : dosFont,
         fontSize   : 16, 
-        color      : '#FFFFFF'
+        color      : whiteColor 
     },
 
     fileName : {
-        fontFamily : 'PerfectDOSVGA437Win',
+        fontFamily : dosFont,
         fontSize   : 12, 
-        color      : '#FFFFFF',
+        color      : whiteColor,
         fontWeight : 'bold'
     },
     progressView : {
         borderTopWidth : 1,
-        borderTopColor : '#FFFFFF',
+        borderTopColor : whiteColor,
         width  : 375
     },
+
     webView : {
         flex :  1
+    },
+
+    instrumentRow : {
+        flexDirection : row
+    },
+
+    instrumentText : {
+        fontFamily : dosFont,
+        fontSize   : 16,
+        color      : '#00FF00',
+        width      : 30
+    },
+
+
+    instrumentsLabel : {
+        fontFamily : dosFont,
+        fontSize   : 16,
+        color      : '#00FF00',
+        width      : 150,
+        fontWeight : 'bold'
+    },
+
+    instrumentName : {
+        fontFamily : dosFont,
+        fontSize   : 16,
+        color      : '#FFFFFF',
+        fontWeight : 'bold' 
     }
+
 });

@@ -1,5 +1,5 @@
 var React         = require('react-native'),
-    BaseComponent = require('../BaseComponent');
+    BaseComponent = require('../../BaseComponent');
 
 
 var {

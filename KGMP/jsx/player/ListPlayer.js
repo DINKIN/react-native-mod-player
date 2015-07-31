@@ -18,11 +18,12 @@ class ListPlayer extends AbstractPlayer {
             record    = this.getPreviousRecord(rowID);
 
         if (! record) {
-            rowID  = this.getRowDataCount();
+            this.rowID = rowID  = this.getRowDataCount();
             record = this.getLastRecord();
 
             // debugger;
             if (! record) {
+                window.main.hideSpinner();
                 alert('Apologies! There are no more songs to play in this list.');
                 // VibrationIOS.vibrate();
                 return;
@@ -39,7 +40,8 @@ class ListPlayer extends AbstractPlayer {
     // Todo: clean this up
     // Todo: read from local list (not have to poll the owner component)
     nextTrack() {
-
+        console.log('ListPlayer.nextTrack()')
+        // debugger;
         if (this.loading) {
             return;
         }
@@ -52,13 +54,13 @@ class ListPlayer extends AbstractPlayer {
             record    = this.getNextRecord(rowID);
 
         if (! record) {
-            rowID  = 0;
+            this.rowID = rowID  = 0;
             record = this.getFirstRecord();
 
             if (! record) {
-                debugger
+                window.main.hideSpinner();
                 alert('Apologies! There are no more songs to play in this list.');
-                VibrationIOS.vibrate();
+                // VibrationIOS.vibrate();
                 this.loading = false;
                 return;
             }
@@ -66,9 +68,11 @@ class ListPlayer extends AbstractPlayer {
 
         this.pauseTrack(() => {
             this.patterns = {};
-            this.loadFile(record, () => this.rowID = rowID + 1);
+            this.loadFile(record, () => {
+                this.rowID = rowID + 1;
+                console.log('this.rowID = ' + this.rowID)
+            });
         });
-
     
     }
     
@@ -135,10 +139,9 @@ class ListPlayer extends AbstractPlayer {
 
         this.patterns = {};
         this.forceUpdate();
-        this.refs.webView.execJsCall('cls()');
+        // this.refs.webView.execJsCall('cls()');
         
         window.main.showSpinner();
-        
         MCModPlayerInterface.loadFile(
             record.path,
             //failure
@@ -164,7 +167,7 @@ class ListPlayer extends AbstractPlayer {
                 // this.forceUpdate();   
 
                 this.patterns = modObject.patterns;
-                this.onWkWebViewInit();
+                // this.onWkWebViewInit();
                 this.playTrack();
                 window.main.hideSpinner();
 
@@ -191,6 +194,7 @@ class ListPlayer extends AbstractPlayer {
     }
 
     getNextRecord(rowID) {
+        // debugger;
         var record = this.props.rowData[++rowID];
 
         return record ? record : null;

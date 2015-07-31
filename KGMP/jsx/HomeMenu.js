@@ -117,7 +117,7 @@ class HomeMenu extends BaseComponent {
                     this.createButton(this.onRandomPress,    "Random"),
                     this.createButton(this.onBrowsePress,    "Browse"),
                     this.createButton(this.onFavoritesPress, "Favorites"),
-                    this.createButton(this.onSearchPress,    "Search"),
+                    // this.createButton(this.onSearchPress,    "Search"),
                     this.createButton(this.onAboutPress,     "About")
                 ]}
             </View>

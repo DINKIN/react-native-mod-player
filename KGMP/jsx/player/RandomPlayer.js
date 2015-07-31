@@ -12,8 +12,10 @@ class RandomPlayer extends AbstractPlayer {
             return;
         }
 
+
         this.loading = true;
         window.main.showSpinner();
+
         window.db.getPrevRandom((rowData) => {
             if (! rowData) {
                 alert('Sorry. No more items in history.');
@@ -93,6 +95,7 @@ class RandomPlayer extends AbstractPlayer {
     }
 
     dislike () {
+        window.main.showSpinner();
         window.db.updateLikeViaCurrentItem(-1, () => {
             window.db.getNewRandomCurrentItem((rowData) => {
                 // var filePath = window.bundlePath + rowData.path + rowData.file_name;
@@ -107,10 +110,11 @@ class RandomPlayer extends AbstractPlayer {
         var filePath = window.bundlePath + rowData.path + rowData.file_name;
 
         this.deregisterPatternUpdateHandler();
+        // debugger;
         MCModPlayerInterface.pause(() => {
             this.deregisterPatternUpdateHandler();
     
-            this.refs.webView.execJsCall('cls()');
+            // this.refs.webView.execJsCall('cls()');
 
             MCModPlayerInterface.loadFile(
                 filePath,
@@ -145,12 +149,12 @@ class RandomPlayer extends AbstractPlayer {
     }
 
 
-    onWkWebViewPatternsRegistered() {
-        console.log('onWkWebViewPatternsRegistered');
-        this.patternsRegistered = true;
-        this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
-        // debugger;
-    }
+    // onWkWebViewPatternsRegistered() {
+    //     console.log('onWkWebViewPatternsRegistered');
+    //     this.patternsRegistered = true;
+    //     this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
+    //     // debugger;
+    // }
 
 
 

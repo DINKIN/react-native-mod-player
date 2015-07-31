@@ -102,16 +102,26 @@
     
      //type;type_long;container;container_long;tracker;artist;title;date;message;warnings
     
-    const char *artist   = openmpt_module_get_metadata(myLoadedMpFile, "artist"),
-               *type     = openmpt_module_get_metadata(myLoadedMpFile, "type"),
-               *typeLong = openmpt_module_get_metadata(myLoadedMpFile, "type_long"),
-               *tracker  = openmpt_module_get_metadata(myLoadedMpFile, "tracker"),
-               *title    = openmpt_module_get_metadata(myLoadedMpFile, "title"),
-               *date     = openmpt_module_get_metadata(myLoadedMpFile, "date"),
-               *message  = openmpt_module_get_metadata(myLoadedMpFile, "message"),
-               *warnings = openmpt_module_get_metadata(myLoadedMpFile, "warnings");
+    const char *artist    = openmpt_module_get_metadata(myLoadedMpFile, "artist"),
+               *type      = openmpt_module_get_metadata(myLoadedMpFile, "type"),
+               *typeLong  = openmpt_module_get_metadata(myLoadedMpFile, "type_long"),
+               *tracker   = openmpt_module_get_metadata(myLoadedMpFile, "tracker"),
+               *title     = openmpt_module_get_metadata(myLoadedMpFile, "title"),
+               *date      = openmpt_module_get_metadata(myLoadedMpFile, "date"),
+               *message   = openmpt_module_get_metadata(myLoadedMpFile, "message"),
+               *warnings  = openmpt_module_get_metadata(myLoadedMpFile, "warnings"),
+               *container = openmpt_module_get_metadata(myLoadedMpFile, "container_long");
     
 //    NSDictionary *patternsDict = [self getPatterns:myLoadedMpFile];
+    
+    NSMutableArray *instrumentNames = [[NSMutableArray alloc] init];
+    NSString *instName;
+    for (int i = 0; i < numInstr; i ++) {
+        instName = [[NSString alloc] initWithCString:openmpt_module_get_instrument_name(myLoadedMpFile, i) encoding:NSUTF8StringEncoding];
+        [instrumentNames addObject:instName];
+        
+//        printf("Instrument %i, %s\n", i, openmpt_module_get_instrument_name(myLoadedMpFile, i));
+    }
     
     
     NSString *nsName     = [[NSString alloc] initWithCString:title],
@@ -141,7 +151,7 @@
         [patternOrders addObject:[[NSNumber alloc] initWithInt:orderPattern]];
     }
     
-    NSDictionary *patternsDict = [self getPatterns:myLoadedMpFile];
+//    NSDictionary *patternsDict = [self getPatterns:myLoadedMpFile];
     
     return @{
         @"name"        : nsName ?: @"",
@@ -158,14 +168,15 @@
         @"currentPat"  : [[NSNumber alloc] initWithInt:currentPat],
         @"numPatterns" : [[NSNumber alloc] initWithInt:numPatterns],
         @"tracks"      : [[NSNumber alloc] initWithInt:numChannels],
-        @"instruments" : [[NSNumber alloc] initWithInt:numInstr],
+        @"numInstr"    : [[NSNumber alloc] initWithInt:numInstr],
         @"samples"     : [[NSNumber alloc] initWithInt:numSamples],
         @"speed"       : [[NSNumber alloc] initWithInt:speed],
         @"bpm"         : [[NSNumber alloc] initWithInt:bpm],
         @"length"      : [[NSNumber alloc] initWithInt:length],
         @"patternOrds" : patternOrders,
-        @"patterns"    : patternsDict,
-        @"file_name"   : file_name
+//        @"patterns"    : patternsDict,
+        @"file_name"   : file_name,
+        @"instruments" : instrumentNames
     };
 
 }

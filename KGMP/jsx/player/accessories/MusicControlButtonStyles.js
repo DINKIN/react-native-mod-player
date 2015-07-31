@@ -1,6 +1,6 @@
 
 var React         = require('react-native'),
-    BaseComponent = require('../BaseComponent'),
+    BaseComponent = require('../../BaseComponent'),
     deviceWidth   = 375,
     top           = 10, 
     {StyleSheet}  = React;

@@ -2,7 +2,7 @@
 
 var React      = require('react-native'),
     FavoritesView = require('./FavoritesView'),
-    ListPlayer = require('../player/ListPlayer');
+    FavoritesPlayer = require('../player/FavoritesPlayer');
 
 var {
         AppRegistry,
@@ -46,7 +46,8 @@ class FavoritesViewNavigator extends React.Component{
             initialRoute   : initialRoute,
             tintColor      : "#FF0000",
             barTintColor   : "#000000",
-            titleTextColor : "#00FF00"
+            titleTextColor : "#00FF00",
+            translucent    : false
         });
     }
 
@@ -83,7 +84,7 @@ class FavoritesViewNavigator extends React.Component{
                 
                 this.props.navigator.push({
                     title            : 'Player',
-                    component        : ListPlayer,
+                    component        : FavoritesPlayer,
                     componentConfig  : {
                         ownerList : ownerList,
                         modObject : modObject,
@@ -93,6 +94,7 @@ class FavoritesViewNavigator extends React.Component{
                         record    : record
                     }
                 });
+                
                 window.main.hideSpinner();
 
             }

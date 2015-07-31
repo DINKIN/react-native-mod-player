@@ -53,7 +53,7 @@ module.exports  = React.createClass({
         for (; i < numRows; i++) {
             rowInHex = i.toString(sixteen).toUpperCase();
 
-            if (i < 16) {
+            if (i < sixteen) {
                 rowInHex = '0'+rowInHex;
             }
 
