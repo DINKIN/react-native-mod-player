@@ -41,7 +41,6 @@ var FavoritesView = React.createClass({
         }
 
         return rowData;
-
     },
 
     getInitialState: function() {
@@ -59,6 +58,7 @@ var FavoritesView = React.createClass({
             rowData = this.extractNamesForRow(daters);
 
             var dSrc = dataSource.cloneWithRows(rowData);
+            
             return {
                 dataSource : dSrc
             };
@@ -100,9 +100,10 @@ var FavoritesView = React.createClass({
     render: function() {
         var numRecords = this.state.dataSource.getRowCount(),
             shuffleButton;
+
         if (numRecords > 2) {
             shuffleButton = (
-                <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center'}}>
+                <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center', borderTopWidth: .5, borderTopColor: '#222222'}}>
                     <View style={styles.touchableCt}>
 
                         <TouchableHighlight
@@ -110,9 +111,10 @@ var FavoritesView = React.createClass({
                             animationVelocity={0}
                             underlayColor="rgb(150,150,00)" 
                             style={styles.highlightCt} 
-                            onPress={this.onShufflePress}>
+                            onPress={this._pressShuffle}>
                                 <Text style={styles.label}>{"Shuffle"}</Text>
                         </TouchableHighlight>
+
                     </View>
                 </View>
             );
@@ -206,6 +208,11 @@ var FavoritesView = React.createClass({
         var props = this.props;
 
         props.onRowPress(props.rowData[rowID], props.navigator, this);
+    },
+
+   _pressShuffle: function() {
+        var props = this.props;
+        props.onShufflePress();
     }
 });
 

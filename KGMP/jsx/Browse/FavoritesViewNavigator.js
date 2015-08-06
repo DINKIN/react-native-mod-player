@@ -2,7 +2,8 @@
 
 var React           = require('react-native'),
     FavoritesView   = require('./FavoritesView'),
-    FavoritesPlayer = require('../player/FavoritesPlayer');
+    FavoritesPlayer = require('../player/FavoritesPlayer'),
+    RandomPlayer    = require('../player/RandomPlayer');
 
 var {
         AppRegistry,
@@ -28,6 +29,9 @@ class FavoritesViewNavigator extends React.Component{
                 rowData    : this.props.rowData,
                 onRowPress : (record, childNavigator, ownerList) => {
                     this.onRowPress(record, childNavigator, ownerList);
+                },
+                onShufflePress : () => {
+                    this.onShufflePress();
                 }
             },
             onLeftButtonPress : () => {
@@ -54,6 +58,52 @@ class FavoritesViewNavigator extends React.Component{
     onRowPress(record, childNavigator, ownerList) {
         // TODO: Setup color for selected item
         this.loadModFile(record, childNavigator, ownerList);
+    }
+
+    onShufflePress() {
+        var  navigator = this.props.navigator;
+        window.main.showSpinner();
+
+        window.db.clear();
+
+        window.db.getNextRandomFavorite((rowData) => {
+            // console.log(rowData);
+           
+            var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
+            MCModPlayerInterface.loadFile(
+                filePath,
+                //failure
+                (data) => {
+                    window.main.hideSpinner();
+                    alert('Failure loading ' + rowData.file_name);
+                    console.log(data);
+                },        
+                //success
+                (modObject) => {
+                    // debugger;
+                    var fileName  = rowData.file_name,
+                        rtBtnText,
+                        rtBtnHandler;
+
+                    modObject.fileName = fileName;
+                    
+                    window.mainNavigator.push({
+                        title            : 'Player',
+                        rightButtonTitle : rtBtnText,
+                        component        : RandomPlayer,
+                        componentConfig  : {
+                            modObject   : modObject,
+                            isFavorites : true,
+                            patterns    : modObject.patterns
+                        }
+                    });
+  
+                    window.main.hideSpinner();
+                }
+            );
+
+        });
+       
     }
 
     // Todo:  Clean this method up. Shit, it's a mess!

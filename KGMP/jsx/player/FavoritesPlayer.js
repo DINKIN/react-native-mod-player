@@ -17,12 +17,14 @@ class FavoritesPlayer extends ListPlayer {
 
         MCModPlayerInterface.loadFile(
             bundlePath + decodeURIComponent(record.path) + decodeURIComponent(record.file_name),
+           
             //failure
             (data) => {
                 window.main.hideSpinner();
                 alert('Failure in loading file ' + record.file_name);
                 console.log(data);
             },        
+            
             //success
             (modObject) => {
                 this.loading = false;
@@ -42,7 +44,6 @@ class FavoritesPlayer extends ListPlayer {
                 this.onWkWebViewInit();
                 this.playTrack();
                 window.main.hideSpinner();
-
             }
         );
     }

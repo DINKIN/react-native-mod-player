@@ -1,5 +1,6 @@
 var sqlite       = require('react-native-sqlite'),
     randomSQL    = "SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;",
+    randomFavSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY RANDOM() LIMIT 1;",
     favoritesSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY file_name;",
     emptyArray   = [],
     emptyFn      = function() {};
@@ -19,6 +20,10 @@ module.exports = {
         this.execQuery(randomSQL, successCallback);
     },
 
+    getRandomFavorite : function (successCallback) {
+        this.execQuery(randomFavSQL, successCallback);
+    },
+
     getNewRandomCurrentItem : function(cb) {
         this.getRandom((item) => {
             this.currentItem = item;
@@ -36,6 +41,33 @@ module.exports = {
          
             successCallback(rowData, this.stack.length);
         });
+    },
+
+    getNextRandomFavorite : function(successCallback) {
+        this.getRandomFavorite((rowData) => {
+            if (this.currentItem) {
+                this.stack.push(this.currentItem);
+            }
+         
+            this.currentItem = rowData;
+         
+            successCallback(rowData, this.stack.length);
+        });
+    },
+
+
+    // TODO : Reverse random stack
+    getPrevRandomFavorite : function(successCallback) {
+        var stack = this.stack;
+
+        if (stack.length <= 0) {
+            successCallback(null);
+            return;
+        }
+
+        var item = stack.pop();
+        successCallback(item);
+        this.currentItem = item; 
     },
 
     // TODO : Reverse random stack
@@ -65,7 +97,6 @@ module.exports = {
         this.execQuery(query, function() {
             successCallback();
         });
-
     },
 
 

@@ -16,14 +16,30 @@ class RandomPlayer extends AbstractPlayer {
         this.loading = true;
         window.main.showSpinner();
 
-        window.db.getPrevRandom((rowData) => {
-            if (! rowData) {
-                alert('Sorry. No more items in history.');
-                return;
-            }
-            
-            this.loadFile(rowData);
-        });
+        if (this.props.isFavorites) {
+            window.db.getPrevRandomFavorite((rowData) => {
+                if (! rowData) {
+                    window.main.hideSpinner();
+
+                    alert('Sorry. No more items in history.');
+                    return;
+                }
+                
+                this.loadFile(rowData);
+            });
+        }
+        else {
+            window.db.getPrevRandom((rowData) => {
+                if (! rowData) {
+                    window.main.hideSpinner();
+
+                    alert('Sorry. No more items in history.');
+                    return;
+                }
+                
+                this.loadFile(rowData);
+            });
+        }
     }
 
     // Todo: clean this up
@@ -34,9 +50,18 @@ class RandomPlayer extends AbstractPlayer {
 
         this.loading = true;
         window.main.showSpinner();
-        window.db.getNextRandom((rowData) => {
-            this.loadFile(rowData);
-        });
+        
+        if (this.props.isFavorites) {
+            window.db.getNextRandomFavorite((rowData) => {
+                this.loadFile(rowData);
+            });
+        }
+        else {
+            window.db.getNextRandom((rowData) => {
+                this.loadFile(rowData);
+            });
+        }
+
     }
 
     playTrack() {
