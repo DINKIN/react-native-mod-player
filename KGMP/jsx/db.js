@@ -91,14 +91,20 @@ module.exports = {
 
     updateLikeViaCurrentItem : function(likeValue, successCallback) {
         var id_md5 = this.currentItem.id_md5,
-            query = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE id_md5 = "' + id_md5 + '";'
-
+            query  = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE id_md5 = "' + id_md5 + '";'
 
         this.execQuery(query, function() {
             successCallback();
         });
     },
 
+    updateLikeViaFileName : function(fileName, likeValue, successCallback) {
+        var query  = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE file_name = "' + fileName + '";'
+ 
+        this.execQuery(query, function() {
+            successCallback();
+        });
+    },
 
     execQuery : function(query, successCallback) {
         var database = sqlite.open("keygenmusicplayer.db", function (error, database) {

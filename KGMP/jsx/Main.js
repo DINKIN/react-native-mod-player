@@ -19,9 +19,6 @@ var winder       = Dimensions.get('window'),
     screenHeight = window.height = winder.height;
 
 
-    console.log('Device height = ', screenHeight)
-
-
 var styles = StyleSheet.create({
     scene    : {
         // flex            : 1,
@@ -41,8 +38,11 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    spinnerIndicator : {
 
+    buttonFont : {
+        fontFamily : 'fontello', 
+        fontSize   : 60,
+        color      : '#FFFFFF'
     }
 });
 
@@ -52,7 +52,6 @@ class Spinner extends BaseComponent {
         return (
             <View style={styles.spinnerContainer}>
                 <ActivityIndicatorIOS 
-                    style={styles.spinnerIndicator}
                     animating={true}
                     size={"large"}
                     color="#FFFF00"
@@ -62,10 +61,37 @@ class Spinner extends BaseComponent {
     }
 }
 
+
+var chars = {
+    like    : '\uE81C',
+    dislike : '\uE81D'
+}
+class LikeSpinner extends BaseComponent {
+    render() {
+        return (
+            <View style={styles.spinnerContainer}>
+                <Text style={styles.buttonFont}>{chars['like']}</Text>
+            </View>
+        );
+    }
+}
+
+
+class DislikeSpinner extends BaseComponent {
+    render() {
+        return (
+            <View style={styles.spinnerContainer}>
+                <Text style={styles.buttonFont}>{chars['dislike']}</Text>
+            </View>
+        );
+    }
+}
 class Main extends BaseComponent  {
     setInitialState() {
         this.state = {
-            spinner : false
+            spinner        : false,
+            likeSpinner    : false,
+            dislikeSpinner : false
         };
     }
 
@@ -75,8 +101,6 @@ class Main extends BaseComponent  {
         var baseObj = {
             navigator : nav
         }
-
-        // debugger;
 
 
         if (route.componentConfig) {
@@ -120,12 +144,23 @@ class Main extends BaseComponent  {
         var initialRoute = {
                 component : HomeMenu
             },
-            spinner;
+            spinner,
+            likeSpinner,
+            dislikeSpinner;
 
 
         if (this.state.spinner) {
             spinner = React.createElement(Spinner);
         }
+
+        if (this.state.likeSpinner) {
+            likeSpinner = React.createElement(LikeSpinner);
+        }
+
+        if (this.state.dislikeSpinner) {
+            dislikeSpinner = React.createElement(DislikeSpinner);
+        }
+
         window.main = this;
         return (
             <View style={{flex: 1}}>
@@ -137,6 +172,8 @@ class Main extends BaseComponent  {
                 />
                 
                 {spinner}
+                {likeSpinner}
+                {dislikeSpinner}
             </View>
         );
     }
@@ -147,12 +184,24 @@ class Main extends BaseComponent  {
 
     }
 
+    showLikeSpinner() {
+        this.setState({likeSpinner : true})
+    }
+
+    showDislikeSpinner() {
+        this.setState({dislikeSpinner : true})
+
+    }
+
     hideSpinner() {
         console.log('hideSpinner')
 
-        this.setState({spinner : false})
+        this.setState({
+            spinner        : false,
+            likeSpinner    : false,
+            dislikeSpinner : false
+        })
     }
-
 };
 
 Main.prototype.navigator = null;

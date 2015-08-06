@@ -84,6 +84,7 @@ class RandomPlayer extends AbstractPlayer {
         } 
         else {
             state.playingSong = 1;
+
             MCModPlayerInterface.resume(
                 () => {
                     this.registerPatternUpdateHandler();
@@ -114,13 +115,20 @@ class RandomPlayer extends AbstractPlayer {
     }
 
     like() {
+        window.main.showLikeSpinner();
+
         window.db.updateLikeViaCurrentItem(1, (rowData) => {
+            setTimeout(function() {
+                window.main.hideSpinner();
+            }, 250);
+
             console.log(rowData)
         });
     }
 
     dislike () {
-        window.main.showSpinner();
+        window.main.showDislikeSpinner();
+
         window.db.updateLikeViaCurrentItem(-1, () => {
             window.db.getNewRandomCurrentItem((rowData) => {
                 // var filePath = window.bundlePath + rowData.path + rowData.file_name;

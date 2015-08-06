@@ -199,6 +199,27 @@ class ListPlayer extends AbstractPlayer {
 
         return record ? record : null;
     }
+
+
+    like(rowData) {
+        window.main.showLikeSpinner();
+
+        window.db.updateLikeViaFileName(this.modObject.fileName, 1, (rowData) => {
+            setTimeout(function() {
+                window.main.hideSpinner();
+            }, 250);
+
+            console.log(rowData)
+        });
+    }
+
+    dislike () {
+        window.main.showDislikeSpinner();
+
+        window.db.updateLikeViaFileName(this.modObject.fileName, 1, (rowData) => {
+            this.nextTrack();
+        });
+    }
 }
 
 
