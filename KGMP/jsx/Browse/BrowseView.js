@@ -59,6 +59,7 @@ var BrowseView = React.createClass({
             rowData = this.extractNamesForRow(daters);
 
             var dSrc = dataSource.cloneWithRows(rowData);
+            // var dSrc = dataSource.cloneWithRows([rowData[0]]);
             return {
                 dataSource : dSrc
             };
@@ -102,14 +103,16 @@ var BrowseView = React.createClass({
 
     render: function() {
         return (
-            <ListView 
-                style={styles.listView} 
-                dataSource={this.state.dataSource} 
-                initialListSize={30} 
-                pageSize={30} 
-                scrollRenderAheadDistance={100} 
-                renderRow={this._renderRow}
-            />
+            <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>
+                <ListView 
+                    style={styles.listView} 
+                    dataSource={this.state.dataSource} 
+                    initialListSize={30} 
+                    pageSize={30} 
+                    scrollRenderAheadDistance={300} 
+                    renderRow={this._renderRow}
+                />
+            </View>
         );
     },
 
@@ -190,6 +193,7 @@ var BrowseView = React.createClass({
 var styles = StyleSheet.create({
     listView : {
         backgroundColor : '#000000',
+        height: window.height - 60
 
     },
     row : {

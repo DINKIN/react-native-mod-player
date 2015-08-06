@@ -15,13 +15,16 @@ var {
 } = React;
 
 var winder       = Dimensions.get('window'),
-    screenWidth  = winder.width,
-    screenHeight = winder.height;
+    screenWidth  = window.width = winder.width,
+    screenHeight = window.height = winder.height;
+
+
+    console.log('Device height = ', screenHeight)
 
 
 var styles = StyleSheet.create({
     scene    : {
-        flex            : 1,
+        // flex            : 1,
         paddingTop      : 20,
         backgroundColor : '#EAEAEA',
 

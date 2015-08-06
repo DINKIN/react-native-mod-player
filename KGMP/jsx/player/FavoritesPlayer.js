@@ -14,15 +14,13 @@ class FavoritesPlayer extends ListPlayer {
         // this.refs.webView.execJsCall('cls()');
         
         window.main.showSpinner();
-        
+
         MCModPlayerInterface.loadFile(
-            bundlePath + record.path + record.file_name,
+            bundlePath + decodeURIComponent(record.path) + decodeURIComponent(record.file_name),
             //failure
             (data) => {
                 window.main.hideSpinner();
-                var pathSplit = record.path.split('/');
-                
-                alert('Failure in loading file ' + pathSplit[pathSplit.length - 1]);
+                alert('Failure in loading file ' + record.file_name);
                 console.log(data);
             },        
             //success

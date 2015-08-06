@@ -107,7 +107,7 @@ class RandomPlayer extends AbstractPlayer {
     loadFile(rowData) {
         this.patterns = {};
         this.patternsRegistered = false;
-        var filePath = window.bundlePath + rowData.path + rowData.file_name;
+        var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
 
         this.deregisterPatternUpdateHandler();
         // debugger;

@@ -95,20 +95,41 @@ var FavoritesView = React.createClass({
 
     componentWillMount: function() {
         this._pressData = {};
-
-        // this.getDirectories();
     },
 
     render: function() {
+        var numRecords = this.state.dataSource.getRowCount(),
+            shuffleButton;
+        if (numRecords > 2) {
+            shuffleButton = (
+                <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center'}}>
+                    <View style={styles.touchableCt}>
+
+                        <TouchableHighlight
+                            activeOpacity={1}
+                            animationVelocity={0}
+                            underlayColor="rgb(150,150,00)" 
+                            style={styles.highlightCt} 
+                            onPress={this.onShufflePress}>
+                                <Text style={styles.label}>{"Shuffle"}</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            );
+        }
+
         return (
-            <ListView 
-                style={styles.listView} 
-                dataSource={this.state.dataSource} 
-                initialListSize={30} 
-                pageSize={20} 
-                scrollRenderAheadDistance={100} 
-                renderRow={this._renderRow}
-            />
+            <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>
+                <ListView 
+                    style={styles.listView} 
+                    dataSource={this.state.dataSource} 
+                    initialListSize={30} 
+                    pageSize={20} 
+                    scrollRenderAheadDistance={100} 
+                    renderRow={this._renderRow}
+                />
+                {shuffleButton}                
+            </View>
         );
     },
 
@@ -150,12 +171,15 @@ var FavoritesView = React.createClass({
     getRowDataCount : function() {
         return this.props.rowData.length - 1;
     },
+    
     getFirstRecord : function() {
         return this.props.rowData[0];
     },
+    
     getLastRecord : function() {
         this.props.rowData[this.props.rowData.length - 1];
     },
+
     getPreviousRecord : function(rowID) {
         var record    = this.props.rowData[--rowID];
         
@@ -169,6 +193,7 @@ var FavoritesView = React.createClass({
 
     getNextRecord : function(rowID) {
         var record    = this.props.rowData[++rowID];
+
         if (record) {
             return record;
         }
@@ -188,9 +213,13 @@ var FavoritesView = React.createClass({
 
 var styles = StyleSheet.create({
     listView : {
+        // height : window.height - 105,
+        // borderWidth : 1,
+        // borderColor : '#FFF000'
         backgroundColor : '#000000',
-
+        flex            : 1
     },
+
     row : {
         flexDirection   : 'row',
         justifyContent  : 'center',
@@ -202,11 +231,6 @@ var styles = StyleSheet.create({
     separator  : {
         height          : 1,
         backgroundColor : '#222222',
-    },
-
-    thumb : {
-        width  : 64,
-        height : 64,
     },
 
     rowText : {
@@ -240,7 +264,35 @@ var styles = StyleSheet.create({
         marginLeft   : 5,
         paddingRight : 3,
         marginTop    : 2
-    }
+    },
+
+    // Shuffle button
+    highlightCt : {
+        width          : 160,
+        height         : 28,
+        borderWidth    : .5,
+        borderColor    : '#333333',
+        // borderRadius   : 3,
+        flexDirection  : 'row',
+        justifyContent : 'center',
+    },
+
+    touchableCt : {
+        flexDirection  : 'row',
+        justifyContent : 'center',
+        // marginTop      : 20,
+        // marginBottom   : 20,
+        backgroundColor : '#000000'
+        // borderWidth    : 2,
+        // borderColor    : '#FF0000'
+    },  
+
+    label : {
+        fontFamily : 'PerfectDOSVGA437Win',
+        fontSize   : 25, 
+        fontWeight : 'bold',
+        color      : '#EFEFEF'
+    },
 });
 
 module.exports = FavoritesView;

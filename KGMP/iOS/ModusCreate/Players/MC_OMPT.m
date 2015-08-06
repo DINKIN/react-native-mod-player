@@ -25,6 +25,7 @@
     
     char *loadedFileData;
    
+    printf("Loading file\n%s\n", [path UTF8String]);
     FILE *file = fopen([path cStringUsingEncoding:NSASCIIStringEncoding], "rb");
     
     if (file == NULL) {
@@ -41,13 +42,17 @@
    	openmpt_module * mod = 0;
 	mod = openmpt_module_create_from_memory(loadedFileData, loadedFileSize, NULL, NULL, NULL);
     
+    fclose(file);
+    free(loadedFileData);
+    
+    if (! mod) {
+        return nil;
+    }
+    
     openmpt_module_set_repeat_count(mod, 100);
     
     self.mod = mod;
-   
-    fclose(file);
 
-    free(loadedFileData);
     
    
     NSDictionary *retObj = [self extractInfoFromModFile:mod withPath:path];

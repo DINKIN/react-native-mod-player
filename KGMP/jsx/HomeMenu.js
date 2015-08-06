@@ -37,7 +37,8 @@ var styles = StyleSheet.create({
     },
 
     highlightCt : {
-        width          : 175,
+        width          : 210,
+        height         : 35,
         borderWidth    : .5,
         borderColor    : '#333333',
         // borderRadius   : 3,
@@ -56,21 +57,21 @@ var styles = StyleSheet.create({
 
     label : {
         fontFamily : 'PerfectDOSVGA437Win',
-        fontSize   : 28, 
+        fontSize   : 33, 
         fontWeight : 'bold',
         color      : '#EFEFEF'
     },
 
     titleRed : {
         fontFamily : 'PerfectDOSVGA437Win', 
-        fontSize   : 30,
+        fontSize   : 45,
         fontWeight : 'bold',
         color      : '#FF0000'
     },
 
     titleGreen : {
         fontFamily : 'PerfectDOSVGA437Win', 
-        fontSize   : 30,
+        fontSize   : 45,
         color      : '#00FF00'
     }
 });
@@ -146,8 +147,7 @@ Object.assign(HomeMenu.prototype, {
 
             window.db.getNextRandom((rowData) => {
                 // console.log(rowData);
-                var filePath = window.bundlePath + rowData.path + rowData.file_name;
-
+                var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
                 MCModPlayerInterface.loadFile(
                     filePath,
                     //failure
@@ -184,16 +184,26 @@ Object.assign(HomeMenu.prototype, {
         },
         
         onBrowsePress : function() {
+            window.main.showSpinner();
+
             this.props.navigator.push({
                 title          : 'Browse Groups',
                 component      : BrowseViewNav,
                 // transitionType : 'PushFromRight'
             });
+
+            window.main.hideSpinner();
+
         },
         
         onFavoritesPress : function() {
             window.main.showSpinner();
             window.db.getFavorites((rowData) => {
+                
+
+                rowData.path = decodeURIComponent(rowData.path);
+                rowData.file_name = decodeURIComponent(rowData.file_name);
+                
                 window.mainNavigator.push({
                     component       : FavsViewNav,
                     componentConfig : {
@@ -218,6 +228,10 @@ Object.assign(HomeMenu.prototype, {
                 //success
                 (modObject) => {
                     // debugger;
+
+                    modObject.path = decodeURIComponent(modObject.path);
+                    modObject.file_name = decodeURIComponent(mod_object.file_name);
+
                     window.mainNavigator.push({
                         title           : 'About',
                         component       : AboutView,

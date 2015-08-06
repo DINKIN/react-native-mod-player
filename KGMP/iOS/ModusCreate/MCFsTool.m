@@ -13,8 +13,8 @@
 RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(getDirectoriesAsJson:(NSString *)path
-                                errorCallback:(RCTResponseSenderBlock)errorCallback
-                                     callback:(RCTResponseSenderBlock)callback) {
+                         errorCallback:(RCTResponseSenderBlock)errorCallback
+                              callback:(RCTResponseSenderBlock)callback) {
     
     NSMutableArray *directories = [self getContentsOfDirectory:path];
     

@@ -1,7 +1,7 @@
 'use strict';
 
-var React      = require('react-native'),
-    FavoritesView = require('./FavoritesView'),
+var React           = require('react-native'),
+    FavoritesView   = require('./FavoritesView'),
     FavoritesPlayer = require('../player/FavoritesPlayer');
 
 var {
@@ -53,16 +53,14 @@ class FavoritesViewNavigator extends React.Component{
 
     onRowPress(record, childNavigator, ownerList) {
         // TODO: Setup color for selected item
-
-        this.loadModFile(record, childNavigator, ownerList);                
-
+        this.loadModFile(record, childNavigator, ownerList);
     }
 
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
         window.main.showSpinner();
         MCModPlayerInterface.loadFile(
-            bundlePath + record.path + record.file_name,
+            bundlePath + decodeURIComponent(record.path) + decodeURIComponent(record.file_name),
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -106,14 +104,14 @@ class FavoritesViewNavigator extends React.Component{
 
 var styles = StyleSheet.create({
     container : {
-        backgroundColor : '#000000',
+        backgroundColor : '#00FF00',
         // borderWidth     : 3,
-        // borderColor     : '#0000FF',
+        // borderColor     : '#FF00FF',
         // marginTop       : 20,
-        overflow        : 'visible',
-        flexDirection   : 'column',
+        // overflow        : 'visible',
+        // flexDirection   : 'column',
         flex            : 1,
-        alignSelf       : 'stretch'
+        // alignSelf       : 'stretch'
     },
 
 })

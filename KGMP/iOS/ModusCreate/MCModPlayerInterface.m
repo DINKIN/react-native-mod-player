@@ -63,19 +63,20 @@ RCT_EXPORT_METHOD(loadFile:(NSString *)path
     MCModPlayer *player = [MCModPlayer sharedManager];
     
     NSDictionary *modInfo = [player initializeSound:path];
-//    printf("                  ---------          \n");
 
-    self.currentRow     = 0;
-    self.currentOrder   = 0;
-    
-    NSArray *ords = [modInfo objectForKey:@"patternOrds"];
-    
-    self.currentPattern = [ords objectAtIndex:0];
     
     if (modInfo == nil) {
         errorCallback(@[@"Could not initialize audio."]);
     }
     else {
+    
+        self.currentRow     = 0;
+        self.currentOrder   = 0;
+
+        NSArray *ords = [modInfo objectForKey:@"patternOrds"];
+
+        self.currentPattern = [ords objectAtIndex:0];
+
         callback(@[modInfo]);
     }
 
@@ -165,7 +166,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
  
     MCModPlayer *player = [MCModPlayer sharedManager];
     
-    NSDictionary *modInfo = [player initializeSound:filePath],
+    NSDictionary *modInfo  = [player initializeSound:filePath],
                  *patterns = [player getAllPatterns:filePath];
     
     NSMutableDictionary *allModInfo = [[NSMutableDictionary alloc] initWithDictionary:modInfo];
