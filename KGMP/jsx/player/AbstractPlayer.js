@@ -19,7 +19,7 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseComponent         = require('../BaseComponent'),
-    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     ProgressView          = require('./accessories/ProgressView');
 
 
@@ -133,17 +133,19 @@ class AbstractPlayer extends BaseComponent {
                 </View>
 
                 <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
+                {/*
+                
                 <View style={{padding:5}}>
                     <Text style={styles.instrumentsLabel}>Instruments:</Text>
                 </View>
 
-                <ScrollView style={{flex:1, padding: 5}}>
-                    {{instViews}}
-                </ScrollView>
-
-                {/*
-                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
+                 <ScrollView style={{flex:1, padding: 5}}>
+                     {{instViews}}
+                 </ScrollView>
                 */}
+
+                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
+                
                     {/*
                     <View style={[styles.rowNumberz, newTopPosition]}>
                         <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
@@ -330,7 +332,7 @@ Object.assign(AbstractPlayer.prototype, {
                 pattern = position[1],
                 row     = position[2];
 
-            // refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
+            refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
 
             refs.summaryCard.setState({
                 order   : order,
@@ -416,7 +418,7 @@ Object.assign(AbstractPlayer.prototype, {
             // window.modObjStr = newModObj;
             // window.refz = this.refs;
             // console.log('do it')
-            // this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
+            this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
         },
 
         onWkWebViewPatternsRegistered : function() {

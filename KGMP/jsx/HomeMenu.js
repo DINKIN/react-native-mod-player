@@ -228,7 +228,7 @@ Object.assign(HomeMenu.prototype, {
                 (modObject) => {
 
                     modObject.directory = unescape(modObject.directory);
-                    modObject.file_name = unescape(mod_object.file_name);
+                    modObject.file_name = unescape(modObject.file_name);
 
                     window.mainNavigator.push({
                         title           : 'About',
