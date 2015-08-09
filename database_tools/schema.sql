@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS songs;
 DROP TABLE IF EXISTS plays;
+DROP TABLE IF EXISTS directories;
 DROP INDEX IF EXISTS song_index;
-DROP INDEX IF EXISTS directories;
 
 
 CREATE TABLE songs (

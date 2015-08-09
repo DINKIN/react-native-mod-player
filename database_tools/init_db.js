@@ -56,14 +56,14 @@ for (var dir in modFiles) {
 
         // console.log('[%s] %s', md5, fileName);
         
-        statement = util.format(insertSongsSQL, md5, encodeURIComponent(fileName), fileName, encodeURIComponent(dir + '/'));
+        statement = util.format(insertSongsSQL, md5, escape(fileName), fileName, escape(dir + '/'));
         fs.appendFileSync(sqlFile, statement);
         numGood++;
         // console.log('INSERT %s/%s', dir, fileName);
         // console.log(statement)
     }
 
-    statement = util.format(insertDirSQL, encodeURIComponent(dir + '/'), numGood);
+    statement = util.format(insertDirSQL, escape(dir + '/'), numGood);
     fs.appendFileSync(sqlFile, statement);
 
 }
