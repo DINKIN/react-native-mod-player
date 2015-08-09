@@ -62,14 +62,14 @@
                 
                 NSArray *pathSplit = [filePath componentsSeparatedByString:@"/"];
                 
-                NSString *fileName = [pathSplit objectAtIndex:[pathSplit count] - 1];
+//                NSString *fileName = [pathSplit objectAtIndex:[pathSplit count] - 1];
                 
-                printf("READING FILE --- %s ", [fileName UTF8String]);
+                printf("READING FILE --- %s ",  [[fileObj valueForKey:@"name"] UTF8String]);
 
-                BOOL didRead;
+                NSString *songName;
                 
                 @try {
-                    didRead = [player loadFile:filePath];
+                    songName = [player loadFile:filePath];
                 }
                 @catch(NSException * e) {
                     printf("   FATAL --- \n");
@@ -77,8 +77,13 @@
                 
                 NSMutableDictionary *tmpData = [[NSMutableDictionary alloc] initWithDictionary:fileObj];
                 [tmpData removeObjectForKey:@"path"];
+                [tmpData setValue:songName forKey:@"songName"];
+                
+                [tmpData setValue:[fileObj valueForKey:@"name"] forKey:@"file_name"];
+                [tmpData removeObjectForKey:@"name"];
+                
 
-                if (didRead != TRUE) {
+                if (songName == nil) {
                     printf("    BAD\n");
                     [tmpData setValue:@"true" forKey:@"bad"];
                 }

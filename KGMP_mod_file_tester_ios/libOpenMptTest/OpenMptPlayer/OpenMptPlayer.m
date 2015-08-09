@@ -142,7 +142,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 }
 
 
-- (BOOL) loadFile:(NSString *)path {
+- (NSString *) loadFile:(NSString *)path {
     FILE *file;
     
     const char* fil = [path cStringUsingEncoding:NSASCIIStringEncoding];
@@ -174,7 +174,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         openmpt_module_destroy(mod);
 
 //        printf("Read Error: %s\n", fil);
-        return FALSE;
+        return NULL;
     }
     
     
@@ -185,13 +185,19 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         openmpt_module_destroy(mod);
 
 //        printf("Read Error: %s\n", fil);
-        return FALSE;
+        return NULL;
     }
+    
+    
+    const char *title = openmpt_module_get_metadata(mod, "title");
+    
+    NSString *nsName = [[NSString alloc] initWithCString:title];
+    
     
     openmpt_module_destroy(mod);
    
     
-    return TRUE;
+    return nsName ?: @"";
 }
 
 // Todo: Merge getDirectories and getFilesForDirectory into one method
@@ -293,7 +299,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             
             jsonObj = @{
                 @"name"      : [url lastPathComponent],
-                @"file_name" : file_name,
+                @"file_name_short" : file_name,
                 @"path"      : [url path],
                 @"type"      : fileType
             };

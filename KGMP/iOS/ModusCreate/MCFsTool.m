@@ -76,9 +76,9 @@ RCT_EXPORT_METHOD(getBundlePath:(RCTResponseSenderBlock)callback) {
    
         if (isDirectoryBool) {
             jsonObj = @{
-                @"name" : [url lastPathComponent],
-                @"path" : [url path],
-                @"type" : dirType
+                @"name"      : [url lastPathComponent],
+                @"directory" : [url path],
+                @"type"      : dirType
             };
         }
         else if (! isDirectoryBool) {
@@ -87,7 +87,7 @@ RCT_EXPORT_METHOD(getBundlePath:(RCTResponseSenderBlock)callback) {
             jsonObj = @{
                 @"name"      : [url lastPathComponent],
                 @"file_name" : file_name,
-                @"path"      : [url path],
+                @"directory" : [url path],
                 @"type"      : fileType
             };
             

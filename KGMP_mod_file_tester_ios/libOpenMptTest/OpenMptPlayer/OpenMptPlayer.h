@@ -44,7 +44,7 @@
 - (NSMutableArray *) getDirectories:(NSString*)path;
 - (NSMutableArray *) getFilesForDirectory:(NSString*)path;
 - (void) copyBufferData:(SInt16 *)frames withBufferSize:(int)size;
-- (BOOL) loadFile:(NSString *)path;
+- (NSString *) loadFile:(NSString *)path;
 
 - (NSMutableArray *) getContentsOfDirectory:(NSString*)path;
 
