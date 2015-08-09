@@ -86,7 +86,7 @@ class BrowseViewNavigator extends React.Component{
         if (isDir) {
             title = record.name + '/';
             window.main.showSpinner();
-            getDirectories(record.path, (rowData)=> {
+            getDirectories(record.directory, (rowData)=> {
                 var route = {
                     title     : title,
                     component : BrowseView,
@@ -115,7 +115,7 @@ class BrowseViewNavigator extends React.Component{
         window.main.showSpinner();
 
         MCModPlayerInterface.loadFile(
-            record.path,
+            record.directory,
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -125,9 +125,9 @@ class BrowseViewNavigator extends React.Component{
             //success
             (modObject) => {
 
-                modObject.path = record.path;
+                modObject.directory = record.directory;
 
-                var fileName = modObject.path.split('/');
+                var fileName = modObject.directory.split('/');
 
                 modObject.fileName = fileName[fileName.length - 1];
                 // var cn = childNavigator;

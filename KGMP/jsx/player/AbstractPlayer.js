@@ -156,6 +156,7 @@ class AbstractPlayer extends BaseComponent {
                     <View style={styles.playerBarBottom}/>
                     */}
                 <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
+                
                 <View style={styles.controlsContainer}>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>

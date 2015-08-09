@@ -146,7 +146,8 @@ Object.assign(HomeMenu.prototype, {
 
             window.db.getNextRandom((rowData) => {
                 // console.log(rowData);
-                var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
+                var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
+
                 MCModPlayerInterface.loadFile(
                     filePath,
                     //failure
@@ -203,8 +204,9 @@ Object.assign(HomeMenu.prototype, {
             window.db.getFavorites((rowData) => {
                 
 
-                rowData.path = decodeURIComponent(rowData.path);
-                rowData.file_name = decodeURIComponent(rowData.file_name);
+
+                rowData.directory = unescape(rowData.directory);
+                rowData.file_name = unescape(rowData.file_name);
                 
                 window.mainNavigator.push({
                     component       : FavsViewNav,
@@ -231,8 +233,8 @@ Object.assign(HomeMenu.prototype, {
                 (modObject) => {
                     // debugger;
 
-                    modObject.path = decodeURIComponent(modObject.path);
-                    modObject.file_name = decodeURIComponent(mod_object.file_name);
+                    modObject.directory = unescape(modObject.directory);
+                    modObject.file_name = unescape(mod_object.file_name);
 
                     window.mainNavigator.push({
                         title           : 'About',

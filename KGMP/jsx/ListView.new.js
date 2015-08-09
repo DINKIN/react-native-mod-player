@@ -50,7 +50,7 @@ var generateView = function(cfg) {
             this.state = this.getInitialState();
 
             // MCFsTool.getDirectoriesAsJson(
-            //     cfg.path,
+            //     cfg.directory,
             //     // failure
             //     () => {
             //         console.log('An Error Occurred');
@@ -215,9 +215,9 @@ var generateView = function(cfg) {
             else {
                 title = record.name;
                 
-                // console.log(record.path)
+                // console.log(record.directory)
                 MCModPlayerInterface.getFileInfo(
-                    record.path,
+                    record.directory,
                     //failure
                     (data) => {
                         alert('Apologies. This file could not be loaded.');
@@ -229,9 +229,9 @@ var generateView = function(cfg) {
 
 
                         if (modObject) {
-                            modObject.path = record.path;
+                            modObject.directory = record.directory;
 
-                            var fileName = modObject.path.split('/');
+                            var fileName = modObject.directory.split('/');
                             fileName = fileName[fileName.length - 1];
 
                             modObject.fileName = fileName;

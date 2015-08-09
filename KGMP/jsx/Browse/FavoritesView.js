@@ -31,11 +31,10 @@ var FavoritesView = React.createClass({
 
         for (; i < len; i++) {
             dataItem = daters[i];
-            name     = dataItem.file_name ? dataItem.file_name : dataItem.name;
+            name     = dataItem.file_name;
 
-            if (dataItem.type == dir) {
-                name += '/';
-            }
+            console.log(name)
+            
 
             rowData.push(name);
         }
@@ -119,6 +118,8 @@ var FavoritesView = React.createClass({
                 </View>
             );
         }
+
+        debugger;
 
         return (
             <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>

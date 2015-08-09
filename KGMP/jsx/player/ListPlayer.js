@@ -143,11 +143,11 @@ class ListPlayer extends AbstractPlayer {
         
         window.main.showSpinner();
         MCModPlayerInterface.loadFile(
-            record.path,
+            record.directory,
             //failure
             (data) => {
                 window.main.hideSpinner();
-                var pathSplit = record.path.split('/');
+                var pathSplit = record.directory.split('/');
                 alert('Failure in loading file ' + pathSplit[pathSplit.length - 1]);
                 console.log(data);
             },        

@@ -69,7 +69,7 @@ class FavoritesViewNavigator extends React.Component{
         window.db.getNextRandomFavorite((rowData) => {
             // console.log(rowData);
            
-            var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
+            var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
             MCModPlayerInterface.loadFile(
                 filePath,
                 //failure
@@ -110,7 +110,7 @@ class FavoritesViewNavigator extends React.Component{
     loadModFile(record, childNavigator, ownerList) {
         window.main.showSpinner();
         MCModPlayerInterface.loadFile(
-            bundlePath + decodeURIComponent(record.path) + decodeURIComponent(record.file_name),
+            bundlePath + unescape(record.directory) + unescape(record.file_name),
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -120,9 +120,9 @@ class FavoritesViewNavigator extends React.Component{
             //success
             (modObject) => {
 
-                modObject.path = record.path;
+                modObject.directory = record.directory;
 
-                var fileName = modObject.path.split('/');
+                var fileName = modObject.directory.split('/');
 
                 modObject.fileName = fileName[fileName.length - 1];
                 // var cn = childNavigator;

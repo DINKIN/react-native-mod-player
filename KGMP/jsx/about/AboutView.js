@@ -78,9 +78,9 @@ var AboutView = React.createClass({
                 this.afterLoadModFile(modObject);
                 if (modObject) {
 
-                    // modObject.path = record.path;
+                    // modObject.directory = record.directory;
 
-                    // var fileName = modObject.path.split('/'),
+                    // var fileName = modObject.directory.split('/'),
                     //     rtBtnText,
                     //     rtBtnHandler;
 

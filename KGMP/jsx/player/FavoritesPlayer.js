@@ -16,7 +16,7 @@ class FavoritesPlayer extends ListPlayer {
         window.main.showSpinner();
 
         MCModPlayerInterface.loadFile(
-            bundlePath + decodeURIComponent(record.path) + decodeURIComponent(record.file_name),
+            bundlePath + unescape(record.directory) + unescape(record.file_name),
            
             //failure
             (data) => {

@@ -131,7 +131,7 @@ class RandomPlayer extends AbstractPlayer {
 
         window.db.updateLikeViaCurrentItem(-1, () => {
             window.db.getNewRandomCurrentItem((rowData) => {
-                // var filePath = window.bundlePath + rowData.path + rowData.file_name;
+                // var filePath = window.bundlePath + rowData.directory + rowData.file_name;
                 this.loadFile(rowData);
             });
         });
@@ -140,7 +140,7 @@ class RandomPlayer extends AbstractPlayer {
     loadFile(rowData) {
         this.patterns = {};
         this.patternsRegistered = false;
-        var filePath = window.bundlePath + decodeURIComponent(rowData.path) + decodeURIComponent(rowData.file_name);
+        var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
 
         this.deregisterPatternUpdateHandler();
         // debugger;

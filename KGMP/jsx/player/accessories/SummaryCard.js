@@ -16,7 +16,12 @@ var white ='#FFFFFF';
 var styles = StyleSheet.create({
 
     summaryRow : {
-        flexDirection  : 'row'
+        flexDirection  : 'row',
+        height : 16
+    },
+    summaryRowLarge : {
+        flexDirection : 'row',
+        height : 30
     },
 
     fileSummary : {
@@ -98,7 +103,7 @@ module.exports  = React.createClass({
                     <Text style={styles.text}>{data.typeLong}</Text>
                 </View>  
 
-                <View style={styles.summaryRow}>
+                <View style={styles.summaryRowLarge}>
                     <View>
                         <Text style={styles.title}>Order: </Text>
                         <Text style={styles.text}>{state.order}</Text>
