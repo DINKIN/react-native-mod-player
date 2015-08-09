@@ -31,6 +31,13 @@ module.exports = {
         });
     },
 
+    getByColumn : function(column, value, successCallback) {
+        var query = "SELECT * FROM songs WHERE " + column + " like '" + value + "';";
+
+        this.execQuery(query, successCallback);
+
+    },
+
     getNextRandom : function(successCallback) {
         this.getRandom((rowData) => {
             if (this.currentItem) {
@@ -100,13 +107,14 @@ module.exports = {
 
     updateLikeViaFileName : function(fileName, likeValue, successCallback) {
         var query  = 'UPDATE songs SET like_value = ' + likeValue + ' WHERE file_name = "' + fileName + '";'
- 
+        // debugger;
         this.execQuery(query, function() {
             successCallback();
         });
     },
 
     execQuery : function(query, successCallback) {
+        // debugger;
         var database = sqlite.open("keygenmusicplayer.db", function (error, database) {
             if (error) {
                 console.log("Failed to open database:", error);

@@ -31,9 +31,9 @@ var FavoritesView = React.createClass({
 
         for (; i < len; i++) {
             dataItem = daters[i];
-            name     = dataItem.file_name;
+            name     = unescape(dataItem.file_name);
 
-            console.log(name)
+            // console.log(name)
             
 
             rowData.push(name);
@@ -51,9 +51,13 @@ var FavoritesView = React.createClass({
                 }
             }),
             rowData;
-            
+           
+        // one object, need to stuff into array.
         
         if (daters) {
+            if (daters.directory) {
+                daters = [daters];
+            }
             rowData = this.extractNamesForRow(daters);
 
             var dSrc = dataSource.cloneWithRows(rowData);
@@ -119,8 +123,7 @@ var FavoritesView = React.createClass({
             );
         }
 
-        debugger;
-
+        
         return (
             <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>
                 <ListView 

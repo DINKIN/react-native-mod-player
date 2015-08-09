@@ -204,7 +204,7 @@ class ListPlayer extends AbstractPlayer {
     like(rowData) {
         window.main.showLikeSpinner();
 
-        window.db.updateLikeViaFileName(this.modObject.fileName, 1, (rowData) => {
+        window.db.updateLikeViaFileName(this.modObject.file_name, 1, (rowData) => {
             setTimeout(function() {
                 window.main.hideSpinner();
             }, 350);
@@ -216,7 +216,7 @@ class ListPlayer extends AbstractPlayer {
     dislike () {
         window.main.showDislikeSpinner();
 
-        window.db.updateLikeViaFileName(this.modObject.fileName, 1, (rowData) => {
+        window.db.updateLikeViaFileName(this.modObject.file_name, 1, (rowData) => {
             this.nextTrack();
         });
     }

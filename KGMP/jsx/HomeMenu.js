@@ -203,11 +203,6 @@ Object.assign(HomeMenu.prototype, {
             window.main.showSpinner();
             window.db.getFavorites((rowData) => {
                 
-
-
-                rowData.directory = unescape(rowData.directory);
-                rowData.file_name = unescape(rowData.file_name);
-                
                 window.mainNavigator.push({
                     component       : FavsViewNav,
                     componentConfig : {
@@ -231,7 +226,6 @@ Object.assign(HomeMenu.prototype, {
                 },        
                 //success
                 (modObject) => {
-                    // debugger;
 
                     modObject.directory = unescape(modObject.directory);
                     modObject.file_name = unescape(mod_object.file_name);
