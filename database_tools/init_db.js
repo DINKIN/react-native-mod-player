@@ -6,7 +6,7 @@ var fs         = require('fs'),
     util       = require('util'),
     // modFiles   = require('./mod_files.in'),
     sqlFile    = 'data_to_insert.sql',
-    insertSongsSQL = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", 0);\n',
+    insertSongsSQL = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", "%s", 0);\n',
     insertDirSQL   = 'INSERT INTO directories VALUES("%s", "%s");\n';
 
 
@@ -53,12 +53,13 @@ for (var dir in modFiles) {
 
         md5 = execSync(cmd).toString();
         md5 = md5.trim();
-
+        // console.log(fileObj)
         // console.log('[%s] %s', md5, fileName);
         
-        statement = util.format(insertSongsSQL, md5, escape(fileName), fileName, escape(dir + '/'));
+        statement = util.format(insertSongsSQL, md5, escape(fileObj.songName), escape(fileName), escape(fileObj.file_name_short), escape(dir + '/'));
         fs.appendFileSync(sqlFile, statement);
         numGood++;
+
         // console.log('INSERT %s/%s', dir, fileName);
         // console.log(statement)
     }

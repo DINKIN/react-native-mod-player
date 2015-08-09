@@ -8,6 +8,7 @@ CREATE TABLE songs (
     id_md5     TEXT, 
     song_name  TEXT,
     file_name  TEXT, 
+    file_name_short  TEXT, 
     directory  TEXT, 
     like_value INT
 );
