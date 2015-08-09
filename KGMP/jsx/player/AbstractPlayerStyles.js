@@ -8,9 +8,7 @@ var {StyleSheet, Image} = React;
 
 //TODO: more fluid layouting!!!
 
-
-var deviceWidth = 375,
-    dosFont     = 'PerfectDOSVGA437Win',
+var dosFont     = 'PerfectDOSVGA437Win',
     borderColor = '#AEAEAE',
     blackColor  = '#000000',
     whiteColor  = '#FFFFFF',
@@ -35,7 +33,6 @@ module.exports = StyleSheet.create({
 
     titleBar : {
         height            : 20,
-        width             : 375,
         paddingTop        : 3,
         paddingLeft       : 3,
         borderTopWidth    : 1,
@@ -48,20 +45,18 @@ module.exports = StyleSheet.create({
 
     gameImage : {
         alignSelf   : stretch,
-        width       : 375,
         resizeMode  : Image.resizeMode.fit
     },
     
     controlsContainer : {
         height      : 60,
-        width       : 375,
+        // width       : 375,
         borderTopWidth : 1,
         borderColor    : borderColor
     },
 
     vizContainer : {
         height         : 50,
-        width          : 375,
         flexDirection  : row,
         justifyContent : 'space-around',
     },

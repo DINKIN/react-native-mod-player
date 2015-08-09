@@ -23,7 +23,6 @@ var {
 } = React;
 
 
-var deviceWidth = 375;
 
 var styles = StyleSheet.create({
 
@@ -186,13 +185,16 @@ Object.assign(HomeMenu.prototype, {
         onBrowsePress : function() {
             window.main.showSpinner();
 
-            this.props.navigator.push({
-                title          : 'Browse Groups',
-                component      : BrowseViewNav,
-                // transitionType : 'PushFromRight'
-            });
+            setTimeout(() => {
 
-            window.main.hideSpinner();
+                this.props.navigator.push({
+                    title          : 'Browse Groups',
+                    component      : BrowseViewNav,
+                    // transitionType : 'PushFromRight'
+                });
+
+                window.main.hideSpinner();
+            }, 100)
 
         },
         

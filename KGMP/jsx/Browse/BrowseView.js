@@ -107,9 +107,9 @@ var BrowseView = React.createClass({
                 <ListView 
                     style={styles.listView} 
                     dataSource={this.state.dataSource} 
-                    initialListSize={30} 
-                    pageSize={30} 
-                    scrollRenderAheadDistance={300} 
+                    initialListSize={50} 
+                    pageSize={50} 
+                    scrollRenderAheadDistance={150} 
                     renderRow={this._renderRow}
                 />
             </View>

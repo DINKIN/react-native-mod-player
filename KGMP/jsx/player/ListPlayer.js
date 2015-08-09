@@ -207,7 +207,7 @@ class ListPlayer extends AbstractPlayer {
         window.db.updateLikeViaFileName(this.modObject.fileName, 1, (rowData) => {
             setTimeout(function() {
                 window.main.hideSpinner();
-            }, 250);
+            }, 350);
 
             console.log(rowData)
         });

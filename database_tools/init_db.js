@@ -6,7 +6,8 @@ var fs         = require('fs'),
     util       = require('util'),
     // modFiles   = require('./mod_files.in'),
     sqlFile    = 'data_to_insert.sql',
-    insertRoot = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", 0);\n';
+    insertSongsSQL = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", 0);\n',
+    insertDirSQL   = 'INSERT INTO directories VALUES("%s", "%s");\n';
 
 
 
@@ -24,7 +25,8 @@ var rootCmd = '%s "../KGMP/KEYGENMUSiC MusicPack/%s/%s"',
 console.log('starting...')
 for (var dir in modFiles) {
     var keys   = Object.keys(dir),
-        dirObj = modFiles[dir];
+        dirObj = modFiles[dir],
+        numGood = 0;
 
     if (keys.length < 1) {
         console.log(dir);
@@ -54,11 +56,15 @@ for (var dir in modFiles) {
 
         // console.log('[%s] %s', md5, fileName);
         
-        statement = util.format(insertRoot, md5, encodeURIComponent(fileName), fileName, encodeURIComponent(dir + '/'));
+        statement = util.format(insertSongsSQL, md5, encodeURIComponent(fileName), fileName, encodeURIComponent(dir + '/'));
         fs.appendFileSync(sqlFile, statement);
+        numGood++;
         // console.log('INSERT %s/%s', dir, fileName);
         // console.log(statement)
     }
+
+    statement = util.format(insertDirSQL, encodeURIComponent(dir + '/'), numGood);
+    fs.appendFileSync(sqlFile, statement);
 
 }
 

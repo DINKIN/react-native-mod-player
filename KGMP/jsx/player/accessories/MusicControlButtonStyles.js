@@ -1,10 +1,14 @@
 
 var React         = require('react-native'),
     BaseComponent = require('../../BaseComponent'),
-    deviceWidth   = 375,
     top           = 10, 
-    {StyleSheet}  = React;
+    {StyleSheet}  = React,
+    deviceWidth   = window.width,
+    isPhone6      = (deviceWidth > 320);
     
+
+
+
 module.exports =  StyleSheet.create({
 
     playerText : {
@@ -31,34 +35,34 @@ module.exports =  StyleSheet.create({
     },
 
     prevButton : {
-        left : 95
+        left : isPhone6 ? 95 : 70
     },
     prevButtonPressed : {
-        left  : 95.5,
+        left  : isPhone6 ? 95.5 : 70.5,
         top   : top
     },
   
     playButton : {
-        left : 170
+        left : isPhone6 ? 170 : 140
     },
     playButtonPressed : {
-        left : 170.5,
+        left : isPhone6 ? 170.5 : 140.5,
         top  : top          
     },
 
     pauseButton : {
-        left : 170
+        left : isPhone6 ? 170 : 140
     },
     pauseButtonPressed : {
-        left : 170.5,
+        left : isPhone6 ? 170.5 : 140.5,
         top  : top          
     },
 
     nextButton : {
-        left : 240
+        left : isPhone6 ? 240 : 205
     },
     nextButtonPressed : {
-        left : 240.5,
+        left : isPhone6 ? 240.5 : 205.5,
         top  : top         
     },
 
@@ -82,20 +86,20 @@ module.exports =  StyleSheet.create({
     },
 
     dislikeButton : {
-        left : 15,
+        left : isPhone6 ? 15 : 5,
         top  : top
     },
     dislikeButtonPressed : {
-        left : 15.5,
+        left : isPhone6 ? 15.5 : 5.5,
         top  : top
     },
 
     likeButton : {
-        left : 310,
+        left : isPhone6 ? 310 : 265,
         top  : top
     },
     likeButtonPressed : {
-        left : 310.5,
+        left : isPhone6 ? 310.5 : 265.5,
         top  : top
     },
 

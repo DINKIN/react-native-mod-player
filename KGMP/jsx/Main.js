@@ -1,22 +1,24 @@
-var React         = require('react-native'),
-    BaseComponent = require('./BaseComponent'),
-    HomeMenu      = require('./HomeMenu'),
-    Dimensions    = require('Dimensions');
 
-var {
-  Navigator,
-  PixelRatio,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
-  ActivityIndicatorIOS,
-} = React;
-
-var winder       = Dimensions.get('window'),
+var Dimensions   = require('Dimensions'),
+    winder       = Dimensions.get('window'),
     screenWidth  = window.width = winder.width,
     screenHeight = window.height = winder.height;
+
+var React         = require('react-native'),
+    BaseComponent = require('./BaseComponent'),
+    HomeMenu      = require('./HomeMenu');
+
+var {
+    Navigator,
+    PixelRatio,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    TouchableHighlight,
+    ActivityIndicatorIOS,
+} = React;
+
 
 
 var styles = StyleSheet.create({
