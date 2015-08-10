@@ -53,11 +53,8 @@ var FavoritesView = React.createClass({
             rowData;
            
         // one object, need to stuff into array.
-        
         if (daters) {
-            if (daters.directory) {
-                daters = [daters];
-            }
+            
             rowData = this.extractNamesForRow(daters);
 
             var dSrc = dataSource.cloneWithRows(rowData);
@@ -104,6 +101,8 @@ var FavoritesView = React.createClass({
         var numRecords = this.state.dataSource.getRowCount(),
             shuffleButton;
 
+        console.log('number of records ' + numRecords);
+
         if (numRecords > 2) {
             shuffleButton = (
                 <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center', borderTopWidth: .5, borderTopColor: '#222222'}}>
@@ -141,6 +140,7 @@ var FavoritesView = React.createClass({
 
     _renderRow: function(rowData, sectionID, rowID) {
         
+        // debugger;
         var record      = this.props.rowData[rowID],
             isDir       = (record.type == 'dir'),
             prefix      = null,

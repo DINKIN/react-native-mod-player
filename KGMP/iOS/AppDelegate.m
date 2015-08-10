@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 
 #import "RCTRootView.h"
-
+#import "MCQueueManager.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -40,6 +40,11 @@
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"KGMP"
                                                    launchOptions:launchOptions];
+    
+//  
+//  MCQueueManager *qMgr = [[MCQueueManager alloc] init];
+//  
+//  [qMgr getRandomFile];
 
   rootView.backgroundColor = [UIColor blackColor];
 

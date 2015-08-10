@@ -31,7 +31,8 @@
 		7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */; };
 		7122B4C71B4430B10037D38D /* webview-files in Resources */ = {isa = PBXBuildFile; fileRef = 7122B4C61B4430B10037D38D /* webview-files */; };
 		7122B4DC1B443DA50037D38D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7122B4DB1B443DA50037D38D /* WebKit.framework */; };
-		717DC7FB1B72EEA70007D446 /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 717DC7FA1B72EEA70007D446 /* keygenmusicplayer.db */; };
+		71AEDB791B781D1900B4B71C /* MCQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AEDB781B781D1900B4B71C /* MCQueueManager.m */; };
+		71AEDB7B1B7826E400B4B71C /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */; };
 		71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
 		71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
 		71FF0B6E1B41923D00B3B75C /* libAIBSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B621B41909A00B3B75C /* libAIBSQLite.a */; };
@@ -171,7 +172,9 @@
 		7122B4CD1B443CA40037D38D /* MCBridgedWebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCBridgedWebViewManager.h; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebViewManager.h; sourceTree = "<group>"; };
 		7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCBridgedWebViewManager.m; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebViewManager.m; sourceTree = "<group>"; };
 		7122B4DB1B443DA50037D38D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		717DC7FA1B72EEA70007D446 /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../database_tools/keygenmusicplayer.db; sourceTree = "<group>"; };
+		71AEDB771B781D1900B4B71C /* MCQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCQueueManager.h; path = iOS/MCQueueManager.h; sourceTree = "<group>"; };
+		71AEDB781B781D1900B4B71C /* MCQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCQueueManager.m; path = iOS/MCQueueManager.m; sourceTree = "<group>"; };
+		71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../database_tools/keygenmusicplayer.db; sourceTree = "<group>"; };
 		71FF0B5D1B41909A00B3B75C /* AIBSQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBSQLite.xcodeproj; path = "node_modules/react-native-sqlite/AIBSQLite.xcodeproj"; sourceTree = "<group>"; };
 		71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
@@ -318,6 +321,8 @@
 				7118B4B21B418AA80071C0F4 /* MCModPlayer.m */,
 				7118B4B31B418AA80071C0F4 /* MCModPlayerInterface.h */,
 				7118B4B41B418AA80071C0F4 /* MCModPlayerInterface.m */,
+				71AEDB771B781D1900B4B71C /* MCQueueManager.h */,
+				71AEDB781B781D1900B4B71C /* MCQueueManager.m */,
 			);
 			name = ModusCreate;
 			sourceTree = "<group>";
@@ -413,7 +418,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				717DC7FA1B72EEA70007D446 /* keygenmusicplayer.db */,
+				71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */,
 				7122B4DB1B443DA50037D38D /* WebKit.framework */,
 				13B07FAE1A68108700A75B9A /* KGMP */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -667,7 +672,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7118B4A51B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf in Resources */,
-				717DC7FB1B72EEA70007D446 /* keygenmusicplayer.db in Resources */,
+				71AEDB7B1B7826E400B4B71C /* keygenmusicplayer.db in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */,
@@ -698,6 +703,7 @@
 				7118B4B51B418AA80071C0F4 /* MCFsTool.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.mm in Sources */,
 				71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */,
+				71AEDB791B781D1900B4B71C /* MCQueueManager.m in Sources */,
 				71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */,
 				7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */,
 			);

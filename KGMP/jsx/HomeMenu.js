@@ -203,6 +203,12 @@ Object.assign(HomeMenu.prototype, {
             window.main.showSpinner();
             window.db.getFavorites((rowData) => {
                 
+                console.log('rowData');
+                console.log(rowData);
+                if (rowData.directory) {
+                    rowData = [rowData];
+                }
+
                 window.mainNavigator.push({
                     component       : FavsViewNav,
                     componentConfig : {
@@ -212,7 +218,6 @@ Object.assign(HomeMenu.prototype, {
 
                 window.main.hideSpinner();
             });
-                // console.log(rowData);
         },
         
         onAboutPress : function() {

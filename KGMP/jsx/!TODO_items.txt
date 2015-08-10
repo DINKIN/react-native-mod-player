@@ -1,0 +1,13 @@
+Need to have
+    - Background controller for playlist
+    X Splash screen
+    X Static height for Meta data for SummaryCard
+    - Browse View uses Database 
+        - Requires update on Schema to relate group (directories) to files
+
+
+Nice to have
+    - Abstract out RandomPlayer, ListPlayer, Favorites Player as much as possible
+    - Add Search view for Browse
+    - Add shuffle for option for directory endpoints    
+    - Add Now Playing to list views (top right side)

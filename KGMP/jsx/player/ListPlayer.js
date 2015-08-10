@@ -167,7 +167,7 @@ class ListPlayer extends AbstractPlayer {
                 // this.forceUpdate();   
 
                 this.patterns = modObject.patterns;
-                // this.onWkWebViewInit();
+                this.onWkWebViewInit();
                 this.playTrack();
                 window.main.hideSpinner();
 
