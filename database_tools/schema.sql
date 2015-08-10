@@ -14,7 +14,7 @@ CREATE TABLE songs (
 );
 
 CREATE TABLE directories (
-    name         TEXT,
+    dir_name     TEXT,
     number_files INT
 );
 
