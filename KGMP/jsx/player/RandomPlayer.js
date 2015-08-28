@@ -1,47 +1,15 @@
 var React = require('react-native');
 
 
-var MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
-    AbstractPlayer       = require('./AbstractPlayer');
+var AbstractPlayer = require('./AbstractPlayer'),
+    { 
+        MCModPlayerInterface,
+        MCQueueManager
+    } = require('NativeModules');
+
 
 
 class RandomPlayer extends AbstractPlayer {
-
-    previousTrack() {
-        if (this.loading) {
-            return;
-        }
-
-
-        this.loading = true;
-        window.main.showSpinner();
-
-        if (this.props.isFavorites) {
-            window.db.getPrevRandomFavorite((rowData) => {
-                if (! rowData) {
-                    window.main.hideSpinner();
-
-                    alert('Sorry. No more items in history.');
-                    return;
-                }
-                
-                this.loadFile(rowData);
-            });
-        }
-        else {
-            window.db.getPrevRandom((rowData) => {
-                if (! rowData) {
-                    window.main.hideSpinner();
-
-                    alert('Sorry. No more items in history.');
-                    return;
-                }
-                
-                this.loadFile(rowData);
-            });
-        }
-    }
-
     // Todo: clean this up
     nextTrack() {
         if (this.loading) {
@@ -52,17 +20,45 @@ class RandomPlayer extends AbstractPlayer {
         window.main.showSpinner();
         
         if (this.props.isFavorites) {
-            window.db.getNextRandomFavorite((rowData) => {
+            MCQueueManager.getNextRandomFavorite((rowData, queueIndex) => {
+                this.queueIndex = queueIndex;
                 this.loadFile(rowData);
             });
         }
         else {
-            window.db.getNextRandom((rowData) => {
+            MCQueueManager.getNextRandom((rowData) => {
                 this.loadFile(rowData);
             });
         }
 
     }
+
+    previousTrack() {
+        if (this.loading) {
+            return;
+        }
+
+        this.loading = true;
+        window.main.showSpinner();
+
+        if (this.props.isFavorites) {
+            MCQueueManager.getPrevRandomFavorite((rowData) => {
+                if (! rowData) {
+                    window.main.hideSpinner();
+
+                    alert('Sorry. No more items in history.');
+                    return;
+                }
+                
+                this.loadFile(rowData);
+            });
+        }
+        else {
+            MCQueueManager.getPreviousRandom((rowData) => {
+                this.loadFile(rowData);
+            });
+        }
+    }    
 
     playTrack() {
         var props = this.props,
@@ -117,7 +113,7 @@ class RandomPlayer extends AbstractPlayer {
     like() {
         window.main.showLikeSpinner();
 
-        window.db.updateLikeViaCurrentItem(1, (rowData) => {
+        MCQueueManager.updateLikeStatus(1, this.modObject.id_md5, (rowData) => {
             setTimeout(function() {
                 window.main.hideSpinner();
             }, 250);
@@ -129,18 +125,16 @@ class RandomPlayer extends AbstractPlayer {
     dislike () {
         window.main.showDislikeSpinner();
 
-        window.db.updateLikeViaCurrentItem(-1, () => {
-            window.db.getNewRandomCurrentItem((rowData) => {
-                // var filePath = window.bundlePath + rowData.directory + rowData.file_name;
-                this.loadFile(rowData);
-            });
+        MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
+            this.loadFile(rowData);
         });
     }
 
     loadFile(rowData) {
         this.patterns = {};
         this.patternsRegistered = false;
-        var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
+
+        var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.name);
 
         this.deregisterPatternUpdateHandler();
         // debugger;
@@ -153,7 +147,7 @@ class RandomPlayer extends AbstractPlayer {
                 filePath,
                 //failure
                 (data) => {
-                    alert('failure in loading file ' + rowData.file_name);
+                    alert('failure in loading file ' + rowData.name);
                     console.log(data);
                     this.loading = false;
 
@@ -167,8 +161,10 @@ class RandomPlayer extends AbstractPlayer {
                         highlightNumber : 0
                     });
 
+                    modObject.id_md5 = rowData.id_md5;
+
                     this.modObject = modObject;
-                    modObject.fileName = rowData.file_name;
+                    modObject.fileName = rowData.name;
 
                     // this.forceUpdate();   
 

@@ -67,8 +67,5 @@ module.exports  = React.createClass({
                 {items}      
             </View>
         );
-
-
-
     }
 });

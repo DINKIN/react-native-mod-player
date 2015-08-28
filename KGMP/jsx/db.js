@@ -1,7 +1,7 @@
 var sqlite       = require('react-native-sqlite'),
     randomSQL    = "SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;",
     randomFavSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY RANDOM() LIMIT 1;",
-    favoritesSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY file_name;",
+    favoritesSQL = "SELECT * FROM songs where like_value IS '1' ORDER BY name;",
     emptyArray   = [],
     emptyFn      = function() {};
 

@@ -42,9 +42,11 @@
                                                    launchOptions:launchOptions];
     
 //  
-//  MCQueueManager *qMgr = [[MCQueueManager alloc] init];
-//  
+    MCQueueManager *qMgr = [[MCQueueManager alloc] init];
+//
 //  [qMgr getRandomFile];
+//    [qMgr getDirectories];
+//    [qMgr getFilesForDirectory:@"uCF/"];
 
   rootView.backgroundColor = [UIColor blackColor];
 

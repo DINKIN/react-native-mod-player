@@ -8,8 +8,9 @@ var React         = require('react-native'),
 
 
 var { 
-        MCFsTool,
-        MCModPlayerInterface
+        MCFsTool, // Deprecated
+        MCModPlayerInterface,
+        MCQueueManager
     } = require('NativeModules');
 
 
@@ -142,18 +143,17 @@ Object.assign(HomeMenu.prototype, {
             var  navigator = this.props.navigator;
             window.main.showSpinner();
 
-            window.db.clear();
 
-            window.db.getNextRandom((rowData) => {
+            MCQueueManager.getNextRandomAndClearQueue((rowData) => {
                 // console.log(rowData);
-                var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
+                var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.name);
 
                 MCModPlayerInterface.loadFile(
                     filePath,
                     //failure
                     (data) => {
                         window.main.hideSpinner();
-                        alert('Failure loading ' + rowData.file_name);
+                        alert('Failure loading ' + rowData.name);
                         console.log(data);
                     },        
                     //success
@@ -163,6 +163,7 @@ Object.assign(HomeMenu.prototype, {
                             rtBtnText,
                             rtBtnHandler;
 
+                        modObject.id_md5 = rowData.id_md5;
                         modObject.fileName = fileName;
                         
                         window.mainNavigator.push({
@@ -187,7 +188,6 @@ Object.assign(HomeMenu.prototype, {
             window.main.showSpinner();
 
             setTimeout(() => {
-
                 this.props.navigator.push({
                     title          : 'Browse Groups',
                     component      : BrowseViewNav,

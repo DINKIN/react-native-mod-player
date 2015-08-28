@@ -14,31 +14,63 @@ var {
     } = React;
 
 var { 
-        MCFsTool,
-        MCModPlayerInterface
+        MCFsTool, // Deprecated
+        MCModPlayerInterface,
+        MCQueueManager
     } = require('NativeModules');
 
 var getDirectories = function(path, callback) {
-    MCFsTool.getDirectoriesAsJson(
-        path,
-        // failure
-        () => {
-            console.log('An Error Occurred');
-        },
-        // Success
-        (response) =>  {
-            callback(response)               
+    console.log("DIRECTORY :: " + path)    
+    if (path) {
+        MCQueueManager.getFilesForDirectory(
+            path,
+            // failure
+            () => {
+                console.log('An Error Occurred');
+            },
+            // Success
+            (response) =>  {
+                callback(response)               
 
-            // if (this.rowData) {
-            //     this.state = this.getInitialState();
-            //     this.forceUpdate();
-            // }
-        }
-    );
+                // if (this.rowData) {
+                //     this.state = this.getInitialState();
+                //     this.forceUpdate();
+                // }
+            }
+        );
+    }
+    else {
+        MCQueueManager.getDirectories(
+            // failure
+            () => {
+                console.log('An Error Occurred');
+            },
+            // Success
+            (response) =>  {
+                callback(response)               
+
+                // if (this.rowData) {
+                //     this.state = this.getInitialState();
+                //     this.forceUpdate();
+                // }
+            }
+        );
+    }
 };
 
 getDirectories(null, function(rowData) {
     initialPaths = rowData;
+
+    // var i = 0,
+    //     len = rowData.length,
+    //     dirStr = 'dir';
+
+    // for (; i<len; i++) {
+    //     rowData[i].type = dirStr
+    // }
+
+    // console.log('RowData')
+    // console.log(rowData)
 });
 
 
@@ -80,13 +112,14 @@ class BrowseViewNavigator extends React.Component{
 
     onRowPress(record, childNavigator, ownerList) {
         // TODO: Setup color for selected item
-        var isDir = (record.type == 'dir'),
+        var isDir = !! record.number_files,
             title;
+
 
         if (isDir) {
             title = record.name + '/';
             window.main.showSpinner();
-            getDirectories(record.directory, (rowData)=> {
+            getDirectories(record.name, (rowData)=> {
                 var route = {
                     title     : title,
                     component : BrowseView,
@@ -113,9 +146,10 @@ class BrowseViewNavigator extends React.Component{
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
         window.main.showSpinner();
+        var fileName = unescape (record.name);
 
         MCModPlayerInterface.loadFile(
-            record.directory,
+            window.bundlePath + record.directory + fileName,
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -125,14 +159,8 @@ class BrowseViewNavigator extends React.Component{
             //success
             (modObject) => {
 
-                modObject.directory = record.directory;
+                modObject.fileName = fileName;
 
-                var fileName = modObject.directory.split('/');
-
-                modObject.fileName = fileName[fileName.length - 1];
-                // var cn = childNavigator;
-                // var ol = ownerList;
-                // debugger;
                 var rowData = ownerList.props.rowData;
                 
                 this.props.navigator.push({
@@ -148,8 +176,6 @@ class BrowseViewNavigator extends React.Component{
                     }
                 });
                 window.main.hideSpinner();
-
-               
 
             }
         );

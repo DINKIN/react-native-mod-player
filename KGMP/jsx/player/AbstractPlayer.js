@@ -19,7 +19,7 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseComponent         = require('../BaseComponent'),
-    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     ProgressView          = require('./accessories/ProgressView');
 
 
@@ -30,14 +30,10 @@ var updateStart = 'up(',
 
 class AbstractPlayer extends BaseComponent {
 
-
     setInitialState() {
         this.state = {
             songLoaded     : 0,
             playingSong    : 0,
-            // currentTime    : 0,
-            // currentRow     : 0,
-            // currentPattern : null,
             numberPatterns : 0
         }
     }
@@ -91,6 +87,7 @@ class AbstractPlayer extends BaseComponent {
             rowStyle    = styles.instrumentRow,
             greenText   = styles.instrumentText,
             whiteText   = styles.instrumentName,
+            colonStr    = ':',
             sixteen     = 16,
             zeroStr     = '0',
             rowInHex;
@@ -98,7 +95,7 @@ class AbstractPlayer extends BaseComponent {
         instViews.length = len;
 
         if (len > 0) {
-            for (var i = 0; i < len; i++) {
+            for (var i=0; i < len; i++) {
 
                 rowInHex = i.toString(sixteen).toUpperCase();
 
@@ -108,7 +105,7 @@ class AbstractPlayer extends BaseComponent {
 
                 instViews[i] = (
                     <View style={rowStyle}>
-                        <Text style={greenText}>{rowInHex + ':'}</Text> 
+                        <Text style={greenText}>{rowInHex + colonStr}</Text> 
                         <Text style={whiteText}>{instruments[i]}</Text>
                     </View>
                 );
@@ -133,8 +130,6 @@ class AbstractPlayer extends BaseComponent {
                 </View>
 
                 <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
-                {/*
-                
                 <View style={{padding:5}}>
                     <Text style={styles.instrumentsLabel}>Instruments:</Text>
                 </View>
@@ -142,11 +137,12 @@ class AbstractPlayer extends BaseComponent {
                  <ScrollView style={{flex:1, padding: 5}}>
                      {{instViews}}
                  </ScrollView>
-                */}
+
+                {/*
 
                 <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
                 
-                    {/*
+                  
                     <View style={[styles.rowNumberz, newTopPosition]}>
                         <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
                     </View>
@@ -332,7 +328,7 @@ Object.assign(AbstractPlayer.prototype, {
                 pattern = position[1],
                 row     = position[2];
 
-            refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
+            // refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
 
             refs.summaryCard.setState({
                 order   : order,
@@ -350,7 +346,7 @@ Object.assign(AbstractPlayer.prototype, {
             }
             
 
-            curentPattern = pattern;
+            // curentPattern = pattern;
             /** For the pattern view, which is disabled for now **/
             // var order   = position[0], 
             //     pattern = position[1],
@@ -392,6 +388,8 @@ Object.assign(AbstractPlayer.prototype, {
         },
 
         onWkWebViewEvent : function(event) {
+            return;
+
             var body   = event.nativeEvent.body,
                 matrix = this.wkWebViewEventMatrix;
 
@@ -405,6 +403,7 @@ Object.assign(AbstractPlayer.prototype, {
 
         // Register patterns
         onWkWebViewInit : function() {
+            return;
             console.log('onWkWebViewInit');
 
             var newModObj = {},

@@ -142,8 +142,11 @@ class ListPlayer extends AbstractPlayer {
         // this.refs.webView.execJsCall('cls()');
         
         window.main.showSpinner();
+            
+        var fileName = unescape (record.name);
+
         MCModPlayerInterface.loadFile(
-            record.directory,
+            window.bundlePath + record.directory + fileName,
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -162,7 +165,7 @@ class ListPlayer extends AbstractPlayer {
                 });
 
                 this.modObject = modObject;
-                modObject.fileName = record.file_name;
+                modObject.fileName = fileName;
 
                 // this.forceUpdate();   
 

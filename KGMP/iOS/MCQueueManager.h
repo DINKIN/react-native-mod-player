@@ -10,6 +10,7 @@
 
 @interface MCQueueManager : NSObject <RCTBridgeModule>
 
-- (void) getDirectories;
+- (NSArray *) getDirectories;
+- (NSArray *) getFilesForDirectory:(NSString *)dirName;
 - (NSDictionary *) getRandomFile;
 @end

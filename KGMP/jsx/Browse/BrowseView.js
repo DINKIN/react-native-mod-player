@@ -31,11 +31,7 @@ var BrowseView = React.createClass({
 
         for (; i < len; i++) {
             dataItem = daters[i];
-            name     = dataItem.file_name ? dataItem.file_name : dataItem.name;
-
-            if (dataItem.type == 'dir') {
-                name += '/';
-            }
+            name     = unescape(dataItem.name);
 
             rowData.push(name);
         }
@@ -119,7 +115,7 @@ var BrowseView = React.createClass({
     _renderRow: function(rowData, sectionID, rowID) {
         
         var record      = this.props.rowData[rowID],
-            isDir       = (record.type == 'dir'),
+            isDir       = !! record.number_files,
             prefix      = null,
             folder      = '\uE805',
             vgmIcon     = '\uE80A',
