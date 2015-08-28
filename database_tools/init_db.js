@@ -20,12 +20,9 @@ var rootCmd = '%s "../KGMP/KEYGENMUSiC MusicPack/%s/%s"',
     cmd,
     md5; 
 
-
-
-console.log('starting...')
 for (var dir in modFiles) {
-    var keys   = Object.keys(dir),
-        dirObj = modFiles[dir],
+    var keys    = Object.keys(dir),
+        dirObj  = modFiles[dir],
         numGood = 0;
 
     if (keys.length < 1) {

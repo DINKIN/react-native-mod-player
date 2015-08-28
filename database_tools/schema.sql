@@ -7,14 +7,14 @@ DROP INDEX IF EXISTS song_index;
 CREATE TABLE songs (
     id_md5     TEXT, 
     song_name  TEXT,
-    file_name  TEXT, 
+    name       TEXT, 
     file_name_short  TEXT, 
     directory  TEXT, 
     like_value INT
 );
 
 CREATE TABLE directories (
-    dir_name     TEXT,
+    name         TEXT,
     number_files INT
 );
 
@@ -25,7 +25,7 @@ CREATE
     INDEX 
         song_index 
     ON 
-        songs(song_name, file_name) 
+        songs(song_name, name) 
     WHERE 
         song_name 
     IS 
