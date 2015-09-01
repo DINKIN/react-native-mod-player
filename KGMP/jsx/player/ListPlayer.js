@@ -40,7 +40,7 @@ class ListPlayer extends AbstractPlayer {
     // Todo: clean this up
     // Todo: read from local list (not have to poll the owner component)
     nextTrack() {
-        console.log('ListPlayer.nextTrack()')
+        console.log('ListPlayer.nextTrack()');
         // debugger;
         if (this.loading) {
             return;

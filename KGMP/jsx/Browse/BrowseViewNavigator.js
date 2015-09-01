@@ -20,7 +20,6 @@ var {
     } = require('NativeModules');
 
 var getDirectories = function(path, callback) {
-    console.log("DIRECTORY :: " + path)    
     if (path) {
         MCQueueManager.getFilesForDirectory(
             path,
@@ -31,11 +30,6 @@ var getDirectories = function(path, callback) {
             // Success
             (response) =>  {
                 callback(response)               
-
-                // if (this.rowData) {
-                //     this.state = this.getInitialState();
-                //     this.forceUpdate();
-                // }
             }
         );
     }

@@ -188,7 +188,7 @@ RCT_EXPORT_METHOD(getPreviousRandom:(RCTResponseSenderBlock)successCallback) {
 
 
 
-RCT_EXPORT_METHOD(updateLikeStatus:(NSNumber *)likeValue
+RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
                   withMdFiveString:(NSString *)id_md5
                       andCallback:(RCTResponseSenderBlock)successCallback) {
 

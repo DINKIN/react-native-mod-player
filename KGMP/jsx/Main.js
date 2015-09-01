@@ -181,9 +181,8 @@ class Main extends BaseComponent  {
     }
 
     showSpinner() {
-        console.log('showSpinner')
+        // console.log('showSpinner')
         this.setState({spinner : true})
-
     }
 
     showLikeSpinner() {
@@ -192,12 +191,10 @@ class Main extends BaseComponent  {
 
     showDislikeSpinner() {
         this.setState({dislikeSpinner : true})
-
     }
 
     hideSpinner() {
-        console.log('hideSpinner')
-
+        // console.log('hideSpinner')
         this.setState({
             spinner        : false,
             likeSpinner    : false,

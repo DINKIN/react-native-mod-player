@@ -109,8 +109,12 @@ class FavoritesViewNavigator extends React.Component{
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
         window.main.showSpinner();
+
+
+        var fileName = unescape(record.name);
+
         MCModPlayerInterface.loadFile(
-            bundlePath + unescape(record.directory) + unescape(record.file_name),
+            window.bundlePath + record.directory + fileName,
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -122,14 +126,11 @@ class FavoritesViewNavigator extends React.Component{
 
                 modObject.directory = record.directory;
 
-                var fileName = modObject.directory.split('/');
+                modObject.fileName = fileName;
 
-                modObject.fileName = fileName[fileName.length - 1];
-                // var cn = childNavigator;
-                // var ol = ownerList;
-                // debugger;
                 var rowData = ownerList.props.rowData;
-                
+
+
                 this.props.navigator.push({
                     title            : 'Player',
                     component        : FavoritesPlayer,

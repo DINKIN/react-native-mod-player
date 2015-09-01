@@ -22,8 +22,6 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.mm */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
-		7118B4A31B4187B30071C0F4 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7118B4A21B4187B30071C0F4 /* fontello.ttf */; };
-		7118B4A51B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7118B4A41B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf */; };
 		7118B4AD1B4188CD0071C0F4 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7118B4AC1B4188BE0071C0F4 /* liblibopenmpt.a */; };
 		7118B4B51B418AA80071C0F4 /* MCFsTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B01B418AA80071C0F4 /* MCFsTool.m */; };
 		7118B4B61B418AA80071C0F4 /* MCModPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B21B418AA80071C0F4 /* MCModPlayer.m */; };
@@ -33,8 +31,8 @@
 		7122B4DC1B443DA50037D38D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7122B4DB1B443DA50037D38D /* WebKit.framework */; };
 		71AEDB791B781D1900B4B71C /* MCQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AEDB781B781D1900B4B71C /* MCQueueManager.m */; };
 		71AEDB7B1B7826E400B4B71C /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */; };
-		71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
-		71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
+		71DDCB651B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71DDCB641B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf */; };
+		71DDCB671B94C3660051B2D7 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71DDCB661B94C3660051B2D7 /* fontello.ttf */; };
 		71FF0B6E1B41923D00B3B75C /* libAIBSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B621B41909A00B3B75C /* libAIBSQLite.a */; };
 		71FF0B701B41925400B3B75C /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */; };
 		71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */; };
@@ -155,8 +153,6 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iOS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = iOS/main.mm; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		7118B4A21B4187B30071C0F4 /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = fontello.ttf; path = fonts/fontello/font/fontello.ttf; sourceTree = "<group>"; };
-		7118B4A41B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Perfect DOS VGA 437 Win.ttf"; path = "fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf"; sourceTree = "<group>"; };
 		7118B4A71B4188BE0071C0F4 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = snd_libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		7118B4AF1B418AA80071C0F4 /* MCFsTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCFsTool.h; path = iOS/ModusCreate/MCFsTool.h; sourceTree = "<group>"; };
 		7118B4B01B418AA80071C0F4 /* MCFsTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCFsTool.m; path = iOS/ModusCreate/MCFsTool.m; sourceTree = "<group>"; };
@@ -175,6 +171,8 @@
 		71AEDB771B781D1900B4B71C /* MCQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCQueueManager.h; path = iOS/MCQueueManager.h; sourceTree = "<group>"; };
 		71AEDB781B781D1900B4B71C /* MCQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCQueueManager.m; path = iOS/MCQueueManager.m; sourceTree = "<group>"; };
 		71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../database_tools/keygenmusicplayer.db; sourceTree = "<group>"; };
+		71DDCB641B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Perfect DOS VGA 437 Win.ttf"; path = "resources/fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf"; sourceTree = "<group>"; };
+		71DDCB661B94C3660051B2D7 /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = fontello.ttf; path = resources/fonts/fontello/font/fontello.ttf; sourceTree = "<group>"; };
 		71FF0B5D1B41909A00B3B75C /* AIBSQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBSQLite.xcodeproj; path = "node_modules/react-native-sqlite/AIBSQLite.xcodeproj"; sourceTree = "<group>"; };
 		71FF0B6F1B41925400B3B75C /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
@@ -330,8 +328,8 @@
 		7118B4A11B4187900071C0F4 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
-				7118B4A21B4187B30071C0F4 /* fontello.ttf */,
-				7118B4A41B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf */,
+				71DDCB661B94C3660051B2D7 /* fontello.ttf */,
+				71DDCB641B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf */,
 			);
 			name = fonts;
 			sourceTree = "<group>";
@@ -671,14 +669,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7118B4A51B4187BE0071C0F4 /* Perfect DOS VGA 437 Win.ttf in Resources */,
+				71DDCB651B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf in Resources */,
 				71AEDB7B1B7826E400B4B71C /* keygenmusicplayer.db in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
+				71DDCB671B94C3660051B2D7 /* fontello.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				7122B4C71B4430B10037D38D /* webview-files in Resources */,
-				7118B4A31B4187B30071C0F4 /* fontello.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -702,9 +700,7 @@
 				7118B4B61B418AA80071C0F4 /* MCModPlayer.m in Sources */,
 				7118B4B51B418AA80071C0F4 /* MCFsTool.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.mm in Sources */,
-				71C1B4841B6BC444003F1E44 /* MCBridgedWebView.m in Sources */,
 				71AEDB791B781D1900B4B71C /* MCQueueManager.m in Sources */,
-				71C1B4851B6BC444003F1E44 /* MCBridgedWebViewManager.m in Sources */,
 				7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

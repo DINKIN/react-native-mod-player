@@ -14,7 +14,6 @@ var {
     } = require('NativeModules');
 
 
-
 var {
     TouchableHighlight,
     StyleSheet,
@@ -78,6 +77,10 @@ var styles = StyleSheet.create({
 
 
 class HomeMenu extends BaseComponent {
+    setInitialState() {
+        this.state = { time : 0 };
+    }
+
 
     createButton(fn, text) {
         return (
@@ -94,12 +97,26 @@ class HomeMenu extends BaseComponent {
         );
     }
      
+    // componentDidMount () {
+    //     let startTime;
+    //     const loop = t => {
+    //       requestAnimationFrame(loop);
+    //       if (!startTime) {
+    //           startTime = t
+    //       };
+          
+    //       const time = (t - startTime) / 1000;
+    //       this.setState({ time: time });
+    //     };
+
+    //     requestAnimationFrame(loop);
+    // }
 
     render() {
         // setTimeout(()=> {
         //     this.onRandomPress();
         // }, 100);
-
+        
         return (
             <View style={styles.mainCt}>
                 <View style={{flexDirection:'row', justifyContent : 'center'}}>
@@ -121,6 +138,7 @@ class HomeMenu extends BaseComponent {
                     // this.createButton(this.onSearchPress,    "Search"),
                     this.createButton(this.onAboutPress,     "About")
                 ]}
+
             </View>
         );
     }

@@ -31,7 +31,7 @@ var FavoritesView = React.createClass({
 
         for (; i < len; i++) {
             dataItem = daters[i];
-            name     = unescape(dataItem.file_name);
+            name     = unescape(dataItem.name);
 
             // console.log(name)
             
@@ -101,7 +101,7 @@ var FavoritesView = React.createClass({
         var numRecords = this.state.dataSource.getRowCount(),
             shuffleButton;
 
-        console.log('number of records ' + numRecords);
+        // console.log('number of records ' + numRecords);
 
         if (numRecords > 2) {
             shuffleButton = (
@@ -193,7 +193,7 @@ var FavoritesView = React.createClass({
             return record;
         }
         else {
-            return null;
+            return this.props.rowData[this.props.rowData.length - 1];
         }
     },
 
@@ -204,7 +204,7 @@ var FavoritesView = React.createClass({
             return record;
         }
         else {
-            return null;
+            return this.props.rowData[0];
         }
     },
 

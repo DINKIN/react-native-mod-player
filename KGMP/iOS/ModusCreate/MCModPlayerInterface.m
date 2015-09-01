@@ -79,12 +79,14 @@ RCT_EXPORT_METHOD(loadFile:(NSString *)path
 
         callback(@[modInfo]);
     }
+    
+   
 
 }
 
 
 
-RCT_EXPORT_METHOD(getPattern:(NSNumber *)patternNumber
+RCT_EXPORT_METHOD(getPattern:(nonnull NSNumber *)patternNumber
                    errorCallback:(RCTResponseSenderBlock)errorCallback
                         callback:(RCTResponseSenderBlock)callback) {
 

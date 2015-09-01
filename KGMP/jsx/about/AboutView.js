@@ -1,7 +1,7 @@
 
 var React                 = require('react-native'),
     MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
-    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     CloseButton           = require('../player/accessories/CloseButton'),
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
    
@@ -59,7 +59,7 @@ var AboutView = React.createClass({
                 <View style={styles.closeButton}>
                     <CloseButton onPress={this.onClosebuttonPress}/>
                 </View>
-                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"cubetest.html"}/>
+                // <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"cubetest.html"}/>
             </View>
         );
     },

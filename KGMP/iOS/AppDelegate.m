@@ -59,7 +59,7 @@
   self.window.rootViewController = rootViewController;
   
   [self.window makeKeyAndVisible];
-  
+//  
 //    for (id familyName in [UIFont familyNames]) {
 //        NSLog(@"%@", familyName);
 //        for (id fontName in [UIFont fontNamesForFamilyName:familyName]) {
