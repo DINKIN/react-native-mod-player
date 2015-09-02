@@ -25,6 +25,22 @@ class BaseComponent extends React.Component {
             this[methodName] = this.bindableMethods[methodName].bind(this);
         }
     }
+
+    showSpinner() {
+       window.main.showSpinner();
+    }
+
+    showLikeSpinner() {
+        window.main.showLikeSpinner()
+    }
+
+    showDislikeSpinner() {
+        window.main.showDislikeSpinner();
+    }
+
+    hideSpinner() {
+        window.main.hideSpinner();
+    }
 }
 
 module.exports = BaseComponent

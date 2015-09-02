@@ -8,7 +8,6 @@ var React         = require('react-native'),
 
 
 var { 
-        MCFsTool, // Deprecated
         MCModPlayerInterface,
         MCQueueManager
     } = require('NativeModules');
@@ -159,7 +158,7 @@ Object.assign(HomeMenu.prototype, {
 
         onRandomPress : function() {
             var  navigator = this.props.navigator;
-            window.main.showSpinner();
+            this.showSpinner();
 
 
             MCQueueManager.getNextRandomAndClearQueue((rowData) => {
@@ -170,7 +169,7 @@ Object.assign(HomeMenu.prototype, {
                     filePath,
                     //failure
                     (data) => {
-                        window.main.hideSpinner();
+                        this.hideSpinner();
                         alert('Failure loading ' + rowData.name);
                         console.log(data);
                     },        
@@ -194,7 +193,7 @@ Object.assign(HomeMenu.prototype, {
                             }
                         });
       
-                        window.main.hideSpinner();
+                        this.hideSpinner();
                     }
                 );
 
@@ -203,25 +202,23 @@ Object.assign(HomeMenu.prototype, {
         },
         
         onBrowsePress : function() {
-            window.main.showSpinner();
+            this.showSpinner();
 
             setTimeout(() => {
                 this.props.navigator.push({
-                    title          : 'Browse Groups',
                     component      : BrowseViewNav,
                     // transitionType : 'PushFromRight'
                 });
 
-                window.main.hideSpinner();
-            }, 100)
+                this.hideSpinner();
+            }, 50)
 
         },
         
         onFavoritesPress : function() {
-            window.main.showSpinner();
-            window.db.getFavorites((rowData) => {
-                
-                console.log('rowData');
+            this.showSpinner();
+            MCQueueManager.getFavorites((rowData) => {
+                console.log('Favorites:');
                 console.log(rowData);
                 if (rowData.directory) {
                     rowData = [rowData];
@@ -234,13 +231,13 @@ Object.assign(HomeMenu.prototype, {
                     }
                 });
 
-                window.main.hideSpinner();
+                this.hideSpinner();
             });
         },
         
         onAboutPress : function() {
 
-            window.main.showSpinner();
+            this.showSpinner();
             MCModPlayerInterface.loadModusAboutMod(
                 //failure
                 (data) => {
@@ -260,7 +257,7 @@ Object.assign(HomeMenu.prototype, {
                             modObject : modObject
                         }
                     });
-                    window.main.hideSpinner();
+                    this.hideSpinner();
                 }
             );        
         },

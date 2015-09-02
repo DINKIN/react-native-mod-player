@@ -1,9 +1,10 @@
 'use strict';
 
-var React           = require('react-native'),
-    FavoritesView   = require('./FavoritesView'),
-    FavoritesPlayer = require('../player/FavoritesPlayer'),
-    RandomPlayer    = require('../player/RandomPlayer');
+var React         = require('react-native'),
+    FavoritesList = require('./FavoritesList'),
+    ListPlayer    = require('../player/ListPlayer'),
+    RandomPlayer  = require('../player/RandomPlayer'),
+    BaseComponent = require('../BaseComponent');
 
 var {
         AppRegistry,
@@ -14,17 +15,17 @@ var {
     } = React;
 
 var { 
-        MCFsTool,
-        MCModPlayerInterface
+        MCModPlayerInterface,
+        MCQueueManager
     } = require('NativeModules');
 
 
-class FavoritesViewNavigator extends React.Component{
+class FavoritesListNavigator extends BaseComponent{
     render() {
         var initialRoute = {
             title           : 'Favorites',
             leftButtonTitle : 'Close',
-            component       : FavoritesView,
+            component       : FavoritesList,
             passProps       : {
                 rowData    : this.props.rowData,
                 onRowPress : (record, childNavigator, ownerList) => {
@@ -62,35 +63,35 @@ class FavoritesViewNavigator extends React.Component{
 
     onShufflePress() {
         var  navigator = this.props.navigator;
-        window.main.showSpinner();
+        this.showSpinner();
 
-        window.db.clear();
 
-        window.db.getNextRandomFavorite((rowData) => {
-            // console.log(rowData);
-           
-            var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.file_name);
+        MCQueueManager.getFavoritesRandomized((record) => {
+            // console.log(rowData);  
+            var filePath = window.bundlePath + unescape(record.directory) + unescape(record.name);
+
             MCModPlayerInterface.loadFile(
                 filePath,
                 //failure
                 (data) => {
-                    window.main.hideSpinner();
-                    alert('Failure loading ' + rowData.file_name);
+                    this.hideSpinner();
+                    alert('Failure loading ' + record.file_name);
                     console.log(data);
                 },        
                 //success
                 (modObject) => {
                     // debugger;
-                    var fileName  = rowData.file_name,
-                        rtBtnText,
+                    var rtBtnText,
                         rtBtnHandler;
 
-                    modObject.fileName = fileName;
-                    
-                    window.mainNavigator.push({
+                    modObject.fileName = record.name;
+                    modObject.id_md5   = record.id_md5;
+                    modObject.record   = record;
+
+                    window.mainNavigator.replace({
                         title            : 'Player',
                         rightButtonTitle : rtBtnText,
-                        component        : RandomPlayer,
+                        component        : ListPlayer,
                         componentConfig  : {
                             modObject   : modObject,
                             isFavorites : true,
@@ -98,7 +99,7 @@ class FavoritesViewNavigator extends React.Component{
                         }
                     });
   
-                    window.main.hideSpinner();
+                    this.hideSpinner();
                 }
             );
 
@@ -108,16 +109,16 @@ class FavoritesViewNavigator extends React.Component{
 
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
-        window.main.showSpinner();
+        this.showSpinner();
 
 
         var fileName = unescape(record.name);
 
         MCModPlayerInterface.loadFile(
-            window.bundlePath + record.directory + fileName,
+            window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
-                window.main.hideSpinner();
+                this.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
                 console.log(data);
             },        
@@ -129,11 +130,13 @@ class FavoritesViewNavigator extends React.Component{
                 modObject.fileName = fileName;
 
                 var rowData = ownerList.props.rowData;
-
+                modObject.record = record;
+                modObject.id_md5 = record.id_md5;
+                modObject.record = record;
 
                 this.props.navigator.push({
                     title            : 'Player',
-                    component        : FavoritesPlayer,
+                    component        : ListPlayer,
                     componentConfig  : {
                         ownerList : ownerList,
                         modObject : modObject,
@@ -144,7 +147,7 @@ class FavoritesViewNavigator extends React.Component{
                     }
                 });
                 
-                window.main.hideSpinner();
+                this.hideSpinner();
 
             }
         );
@@ -166,4 +169,4 @@ var styles = StyleSheet.create({
     },
 
 })
-module.exports = FavoritesViewNavigator;
+module.exports = FavoritesListNavigator;

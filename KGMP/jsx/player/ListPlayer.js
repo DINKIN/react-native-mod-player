@@ -1,6 +1,10 @@
 var React = require('react-native'),
-    MCModPlayerInterface = require('NativeModules').MCModPlayerInterface,
     AbstractPlayer       = require('./AbstractPlayer');
+
+var {
+        MCModPlayerInterface,
+        MCQueueManager
+    } = require('NativeModules');
 
 
 class ListPlayer extends AbstractPlayer {
@@ -11,28 +15,14 @@ class ListPlayer extends AbstractPlayer {
         }
 
         this.loading = true;
+        this.showSpinner();
 
-        var state     = this.state,
-            rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
-            ownerList = this.props.ownerList,
-            record    = this.getPreviousRecord(rowID);
-
-        if (! record) {
-            this.rowID = rowID  = this.getRowDataCount();
-            record = this.getLastRecord();
-
-            // debugger;
-            if (! record) {
-                window.main.hideSpinner();
-                alert('Apologies! There are no more songs to play in this list.');
-                // VibrationIOS.vibrate();
-                return;
-            }
-        }
-
-        this.pauseTrack(() => {
-            this.patterns = {};
-            this.loadFile(record, () => this.rowID = rowID - 1);
+        MCQueueManager.getPreviousFileFromCurrentSet((record)=> {
+            this.pauseTrack(() => {
+                this.loadFile(record, () => {
+                    this.hideSpinner();
+                });
+            });
         });
 
     }
@@ -40,39 +30,21 @@ class ListPlayer extends AbstractPlayer {
     // Todo: clean this up
     // Todo: read from local list (not have to poll the owner component)
     nextTrack() {
-        console.log('ListPlayer.nextTrack()');
-        // debugger;
         if (this.loading) {
             return;
         }
 
         this.loading = true;
+        this.showSpinner();
 
-        var state     = this.state,
-            rowID     = parseInt((this.rowID != null) ? this.rowID : this.props.rowID),
-            ownerList = this.props.ownerList,
-            record    = this.getNextRecord(rowID);
-
-        if (! record) {
-            this.rowID = rowID  = 0;
-            record = this.getFirstRecord();
-
-            if (! record) {
-                window.main.hideSpinner();
-                alert('Apologies! There are no more songs to play in this list.');
-                // VibrationIOS.vibrate();
-                this.loading = false;
-                return;
-            }
-        }
-
-        this.pauseTrack(() => {
-            this.patterns = {};
-            this.loadFile(record, () => {
-                this.rowID = rowID + 1;
-                console.log('this.rowID = ' + this.rowID)
+        MCQueueManager.getNextFileFromCurrentSet((record)=> {
+            this.pauseTrack(() => {
+                this.loadFile(record, () => {
+                    this.hideSpinner();
+                });
             });
         });
+
     
     }
     
@@ -122,8 +94,6 @@ class ListPlayer extends AbstractPlayer {
                     ownerList = props.ownerList,
                     rowID     = parseInt((this.rowID != null) ? this.rowID : props.rowID);
 
-                ownerList.setRecordIsPlaying(rowID, false);    
-
                 this.deregisterPatternUpdateHandler();     
 
                 callback && callback();
@@ -139,17 +109,16 @@ class ListPlayer extends AbstractPlayer {
 
         this.patterns = {};
         this.forceUpdate();
-        // this.refs.webView.execJsCall('cls()');
         
-        window.main.showSpinner();
+        this.showSpinner();
             
         var fileName = unescape (record.name);
 
         MCModPlayerInterface.loadFile(
-            window.bundlePath + record.directory + fileName,
+            window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
-                window.main.hideSpinner();
+                this.hideSpinner();
                 var pathSplit = record.directory.split('/');
                 alert('Failure in loading file ' + pathSplit[pathSplit.length - 1]);
                 console.log(data);
@@ -166,62 +135,49 @@ class ListPlayer extends AbstractPlayer {
 
                 this.modObject = modObject;
                 modObject.fileName = fileName;
-
+                modObject.record = record;
                 // this.forceUpdate();   
 
                 this.patterns = modObject.patterns;
                 this.onWkWebViewInit();
                 this.playTrack();
-                window.main.hideSpinner();
+                this.hideSpinner();
 
             }
         );
     }
 
-    getRowDataCount() {
-        return this.props.rowData.length - 1;
-    }
-
-    getFirstRecord() {
-        return this.props.rowData[0];
-    }
-
-    getLastRecord() {
-        return this.props.rowData[this.props.rowData.length - 1];
-    }
-
-    getPreviousRecord(rowID) {
-        var record = this.props.rowData[--rowID];
-
-        return record ? record : null;
-    }
-
-    getNextRecord(rowID) {
-        // debugger;
-        var record = this.props.rowData[++rowID];
-
-        return record ? record : null;
-    }
-
-
     like(rowData) {
-        window.main.showLikeSpinner();
+        this.showLikeSpinner();
 
-        window.db.updateLikeViaFileName(this.modObject.file_name, 1, (rowData) => {
-            setTimeout(function() {
-                window.main.hideSpinner();
-            }, 350);
-
-            console.log(rowData)
-        });
+        setTimeout(() => {
+            MCQueueManager.updateLikeStatus(
+                1,
+                this.modObject.id_md5,
+                this.hideSpinner
+            );
+        }, 250);
     }
 
     dislike () {
-        window.main.showDislikeSpinner();
+        this.showDislikeSpinner();
 
-        window.db.updateLikeViaFileName(this.modObject.file_name, 1, (rowData) => {
-            this.nextTrack();
-        });
+        MCQueueManager.updateLikeStatus(
+            -1,
+            this.modObject.id_md5,
+            (record) => {
+                this.props.ownerList.removeRecord(this.modObject.record);
+                
+                if (record) {
+                    this.loadFile(record);    
+                }
+                else {
+                    alert('No more files in the list')
+
+                }
+                
+            }
+        );
     }
 }
 

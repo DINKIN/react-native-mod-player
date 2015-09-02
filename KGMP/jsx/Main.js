@@ -50,7 +50,7 @@ var styles = StyleSheet.create({
 
 class Spinner extends BaseComponent {
     render() {
-        console.log('spinner render')
+        // console.log('spinner render')
         return (
             <View style={styles.spinnerContainer}>
                 <ActivityIndicatorIOS 

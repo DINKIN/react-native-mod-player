@@ -1,7 +1,7 @@
 'use strict';
 
 var React      = require('react-native'),
-    BrowseView = require('./BrowseView'),
+    BrowseList = require('./BrowseList'),
     ListPlayer = require('../player/ListPlayer'),
     initialPaths;
 
@@ -14,7 +14,6 @@ var {
     } = React;
 
 var { 
-        MCFsTool, // Deprecated
         MCModPlayerInterface,
         MCQueueManager
     } = require('NativeModules');
@@ -68,12 +67,12 @@ getDirectories(null, function(rowData) {
 });
 
 
-class BrowseViewNavigator extends React.Component{
+class BrowseListNavigator extends React.Component{
     render() {
         var initialRoute = {
             title           : 'Browse',
             leftButtonTitle : 'Close',
-            component       : BrowseView,
+            component       : BrowseList,
             passProps       : {
                 rowData    : initialPaths,
                 onRowPress : (record, childNavigator, ownerList) => {
@@ -111,12 +110,12 @@ class BrowseViewNavigator extends React.Component{
 
 
         if (isDir) {
-            title = record.name + '/';
+            title = unescape(record.name);
             window.main.showSpinner();
             getDirectories(record.name, (rowData)=> {
                 var route = {
                     title     : title,
-                    component : BrowseView,
+                    component : BrowseList,
                     passProps : {
                         rowData    : rowData,
                         onRowPress : (rec, childNav, ownrList) => {
@@ -143,7 +142,7 @@ class BrowseViewNavigator extends React.Component{
         var fileName = unescape (record.name);
 
         MCModPlayerInterface.loadFile(
-            window.bundlePath + record.directory + fileName,
+            window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
                 window.main.hideSpinner();
@@ -152,11 +151,14 @@ class BrowseViewNavigator extends React.Component{
             },        
             //success
             (modObject) => {
+                var rowData = ownerList.props.rowData,
+                    rowID = rowData.indexOf(record);
+                
+                MCQueueManager.setQueueIndex(rowID);
 
                 modObject.fileName = fileName;
-
-                var rowData = ownerList.props.rowData;
-                
+                modObject.id_md5   = record.id_md5;
+                modObject.record   = record;
                 this.props.navigator.push({
                     title            : 'Player',
                     component        : ListPlayer,
@@ -165,7 +167,7 @@ class BrowseViewNavigator extends React.Component{
                         modObject : modObject,
                         patterns  : modObject.patterns,
                         rowData   : rowData,
-                        rowID     : rowData.indexOf(record),
+                        rowID     : rowID,
                         record    : record
                     }
                 });
@@ -191,4 +193,4 @@ var styles = StyleSheet.create({
     },
 
 })
-module.exports = BrowseViewNavigator;
+module.exports = BrowseListNavigator;
