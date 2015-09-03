@@ -276,7 +276,15 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
             [player pause];
             [self loadFileViaDictionary:file];
             [player play];
-            // TODO: Some type of event for the UI
+            
+            // When the UI becomes active, emit this event
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                    @"eventType" : @"UIUpdate",
+                    @"modObject" : modInfo,
+                    @"file"      : file
+                }];
+            }];
         }
         
 
@@ -298,7 +306,16 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
             [player pause];
             [self loadFileViaDictionary:file];
             [player play];
-            // TODO: Some type of event for the UI
+            
+            // When the UI becomes active, emit this event
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                    @"eventType" : @"UIUpdate",
+                    @"modObject" : modInfo,
+                    @"file"      : file
+                }];
+            }];
+            
         }
         
         return success;

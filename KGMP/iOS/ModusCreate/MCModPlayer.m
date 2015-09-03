@@ -53,11 +53,19 @@
 
 - (void) appHasGoneInForeground {
     self.appActive = true;
+    if (self.updateInterfaceSinceLastSleepBlock) {
+        self.updateInterfaceSinceLastSleepBlock(self.modInfo);
+        [self registerCallbackSinceLastSleep:nil];
+    }
 }
 
 
-- (void) registerInfoCallback:(void(^)(int32_t *playerState))updateInterfaceBlock {
-    self.updateInterfaceBlock = updateInterfaceBlock;
+- (void) registerInfoCallback:(void(^)(int32_t *playerState))executionBlock {
+    self.updateInterfaceBlock = executionBlock;
+}
+
+- (void) registerCallbackSinceLastSleep:(void(^)(NSDictionary *modInfo))executionBlock {
+    self.updateInterfaceSinceLastSleepBlock = executionBlock;
 }
 
 void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer) {

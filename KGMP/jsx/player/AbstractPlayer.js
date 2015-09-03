@@ -341,10 +341,36 @@ class AbstractPlayer extends BaseComponent {
                     this.patterns = modObject.patterns;
                     // this.onWkWebViewInit();
                     this.playTrack();
-                    window.main.hideSpinner();
+                    this.hideSpinner();
                 }
             );
         });
+    }
+
+    onCommandCenterEventUIUpdate(eventObj) {
+        var {
+                modObject,
+                file 
+            } = eventObj;
+
+
+        debugger;
+        this.showSpinner();
+
+        this.loading = false;
+
+        this.refs.progressView.setState({
+            numberOfCells   : modObject.patternOrds.length,
+            highlightNumber : 0
+        });
+
+        modObject.id_md5 = file.id_md5;
+        modObject.record = file;
+
+        this.modObject = modObject;
+        modObject.fileName = file.name;
+
+        this.hideSpinner();
     }
 }
 
@@ -400,25 +426,23 @@ Object.assign(AbstractPlayer.prototype, {
             window.mainNavigator.pop();
         },
  
-        onSummaryItemPress : function(fileTypeObj) {
-            var wiki = fileTypeObj.wiki;
-
-            if (wiki) {
-                // debugger;
-                this.props.navigator.showWebView(wiki);
-            }
-        },
-
         
         onButtonPress : function(buttonType) {
             var methodName = this.audioControlMethodMap[buttonType];
             this[methodName] && this[methodName]();
         },
 
-        onCommandCenterEvent : function(event) {
+        onCommandCenterEvent : function(eventObj) {
             // debugger;
-            console.log('onCommandCenterEvent ' + event.eventType);
-            this.onButtonPress(event.eventType);
+            console.log('onCommandCenterEvent ' + eventObj.eventType);
+            console.log(eventObj);
+
+            if (eventObj.eventType == 'UIUpdate') {
+                this.onCommandCenterEventUIUpdate(eventObj);
+            }
+            else {
+                this.onButtonPress(eventObj.eventType);
+            }
         },
         
         onPatternUpdateEvent : function(position) {
@@ -524,9 +548,9 @@ Object.assign(AbstractPlayer.prototype, {
         onWkWebViewPatternsRegistered : function() {
             console.log('onWkWebViewPatternsRegistered');
             this.patternsRegistered = true;
-            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]);
-           
+            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]); 
         }
+
 
 
 

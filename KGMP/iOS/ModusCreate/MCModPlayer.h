@@ -38,6 +38,9 @@
     int waveFormDataSize;
     
     BOOL appInForeground;
+    
+    BOOL updatesSinceLastSleep;
+    
 }
 
 @property NSDictionary *modInfo;
@@ -50,6 +53,7 @@
 @property id modPlayer;
 //
 @property (nonatomic, copy) void (^updateInterfaceBlock)(int32_t *playerState);
+@property (nonatomic, copy) void (^updateInterfaceSinceLastSleepBlock)(NSDictionary *modInfo);
 
 @property BOOL appActive;
 @property BOOL copyingFloatData;
@@ -80,7 +84,8 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 - (void) play;
 
 - (void) setDelegate:(id)someDelegate;
-- (void) registerInfoCallback:(void(^)(int32_t *playerState))updateInterfaceBlock;
+- (void) registerInfoCallback:(void(^)(int32_t *playerState))executionBlock;
+- (void) registerCallbackSinceLastSleep:(void(^)(NSDictionary *modInfo))executionBlock;
 
 - (void) appHasGoneInBackground;
 - (void) appHasGoneInForeground;
