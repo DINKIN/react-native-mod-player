@@ -13,4 +13,6 @@
 - (NSArray *) getDirectories;
 - (NSArray *) getFilesForDirectory:(NSString *)dirName;
 - (NSDictionary *) getRandomFile;
+- (NSDictionary *) getNext;
+- (NSDictionary *) getPrevious;
 @end

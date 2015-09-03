@@ -23,24 +23,24 @@
     TODO items:
     - Add bridged methods
         ░ Get random file
-        - Get Favorites (By Directory??)
+        ░ Get Favorites (By Directory??)
  
         ░ Browse global directories
         ░ Browse specific directory
             ░ Hide files by -1 (dislike)
-        - Like file by 
-            - md5
-            - file_name
-        - Dislike file by
-            - md5
-            - file_name
+        ░ Like file by
+            ░ md5
+            x file_name
+        ░ Dislike file by
+            ░ md5
+            x file_name
  
-        - Queue Managers
+        ░ Queue Managers
             ░ Random Tracks
             ░ Directory browsing
-            - Favorites
+            ░ Favorites
  
-    - Good queue manager (next, previous)
+    ░ Good queue manager (next, previous)
     - Hook in Command Center
     - Hook in app launch, hibernate, awake
 */
@@ -54,7 +54,6 @@ static dispatch_queue_t MCQueueManagerQueue(void) {
     
     dispatch_once(&onceToken, ^{
         // All JS is single threaded, so a serial queue is our only option.
-
         sqliteQueue = dispatch_queue_create("com.moduscreate.sqlite", DISPATCH_QUEUE_SERIAL);
         dispatch_set_target_queue(sqliteQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
     });
@@ -63,27 +62,44 @@ static dispatch_queue_t MCQueueManagerQueue(void) {
 }
 
 
+
+
+
 @implementation MCQueueManager {
     NSMutableArray *queue;
     unsigned long queueIndex;
-    /*
+    
+    /*  browseType:
         0 = directory
         1 = favorites list
         2 = random file from directories
         3 = random favorites
     */
     short browseType;
-    
-    
 }
+
 
 
 @synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
 
+//
+//
+//+ (id)sharedManager {
+//    static MCQueueManager *sharedMyManager = nil;
+//    static dispatch_once_t onceToken;
+//  
+//    hasInitialized = true;
+//    dispatch_once(&onceToken, ^{
+//        sharedMyManager = [[self alloc] init];
+//    });
+//    return sharedMyManager;
+//}
+
 
 - (instancetype) init {
+    
     if (self = [super init]) {
         queue = [[NSMutableArray alloc] init];
         return self;
@@ -100,9 +116,8 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(getDirectories:(RCTResponseSenderBlock)errorCallback
                         callback:(RCTResponseSenderBlock)successCallback) {
     
-    browseType = 0;
     NSArray *directories = [self getDirectories];
-    
+
     if (directories == nil) {
         errorCallback(@[]);
     }
@@ -118,7 +133,9 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
     
     queue =[[NSMutableArray alloc] initWithArray:[self getFilesForDirectory:dirName]];
     queueIndex = 0;
-    
+
+    browseType = 0;
+    NSLog(@"%@      browseType = %i\n", self, browseType);
     if (queue == nil) {
         errorCallback(@[]);
     }
@@ -130,36 +147,17 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
 
 
 RCT_EXPORT_METHOD(getNextFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
-    queueIndex++;
-    
-    unsigned long totalItems = [queue count] - 1;
-    
-    if (queueIndex > totalItems) {
-        queueIndex = 0;
-    }
-    
-    NSDictionary *file = [queue objectAtIndex:queueIndex];
-    
+    NSDictionary *file = [self getNextFileFromCurrentSet];
+    NSLog(@"%@      browseType = %i\n", self, browseType);
+
     successCallback(@[file]);
     
 }
 
 RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
-    unsigned long totalItems = [queue count] - 1;
-    NSDictionary *file;
-    
-    if (queueIndex == 0) {
-        queueIndex = totalItems;
-        file = [queue objectAtIndex:queueIndex];
-        successCallback(@[file]);
-        return;
-    }
+    NSDictionary *file = [self getPreviousFileFromCurrentSet];
+    NSLog(@"%@      browseType = %i\n", self, browseType);
 
-    queueIndex--;
-    file = [queue objectAtIndex:queueIndex];
-    if (! file) {
-        printf("dafuq?\n");
-    }
     successCallback(@[file]);
 }
 
@@ -207,70 +205,25 @@ RCT_EXPORT_METHOD(getNextRandomAndClearQueue:(RCTResponseSenderBlock)successCall
     
     NSDictionary *file = [self getRandomFile];
     
-    [queue removeAllObjects];
-    
-    
     [queue addObject:file];
     queueIndex = [queue indexOfObject:file];
 
-    printf("Loading queued index %lu\n", queueIndex);
-    successCallback(@[file]);    
-}
-
-
-RCT_EXPORT_METHOD(getNextRandom:(RCTResponseSenderBlock)successCallback) {
-    NSDictionary *file;
-    
-    unsigned long totalItems = [queue count];
-    
-    if (queueIndex < totalItems - 1) {
-        queueIndex++;
-        file = [queue objectAtIndex:queueIndex];
-        queueIndex = [queue indexOfObject:file];
-        
-        printf(">>> Existing FILE\n");
-    }
-    else {
-        file = [self getRandomFile];
-        [queue addObject:file];
-        queueIndex = [queue indexOfObject:file];
-
-        printf(">>> NEW FILE\n");
-    }
-    
-    printf("Loading queued index %lu, %lu\n", queueIndex, [queue count]);
+//    printf("Loading queued index %lu\n", queueIndex);
     successCallback(@[file]);
 }
+
+RCT_EXPORT_METHOD(getNextRandom:(RCTResponseSenderBlock)successCallback) {
+    NSDictionary *file = [self getNextRandom];
+    successCallback(@[file]);
+}
+
 
 
 
 RCT_EXPORT_METHOD(getPreviousRandom:(RCTResponseSenderBlock)successCallback) {
-    NSDictionary *file;
-    
-    unsigned long totalItems = [queue count];
-//    printf("getPreviousRandom(%lu)\n", queueIndex);
-    
-    if (queueIndex > 0) {
-        queueIndex--;
-    }
-    
-    if (queueIndex == 0) {
-        file = [self getRandomFile];
-        
-        [queue insertObject:file atIndex:0];
-        queueIndex = [queue indexOfObject:file];
-//        printf("<<< NEW FILE\n");
-    }
-    else if (queueIndex <= totalItems - 1) {
-        file = [queue objectAtIndex:queueIndex];
-        queueIndex = [queue indexOfObject:file];
-//        printf("<<< Existing FILE\n");
-    }
-    
-//    printf("Loading queued index %lu, %lu\n", queueIndex, [queue count]);
+    NSDictionary *file = [self getPreviousRandom];
     successCallback(@[file]);
 }
-
 
 
 RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
@@ -285,8 +238,8 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
     // If we dislike a song, we just need to replace it in the queue.
     if ((int)[likeValue integerValue] == -1) {
         
-        // directory listings || Favorites list
-        if (browseType == 0 || browseType == 1) {
+        // directory listings || Favorites list ||  Random favorites
+        if (browseType == 0 || browseType == 1 || browseType == 3) {
             [queue removeObjectAtIndex:queueIndex];
             
             unsigned long numFiles = [queue count] - 1;
@@ -295,22 +248,13 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
                 queueIndex = numFiles;
             }
 
-            
             file = [queue objectAtIndex:queueIndex];
-            successCallback(@[file]);
-            
         }
         // Random files from directories
         else if (browseType == 2) {
             file = [self getRandomFile];
           
             [queue replaceObjectAtIndex:queueIndex withObject:file];
-        }
-        // Random favorites
-        else if (browseType == 3) {
-//            file = [self getRandomFavorite];
-//          
-//            [queue replaceObjectAtIndex:queueIndex withObject:file];
         }
         
         
@@ -326,29 +270,133 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 #pragma mark general_utilities
 
 - (NSArray *) getDirectories {
-    
     NSMutableArray *directories = [self execQuery:@"SELECT * FROM directories where number_files > 0 ORDER BY name COLLATE NOCASE;"];
-    
-//    NSLog(@"%@", directories);
-//    printf("done\n");
-    
     return directories;
 }
 
 - (NSArray *) getFilesForDirectory:(NSString *)dirName {
-    
     NSString *query = [NSString stringWithFormat:@"SELECT * FROM songs WHERE directory IS '%@' AND like_value IS NOT '-1' ORDER BY name COLLATE NOCASE;", dirName];
-   
     return [self execQuery:query];
 }
 
 
 - (NSDictionary *) getRandomFile {
-    
     NSMutableArray *rows = [self execQuery:@"SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;"];
-
-//    NSLog(@"RandomFile: %@", [rows objectAtIndex:0]);
     return [rows objectAtIndex:0];
+}
+
+
+- (NSDictionary *) getNext {
+    NSLog(@"%@      browseType = %i\n", self, browseType);
+
+    // directory listings || Favorites list || random favorites list
+    if (browseType == 0 || browseType == 1 || browseType == 3) {
+        return [self getNextFileFromCurrentSet];
+    }
+    // Random files from directories
+    else if (browseType == 2) {
+        return [self getNextRandom];
+    }
+
+    return nil;
+}
+
+- (NSDictionary *) getPrevious {
+    NSLog(@"%@      browseType = %i\n", self, browseType);
+    // directory listings || Favorites list || random favorites list
+    if (browseType == 0 || browseType == 1 || browseType == 3) {
+        return [self getPreviousFileFromCurrentSet];
+    }
+    // Random files from directories
+    else if (browseType == 2) {
+        return [self getPreviousRandom];
+    }
+   
+    return nil;
+}
+
+
+
+- (NSDictionary *) getNextFileFromCurrentSet {
+    queueIndex++;
+    
+    unsigned long totalItems = [queue count] - 1;
+    
+    if (queueIndex > totalItems) {
+        queueIndex = 0;
+    }
+    
+    printf("queueIndex = %lu\n", queueIndex);
+
+    return [queue objectAtIndex:queueIndex];
+}
+
+- (NSDictionary *) getPreviousFileFromCurrentSet {
+    unsigned long totalItems = [queue count] - 1;
+    NSDictionary *file;
+    
+
+    
+    if (queueIndex == 0) {
+        queueIndex = totalItems;
+        file = [queue objectAtIndex:queueIndex];
+    }
+    else {
+        queueIndex--;
+        file = [queue objectAtIndex:queueIndex];
+    }
+    
+    printf("queueIndex = %lu\n", queueIndex);
+
+    return file;
+}
+
+
+/* 
+    Used by both instance exposed method to get the next random file
+*/
+-(NSDictionary *)getNextRandom {
+    unsigned long totalItems = [queue count];
+    NSDictionary *file;
+    
+    if (queueIndex < totalItems - 1) {
+        queueIndex++;
+        file = [queue objectAtIndex:queueIndex];
+        queueIndex = [queue indexOfObject:file];
+    }
+    else {
+        file = [self getRandomFile];
+        [queue addObject:file];
+        queueIndex = [queue indexOfObject:file];
+    }
+    
+    return file;
+}
+
+
+/* 
+    Used by both instance exposed method to get the jprevious random file
+*/
+-(NSDictionary *) getPreviousRandom {
+    NSDictionary *file;
+    unsigned long totalItems = [queue count];
+    
+    if (queueIndex > 0) {
+        queueIndex--;
+    }
+    
+    if (queueIndex == 0) {
+        file = [self getRandomFile];
+        
+        [queue insertObject:file atIndex:0];
+        queueIndex = [queue indexOfObject:file];
+    }
+    else if (queueIndex <= totalItems - 1) {
+        file = [queue objectAtIndex:queueIndex];
+        queueIndex = [queue indexOfObject:file];
+    }
+    
+    return file;
 }
 
 
@@ -383,7 +431,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
     sqlite3 *db;
     BOOL openDatabaseResult = sqlite3_open([dbPath UTF8String], &db);
-//    printf("Open DB %s\n", [dbPath UTF8String]);
+
     if(openDatabaseResult != SQLITE_OK) {
         return nil;
     }
@@ -465,7 +513,6 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
     return rows;
 
 }
-
 
 
 @end

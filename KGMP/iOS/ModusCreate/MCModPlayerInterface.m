@@ -54,34 +54,63 @@ RCT_EXPORT_MODULE();
     return nil;
 }
 
-
-RCT_EXPORT_METHOD(loadFile:(NSString *)path
-                 errorCallback:(RCTResponseSenderBlock)errorCallback
-                 callback:(RCTResponseSenderBlock)callback) {
-    
-    
+- (NSDictionary *) loadFileViaPathString:(NSString *)path {
     MCModPlayer *player = [MCModPlayer sharedManager];
     
     NSDictionary *modInfo = [player initializeSound:path];
 
     
     if (modInfo == nil) {
-        errorCallback(@[@"Could not initialize audio."]);
+        return nil;
     }
     else {
     
-        self.currentRow     = 0;
-        self.currentOrder   = 0;
+        self.currentRow   = 0;
+        self.currentOrder  = 0;
 
         NSArray *ords = [modInfo objectForKey:@"patternOrds"];
 
         self.currentPattern = [ords objectAtIndex:0];
 
+        return modInfo;
+    }
+}
+
+- (NSString *) unescapeString:(NSString *)str {
+    NSDictionary *options = @{
+        NSDocumentTypeDocumentAttribute      : NSHTMLTextDocumentType,
+        NSCharacterEncodingDocumentAttribute : @(NSUTF8StringEncoding)
+    };
+
+    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+
+    return [[[NSAttributedString alloc] initWithData:data options:options documentAttributes:nil error:nil] string];
+}
+
+- (NSDictionary *) loadFileViaDictionary:(NSDictionary *)file {
+    
+    NSString *dir  = [[file objectForKey:@"directory"]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+             *name = [[file objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+   
+    NSString *appUrl = [[NSBundle mainBundle] bundlePath],
+             *path   = [NSString stringWithFormat:@"%@%@%@%@", appUrl, @"/KEYGENMUSiC MusicPack/", dir, name];
+    
+    return [self loadFileViaPathString:path];
+}
+
+RCT_EXPORT_METHOD(loadFile:(NSString *)path
+                 errorCallback:(RCTResponseSenderBlock)errorCallback
+                 callback:(RCTResponseSenderBlock)callback) {
+    
+    
+    NSDictionary *modInfo = [self loadFileViaPathString:path];
+
+    if (modInfo == nil) {
+        errorCallback(@[@"Could not initialize audio."]);
+    }
+    else {
         callback(@[modInfo]);
     }
-    
-   
-
 }
 
 
@@ -115,7 +144,6 @@ RCT_EXPORT_METHOD(getAllPatterns:(NSString *)path
     else {
         callback(@[patternData]);
     }
-    
 }
 
 
@@ -187,45 +215,36 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     
     /** Remote control management**/
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    
-//    [[commandCenter playCommand] setEnabled:YES];
-//    [[commandCenter pauseCommand] setEnabled:YES];
-//    [[commandCenter seekForwardCommand] setEnabled:YES];
-//    [[commandCenter seekBackwardCommand] setEnabled:YES];
-//    [[commandCenter nextTrackCommand] setEnabled:YES];
-//    [[commandCenter previousTrackCommand] setEnabled:YES];
-    
-//    [[commandCenter stopCommand] setEnabled:YES];
+
+    int success = MPRemoteCommandHandlerStatusSuccess;
     
     [commandCenter.togglePlayPauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         [player resume];
         
-        
         NSLog(@"playPause");
-//        [[commandCenter playCommand] setEnabled:NO];
-//        [[commandCenter pauseCommand] setEnabled:YES];
         
+        if (player.appActive) {
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"playPause"
+            }];
+        }
         
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"playPause"
-        }];
-        
-        return MPRemoteCommandHandlerStatusSuccess;
+        return success;
     }];
     
     [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         [player resume];
         
         NSLog(@"playCommand");
-//        [[commandCenter playCommand] setEnabled:NO];
-//        [[commandCenter pauseCommand] setEnabled:YES];
         
+        if (player.appActive) {
+
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"play"
+            }];
+        }
         
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"play"
-        }];
-        
-        return MPRemoteCommandHandlerStatusSuccess;
+        return success;
     }];
     
     [commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
@@ -233,54 +252,78 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
         
         NSLog(@"pauseCommand");
         
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"pause"
-        }];
+        if (player.appActive) {
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"pause"
+            }];
+        }
         
-        return MPRemoteCommandHandlerStatusSuccess;
+        return success;
     }];
 
     [commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        //TODO: Handle next track (have no idea what to do here atm);
         NSLog(@"nextTrackCommand");
         
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"next"
-        }];
+        if (player.appActive) {
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"next"
+            }];
+        }
+        else {
+            MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
+            
+            NSDictionary *file = [qMgr getNext];
+            [player pause];
+            [self loadFileViaDictionary:file];
+            [player play];
+            // TODO: Some type of event for the UI
+        }
         
-        return MPRemoteCommandHandlerStatusSuccess;
+
+        return success;
     }];
     
     [commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        //TODO: Handle previous track (have no idea what to do here atm);
         NSLog(@"previousTrackCommand");
         
-       [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"prev"
-        }];
-        return MPRemoteCommandHandlerStatusSuccess;
+        if (player.appActive) {
+           [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"prev"
+            }];
+        }
+        else {
+            MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
+            
+            NSDictionary *file = [qMgr getPrevious];
+            [player pause];
+            [self loadFileViaDictionary:file];
+            [player play];
+            // TODO: Some type of event for the UI
+        }
+        
+        return success;
     }];
     
-    [commandCenter.seekBackwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        //TODO: Handle reverse seek.  Is this called continuously?
-        NSLog(@"seek backward");
-        
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"seekBackward"
-        }];
-        return MPRemoteCommandHandlerStatusSuccess;
-    }];
-    
-    [commandCenter.seekForwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        //TODO: Handle forward seek.  Is this called continuously?
-        NSLog(@"seek forward");
-        
-        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-            @"eventType" : @"seekForward"
-        }];
-        
-        return MPRemoteCommandHandlerStatusSuccess;
-    }];
+//    [commandCenter.seekBackwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+//        //TODO: Handle reverse seek.  Is this called continuously?
+//        NSLog(@"seek backward");
+//        
+//        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+//            @"eventType" : @"seekBackward"
+//        }];
+//        return MPRemoteCommandHandlerStatusSuccess;
+//    }];
+//    
+//    [commandCenter.seekForwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+//        //TODO: Handle forward seek.  Is this called continuously?
+//        NSLog(@"seek forward");
+//        
+//        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+//            @"eventType" : @"seekForward"
+//        }];
+//        
+//        return MPRemoteCommandHandlerStatusSuccess;
+//    }];
 
 
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -303,6 +346,9 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     
     NSLog(@"Route change, %ld", (long)routeChangeReason);
 }
+
+
+
 
 
 @end

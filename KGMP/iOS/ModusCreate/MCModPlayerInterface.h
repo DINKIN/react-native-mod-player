@@ -10,6 +10,8 @@
 #import "RCTBridgeModule.h"
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
+#import "MCQueueManager.h"
+#import "NSString+HTML.h"
 
 @interface MCModPlayerInterface : NSObject <RCTBridgeModule>
 
@@ -19,6 +21,7 @@
 @property int currentPattern;
 @property int currentOrder;
 @property double then;
+@property BOOL appActive;
 
 - (void) audioRouteChanged:(NSNotification *)notification;
 

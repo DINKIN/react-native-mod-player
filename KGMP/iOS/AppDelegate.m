@@ -16,6 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
+#if TARGET_IPHONE_SIMULATOR
 
   // Loading JavaScript code - uncomment the one you want.
 
@@ -26,8 +27,9 @@
   //
   // To run on device, change `localhost` to the IP address of your computer, and make sure your computer and
   // iOS device are on the same Wi-Fi network.
-//  jsCodeLocation = [NSURL URLWithString:@"http://192.168.6.70:8081/jsx/index.ios.bundle"];
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/jsx/index.ios.bundle"];
+
+#else
 
   // OPTION 2
   // Load from pre-bundled file on disk. To re-generate the static bundle, run
@@ -35,14 +37,15 @@
   // $ curl 'http://localhost:8081/jsx/index.ios.bundle?dev=false&minify=true' -o iOS/main.jsbundle
   //
   // and uncomment the next following line
-//   jsCodeLocation  = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+
+   jsCodeLocation  = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+#endif
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"KGMP"
                                                    launchOptions:launchOptions];
     
 //  
-    MCQueueManager *qMgr = [[MCQueueManager alloc] init];
 //
 //  [qMgr getRandomFile];
 //    [qMgr getDirectories];

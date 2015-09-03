@@ -10,8 +10,7 @@ var {
     TouchableWithoutFeedback
 } = React;
 
-var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
-    RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
+var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./accessories/SummaryCard'),
     MusicControlButton    = require('./accessories/MusicControlButton'),
     // PatternView           = require('./PatternView'),
@@ -22,6 +21,11 @@ var MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
     // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     ProgressView          = require('./accessories/ProgressView');
 
+var {
+        MCModPlayerInterface,
+        MCQueueManager
+
+    } = require('NativeModules')
 
 var updateStart = 'up(',
     updateEnd   = ')'
@@ -227,23 +231,120 @@ class AbstractPlayer extends BaseComponent {
     }
 
     playTrack() {
-        // EXTEND
-    }
-    
-    pauseTrack(callback) {
-        // EXTEND
+        var props = this.props,
+            state = this.state;
+   
+        // TODO: Merge logic into one block below
+        if (! state.songLoaded) {
+            // debugger;
+            MCModPlayerInterface.resume(
+                // SUCCESS callback
+                () => {
+                    state.songLoaded  = 1;
+                    state.playingSong = 1;
+                    this.registerPatternUpdateHandler();
+                    this.setState(state);
+                }
+            );
+            
+        } 
+        else {
+            state.playingSong = 1;
+
+            MCModPlayerInterface.resume(
+                () => {
+                    this.registerPatternUpdateHandler();
+                    this.setState(state);
+                }
+            );
+            
+        }
+      
     }
 
+   
+    pauseTrack(callback) {
+        var state = this.state;
+
+        if (state.playingSong) {
+            this.deregisterPatternUpdateHandler();     
+            MCModPlayerInterface.pause(() => {
+                state.playingSong = 0;
+                this.setState(state);
+
+                callback && callback();
+            });
+        }
+        else {
+            callback && callback();
+        }
+    }
+
+
     like() {
-        // EXTEND
+        this.showLikeSpinner();
+
+        MCQueueManager.updateLikeStatus(1, this.modObject.id_md5, (rowData) => {
+            setTimeout(function() {
+                window.main.hideSpinner();
+            }, 250);
+
+            console.log(rowData);
+        });
     }
 
     dislike () {
-        // EXTEND
+        this.showDislikeSpinner();
+
+        MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
+            this.loadFile(rowData);
+        });
     }
 
     loadFile(rowData) {
-        // EXTEND
+        this.patterns = {};
+        this.patternsRegistered = false;
+
+        var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.name);
+
+        this.deregisterPatternUpdateHandler();
+        // debugger;
+        MCModPlayerInterface.pause(() => {
+
+            MCModPlayerInterface.loadFile(
+                filePath,
+                //failure
+                (data) => {
+                    this.hideSpinner();
+
+                    alert('failure in loading file ' + unescape(rowData.name));
+                    console.log(data);
+                    this.loading = false;
+
+                },        
+                //success
+                (modObject) => {
+                    this.loading = false;
+
+                    this.refs.progressView.setState({
+                        numberOfCells   : modObject.patternOrds.length,
+                        highlightNumber : 0
+                    });
+
+                    modObject.id_md5 = rowData.id_md5;
+
+                    this.modObject = modObject;
+                    modObject.fileName = rowData.name;
+
+                    // this.forceUpdate();   
+
+                    this.patterns = modObject.patterns;
+                    // this.onWkWebViewInit();
+                    this.playTrack();
+                    window.main.hideSpinner();
+                }
+            );
+        });
     }
 }
 

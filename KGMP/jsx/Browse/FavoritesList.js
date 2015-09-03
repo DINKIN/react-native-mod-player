@@ -155,7 +155,9 @@ var FavoritesView = React.createClass({
         return (
             <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => this._pressRow(rowID)}>
                 <View>
-                    <Text style={styles.rowText}>{rowData}</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.rowText}>{rowData}</Text>
+                    </View>
                     <View style={styles.separator} />
                 </View>
             </TouchableHighlight>
@@ -218,7 +220,6 @@ var styles = StyleSheet.create({
         color      : '#00FF00',
         flex       : 1,
         fontSize   : 18,
-        padding    : 8
     },
     
     rowPrefix : {

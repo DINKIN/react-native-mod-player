@@ -20,7 +20,8 @@ RCT_EXPORT_METHOD(getDirectoriesAsJson:(NSString *)path
     
     callback(@[directories]);
 }
-    
+
+
 RCT_EXPORT_METHOD(getBundlePath:(RCTResponseSenderBlock)callback) {
      NSString *appUrl  = [[NSBundle mainBundle] bundlePath];
 

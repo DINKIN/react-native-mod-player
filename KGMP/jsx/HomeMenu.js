@@ -55,7 +55,7 @@ var styles = StyleSheet.create({
 
     label : {
         fontFamily : 'PerfectDOSVGA437Win',
-        fontSize   : 33, 
+        fontSize   : 36, 
         fontWeight : 'bold',
         color      : '#EFEFEF'
     },
@@ -170,7 +170,7 @@ Object.assign(HomeMenu.prototype, {
                     //failure
                     (data) => {
                         this.hideSpinner();
-                        alert('Failure loading ' + rowData.name);
+                        alert('Failure loading ' + unescape(rowData.name));
                         console.log(data);
                     },        
                     //success
