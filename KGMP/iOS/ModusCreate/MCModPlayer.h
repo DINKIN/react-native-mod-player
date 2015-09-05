@@ -22,7 +22,7 @@
 
 #define PLAYBACK_FREQ 44100
 #define SOUND_BUFFER_SIZE_SAMPLE (PLAYBACK_FREQ / 30)
-#define NUM_BUFFERS 16
+#define NUM_BUFFERS 13
 
 @interface MCModPlayer : NSObject {
     AudioQueueRef mAudioQueue;

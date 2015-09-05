@@ -13,9 +13,17 @@
 
 
 static short int **audio_generation_buffer;
+static int32_t *statusInfo;
 static volatile int soundIndex;
 
+struct StatusObject {
+    int32_t order;
+    int32_t pattern;
+    int32_t row;
+    int32_t numRows;
+};
 
+struct StatusObject statuses[NUM_BUFFERS];
 
 + (id)sharedManager {
     static MCModPlayer *sharedMyManager = nil;
@@ -45,6 +53,7 @@ static volatile int soundIndex;
 
         return self;
     }
+    
     return nil;
 }
 
@@ -87,18 +96,30 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     
     memcpy(mBuffer->mAudioData, audio_generation_buffer[soundIndex], mBuffer->mAudioDataByteSize);
-    soundIndex++;
+    AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
+
     
-    if (soundIndex > 15) {
+    int32_t playerState[4];
+    struct StatusObject status = statuses[soundIndex];
+    
+    playerState[0] = status.order;
+    playerState[1] = status.pattern;
+    playerState[2] = status.row;
+    playerState[3] = status.numRows;
+
+    
+    soundIndex++;
+    if (soundIndex > NUM_BUFFERS - 1) {
         soundIndex = 0;
     }
-    AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
     
     
-//    if (player.appActive) {
-//        // TODO: Should we use GCD to execute this method in the main queue??
-//        [player notifyInterface:playerState];
-//    }
+//    printf("%i\t%i\t%i\t%i\t%i\n", soundIndex, playerState[0],playerState[1],playerState[2],playerState[3]);
+
+    if (player.appActive) {
+        // TODO: Should we use GCD to execute this method in the main queue??
+        [player notifyInterface:playerState];
+    }
 }
 
 
@@ -202,17 +223,20 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     int bufferSize = 4096 * 2;
 
+    free(audio_generation_buffer);
+    free(mBuffers);
+
     /* Allocate Audio generation buffer */
     audio_generation_buffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
     
     /* Allocate Audio Queue buffers */
     mBuffers = (AudioQueueBufferRef*) malloc( sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
     
-    
     numFrames = bufferSize / (2 * sizeof(int16_t));
 
     
-    static int zeros[4096 * 2] = {0};
+    static int zeros[4096 * 3] = {0};
+    
     
     // Allocate buffers
     for (int i = 0; i < NUM_BUFFERS; i++) {
@@ -230,7 +254,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         
         /* Allocate buffers for sound generation */
         audio_generation_buffer[i] = (short int*)malloc(bufferSize);
-        
+
     }
 
     self.isPrimed = true;
@@ -259,11 +283,19 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         }
         
         
-    
         if (currentIndex != soundIndex) {
 //            printf("currentIndex %i soundIndex %i \n", currentIndex, soundIndex);
             int32_t *playerState = [player.modPlayer fillBufferNew:audio_generation_buffer[soundIndex] withNumFrames:numFrames];
             
+            struct StatusObject status;;
+            
+            status.order   = playerState[0];
+            status.pattern = playerState[1];
+            status.row     = playerState[2];
+            status.numRows = playerState[3];
+            
+            statuses[soundIndex] = status;
+
             currentIndex = soundIndex;
         }
         

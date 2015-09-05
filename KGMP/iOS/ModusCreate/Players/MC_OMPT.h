@@ -23,11 +23,7 @@
     
     NSThread *soundThread;
 
-    // An Object to produce the JSON below.
     NSMutableDictionary *songPatterns;
-    
-
-
 }
 
 
