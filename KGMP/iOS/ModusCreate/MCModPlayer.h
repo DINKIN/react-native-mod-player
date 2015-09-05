@@ -22,8 +22,7 @@
 
 #define PLAYBACK_FREQ 44100
 #define SOUND_BUFFER_SIZE_SAMPLE (PLAYBACK_FREQ / 30)
-#define NUM_BUFFERS 6
-#define MIDIFX_OFS 32
+#define NUM_BUFFERS 16
 
 @interface MCModPlayer : NSObject {
     AudioQueueRef mAudioQueue;
@@ -40,6 +39,10 @@
     BOOL appInForeground;
     
     BOOL updatesSinceLastSleep;
+    
+    int audioBufferIndex;
+    
+    size_t numFrames;
     
 }
 
@@ -73,7 +76,7 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 - (NSDictionary *) initializeSound:(NSString *)path;
 
 
-- (float *) getBufferData:(NSString *)channel;
+//- (float *) getBufferData:(NSString *)channel;
 - (NSMutableDictionary *) getInfo:(NSString *)path;
 
 - (NSDictionary *)getAllPatterns:(NSString *)path;
@@ -83,7 +86,7 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 - (void) resume;
 - (void) play;
 
-- (void) setDelegate:(id)someDelegate;
+//- (void) setDelegate:(id)someDelegate;
 - (void) registerInfoCallback:(void(^)(int32_t *playerState))executionBlock;
 - (void) registerCallbackSinceLastSleep:(void(^)(NSDictionary *modInfo))executionBlock;
 

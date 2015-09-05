@@ -53,18 +53,15 @@
     
     self.mod = mod;
 
-    
-   
-    NSDictionary *retObj = [self extractInfoFromModFile:mod withPath:path];
-
-
-    return retObj;
+    return [self extractInfoFromModFile:mod withPath:path];
 }
 
 - (int32_t *) fillBuffer:(AudioQueueBuffer *)mBuffer {
 
-    size_t numFrames =  mBuffer->mAudioDataByteSize / (2*sizeof(int16_t));
+    size_t numFrames =  mBuffer->mAudioDataByteSize / (2 * sizeof(int16_t));
     openmpt_module * mod = self.mod;
+    
+    printf("numFrames = %zu\n", numFrames);
     
     openmpt_module_read_interleaved_stereo(mod, PLAYBACK_FREQ, numFrames,  mBuffer->mAudioData);
     
@@ -78,6 +75,25 @@
     return data;
     
 }
+
+
+
+- (int32_t *) fillBufferNew:(short *)buffer withNumFrames:(size_t)numFrames {
+
+    openmpt_module * mod = self.mod;
+    
+    openmpt_module_read_interleaved_stereo(mod, PLAYBACK_FREQ, numFrames, buffer);
+    
+    static int32_t data[4];
+    
+    data[0] = openmpt_module_get_current_order(mod);
+    data[1] = openmpt_module_get_current_pattern(mod);
+    data[2] = openmpt_module_get_current_row(mod);
+    data[3] = openmpt_module_get_pattern_num_rows(mod, data[1]);
+    
+    return data;
+}
+
 
 - (int) getCurrentOrder {
     return openmpt_module_get_current_order(self.mod);

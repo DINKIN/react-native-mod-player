@@ -11,7 +11,6 @@
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
 #import "MCQueueManager.h"
-#import "NSString+HTML.h"
 
 @interface MCModPlayerInterface : NSObject <RCTBridgeModule>
 

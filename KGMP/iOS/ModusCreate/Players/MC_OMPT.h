@@ -36,6 +36,10 @@
 - (NSDictionary *) loadFile:(NSString *)path;
 
 - (int32_t*) fillBuffer:(AudioQueueBuffer *)mBuffer;
+- (int32_t *) fillBufferNew:(short *)buffer withNumFrames:(size_t)numFrames;
+
+
+
 - (NSDictionary *)getInfo:(NSString *)path;
 
 - (NSDictionary *) getAllPatterns:(NSString *)path;

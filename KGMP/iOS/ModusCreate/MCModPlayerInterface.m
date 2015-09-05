@@ -76,17 +76,6 @@ RCT_EXPORT_MODULE();
     }
 }
 
-- (NSString *) unescapeString:(NSString *)str {
-    NSDictionary *options = @{
-        NSDocumentTypeDocumentAttribute      : NSHTMLTextDocumentType,
-        NSCharacterEncodingDocumentAttribute : @(NSUTF8StringEncoding)
-    };
-
-    NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
-
-    return [[[NSAttributedString alloc] initWithData:data options:options documentAttributes:nil error:nil] string];
-}
-
 - (NSDictionary *) loadFileViaDictionary:(NSDictionary *)file {
     
     NSString *dir  = [[file objectForKey:@"directory"]  stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
@@ -209,6 +198,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
 
 
 
+#pragma mark Utilities
 
 - (void) configureCommandCenter {
     MCModPlayer *player = [MCModPlayer sharedManager];
@@ -345,10 +335,18 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
 
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
+    /* Handle audio route changes */
     [notificationCenter addObserver:self
                            selector:@selector(audioRouteChanged:)
                                name:AVAudioSessionRouteChangeNotification
                              object:nil];
+    
+    
+    [notificationCenter addObserver:self
+                        selector:@selector(audioInterruption:)
+                        name:AVAudioSessionInterruptionNotification
+                        object:nil];
+
 
 }
 
@@ -362,7 +360,73 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     };
     
     NSLog(@"Route change, %ld", (long)routeChangeReason);
+    
+    
+/*
+switch (routeChangeReason) {
+    case AVAudioSessionRouteChangeReasonUnknown:
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonUnknown");
+        break;
+
+    case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+        // a headset was added or removed
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonNewDeviceAvailable");
+        break;
+
+    case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
+        // a headset was added or removed
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonOldDeviceUnavailable");
+        break;
+
+    case AVAudioSessionRouteChangeReasonCategoryChange:
+        // called at start - also when other audio wants to play
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonCategoryChange");//AVAudioSessionRouteChangeReasonCategoryChange
+        break;
+
+    case AVAudioSessionRouteChangeReasonOverride:
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonOverride");
+        break;
+
+    case AVAudioSessionRouteChangeReasonWakeFromSleep:
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonWakeFromSleep");
+        break;
+
+    case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory:
+        NSLog(@"routeChangeReason : AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory");
+        break;
+
+    default:
+        break;
+*/
 }
+
+- (void) audioInterruption:(NSNotification*)notification {
+    // get the user info dictionary
+    NSDictionary *interuptionDict = notification.userInfo;
+    // get the AVAudioSessionInterruptionTypeKey enum from the dictionary
+    NSInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+    // decide what to do based on interruption type here...
+    switch (interuptionType) {
+        case AVAudioSessionInterruptionTypeBegan:
+            NSLog(@"Audio Session Interruption case started.");
+            // fork to handling method here...
+            // EG:[self handleInterruptionStarted];
+            break;
+
+        case AVAudioSessionInterruptionTypeEnded:
+            NSLog(@"Audio Session Interruption case ended.");
+            // fork to handling method here...
+            // EG:[self handleInterruptionEnded];
+            break;
+
+        default:
+            NSLog(@"Audio Session Interruption Notification case default.");
+            break;
+    }
+}
+
+
+
 
 
 

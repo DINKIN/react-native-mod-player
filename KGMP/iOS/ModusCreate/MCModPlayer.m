@@ -7,7 +7,13 @@
 
 #import "MCModPlayer.h"
 
-@implementation MCModPlayer
+@implementation MCModPlayer {
+
+}
+
+
+static short int **audio_generation_buffer;
+static volatile int soundIndex;
 
 
 
@@ -25,11 +31,6 @@
     NSLog(@"MCModPlayer init");
     
     if (self = [super init]) {
-//        self.floatDataLt = malloc(sizeof(float) * 512);
-//        self.floatDataRt = malloc(sizeof(float) * 512);
-        
-        
-        // This is here to suppress messages from
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
         [notificationCenter addObserver:self
@@ -68,83 +69,67 @@
     self.updateInterfaceSinceLastSleepBlock = executionBlock;
 }
 
+
+- (void) notifyInterface:(int32_t *) playerState {
+    if (self.updateInterfaceBlock) {
+        self.updateInterfaceBlock(playerState);
+    }
+}
+
+
 void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer) {
 
     MCModPlayer *player = (__bridge MCModPlayer*)data;
     
-    int32_t *playerState = [player.modPlayer fillBuffer:mBuffer];
+    // Todo: memcpy from sound thread
+//    int32_t *playerState = [player.modPlayer fillBuffer:mBuffer];
     
+    
+    
+    memcpy(mBuffer->mAudioData, audio_generation_buffer[soundIndex], mBuffer->mAudioDataByteSize);
+    soundIndex++;
+    
+    if (soundIndex > 15) {
+        soundIndex = 0;
+    }
     AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
     
-    if (player.appActive) {
-        // TODO: Should we use GCD to execute this method in the main queue??
-        [player notifyInterface:playerState];
-    }
-}
-
-
-- (void) notifyInterface:(int32_t *) playerState {
     
-    if (self.updateInterfaceBlock) {
-        self.updateInterfaceBlock(playerState);
-    }
-
+//    if (player.appActive) {
+//        // TODO: Should we use GCD to execute this method in the main queue??
+//        [player notifyInterface:playerState];
+//    }
 }
+
+
 - (BOOL) initAudioSession {
     AVAudioSession *session = [AVAudioSession sharedInstance];
 
-  
-    NSError *setCategoryError = nil;
-    BOOL success = [session setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+    NSError *error = nil;
+    BOOL success = [session setCategory:AVAudioSessionCategoryPlayback error:&error];
     
     if (! success) {
 #if DEBUG
-        NSLog(@"%@", [setCategoryError localizedFailureReason]);
+        NSLog(@"%@", [error localizedFailureReason]);
 #endif
         return NO;
     }
     
     
-    
-    NSError *activationError;
-    success = [session setActive:YES error:&activationError];
+    success = [session setActive:YES error:&error];
     
     if (! success) {
 #if DEBUG
-        NSLog(@"%@", [activationError localizedFailureReason]);
+        NSLog(@"%@", [error localizedFailureReason]);
 #endif
-        
         return NO;
     }
+
 
 
     return YES;
 }
 
-
-void interrruptCallback (void *inUserData, UInt32 interruptType ) {
-//    MCModPlayer *player = (__bridge MCModPlayer *)inUserData;
-//    
-//    if (interruptType == kAudioSessionBeginInterruption) {
-//        // TODO: Handle pause
-//    }
-//    else if (interruptType == kAudioSessionEndInterruption) {
-//        // TODO: Handle resume
-//    }
-    
-
-}
-
-
-
-- (void) play {
-    [self updateInfoCenter];
-
-    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
-//    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 0);
-    AudioQueueStart(mAudioQueue, NULL);
-    self.isPrimed = false;
-}
 
 
 - (NSDictionary *) initializeSound:(NSString *)path  {
@@ -165,6 +150,14 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
 
 
         self.modPlayer = [[MC_OMPT alloc] init];
+    }
+    
+    if (soundThread) {
+        [soundThread cancel];
+        // Give the current sound thread time to finish work.
+        [NSThread sleepForTimeInterval:.010];
+        
+        soundThread = nil;
     }
     
     self.modInfo = [self.modPlayer loadFile:path];
@@ -209,34 +202,76 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
     
     int bufferSize = 4096 * 2;
 
+    /* Allocate Audio generation buffer */
+    audio_generation_buffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
     
-    /* Create associated buffers */
+    /* Allocate Audio Queue buffers */
     mBuffers = (AudioQueueBufferRef*) malloc( sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
+    
+    
+    numFrames = bufferSize / (2 * sizeof(int16_t));
+
     
     static int zeros[4096 * 2] = {0};
     
+    // Allocate buffers
     for (int i = 0; i < NUM_BUFFERS; i++) {
-        
+        /* Allocate buffers for AudioQueue */
         AudioQueueBufferRef mBuffer;
-		
-        AudioQueueAllocateBuffer(mAudioQueue, bufferSize, &mBuffer);
+		AudioQueueAllocateBuffer(mAudioQueue, bufferSize, &mBuffer);
 		
 		mBuffers[i] = mBuffer;
         mBuffer->mAudioDataByteSize = bufferSize;
-        
+
         memcpy(mBuffer->mAudioData, zeros, bufferSize);
         
-//        [self.modPlayer fillBuffer:mBuffer];
-        
         AudioQueueEnqueueBuffer(mAudioQueue, mBuffer, 0, NULL);
+        
+        
+        /* Allocate buffers for sound generation */
+        audio_generation_buffer[i] = (short int*)malloc(bufferSize);
+        
     }
 
     self.isPrimed = true;
-
+    
+    soundThread = [[NSThread alloc] initWithTarget:self selector:@selector(generateAudioThread) object:nil];
+    
+    [soundThread start];
+    
+    soundIndex = 0;
+    memset(audio_generation_buffer[soundIndex], 0, bufferSize);
 
     return self.modInfo;
 }
 
+- (void) generateAudioThread {
+    
+    float timeInterval = .001;
+    int currentIndex = -1;
+    
+    MCModPlayer *player = self;
+    printf("New Thread \t\t%p\n", [NSThread currentThread]);
+    while(1) {
+        if ([[NSThread currentThread] isCancelled]) {
+            printf("Exit thread \t\t%p\n", [NSThread currentThread]);
+            [NSThread exit];
+        }
+        
+        
+    
+        if (currentIndex != soundIndex) {
+//            printf("currentIndex %i soundIndex %i \n", currentIndex, soundIndex);
+            int32_t *playerState = [player.modPlayer fillBufferNew:audio_generation_buffer[soundIndex] withNumFrames:numFrames];
+            
+            currentIndex = soundIndex;
+        }
+        
+        [NSThread sleepForTimeInterval:timeInterval];
+    }
+
+
+}
 
 
 - (NSArray *) getPatternData:(NSNumber *)patternNumber {
@@ -282,23 +317,63 @@ void interrruptCallback (void *inUserData, UInt32 interruptType ) {
     infoCenter.nowPlayingInfo = nowPlayingInfo;
 }
 
-- (float *) floatDataLt {
-    return _floatDataLt;
-}
+/************************************************/
+/* Handle phone calls interruptions             */
+/************************************************/
+//void interruptionListenerCallback (void *inUserData,UInt32 interruptionState ) {
+//	ModizMusicPlayer *mplayer=(ModizMusicPlayer*)inUserData;
+//	if (interruptionState == kAudioSessionBeginInterruption) {
+//		mInterruptShoudlRestart=0;
+//		if ([mplayer isPlaying] && (mplayer.bGlobalAudioPause==0)) {
+//			[mplayer Pause:YES];
+//			mInterruptShoudlRestart=1;
+//		}
+//	}
+//    else if (interruptionState == kAudioSessionEndInterruption) {
+//		// if the interruption was removed, and the app had been playing, resume playback
+//		if (mInterruptShoudlRestart) {
+//            //check if headphone is used?
+//            CFStringRef newRoute;
+//            UInt32 size = sizeof(CFStringRef);
+//            AudioSessionGetProperty(kAudioSessionProperty_AudioRoute,&size,&newRoute);
+//            if (newRoute) {
+//                if (CFStringCompare(newRoute,CFSTR("Headphone"),NULL)==kCFCompareEqualTo) {  //
+//                    mInterruptShoudlRestart=0;
+//                }
+//            }
+//            
+//			if (mInterruptShoudlRestart) [mplayer Pause:NO];
+//			mInterruptShoudlRestart=0;
+//		}
+//		
+//		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
+//		AudioSessionSetProperty (
+//								 kAudioSessionProperty_AudioCategory,
+//								 sizeof (sessionCategory),
+//								 &sessionCategory
+//								 );
+//		AudioSessionSetActive (true);
+//	}
+//}
 
-- (float *) floatDataRt {
-    return _floatDataRt;
+
+- (void) play {
+    [self updateInfoCenter];
+    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
+    AudioQueueStart(mAudioQueue, NULL);
+    self.isPrimed = false;
 }
 
 - (void) pause {
     AudioQueuePause(mAudioQueue);
     AudioQueueFlush(mAudioQueue);
-
 }
 
 - (void) resume {
     AudioQueueStart(mAudioQueue, NULL);
 }
+
+
 
 
 
