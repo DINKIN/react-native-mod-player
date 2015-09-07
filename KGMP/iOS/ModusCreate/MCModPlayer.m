@@ -12,9 +12,12 @@
 }
 
 
-static short int **audio_generation_buffer;
+static short int **audioGenerationBuffer;
 static int32_t *statusInfo;
-static volatile int soundIndex;
+static volatile int soundGeneratorBufferIndex, soundPlayerBufferIndex;
+static volatile int *soundGeneratorFlag;
+
+
 
 struct StatusObject {
     int32_t order;
@@ -95,23 +98,29 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     
     
-    memcpy(mBuffer->mAudioData, audio_generation_buffer[soundIndex], mBuffer->mAudioDataByteSize);
+    memcpy(mBuffer->mAudioData, audioGenerationBuffer[soundPlayerBufferIndex], mBuffer->mAudioDataByteSize);
     AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
 
     
     int32_t playerState[4];
-    struct StatusObject status = statuses[soundIndex];
+    struct StatusObject status = statuses[soundPlayerBufferIndex];
     
     playerState[0] = status.order;
     playerState[1] = status.pattern;
     playerState[2] = status.row;
     playerState[3] = status.numRows;
 
+    soundGeneratorFlag[soundPlayerBufferIndex] = 0;
     
-    soundIndex++;
-    if (soundIndex > NUM_BUFFERS - 1) {
-        soundIndex = 0;
+    soundPlayerBufferIndex++;
+    if (soundPlayerBufferIndex > NUM_BUFFERS - 1) {
+        soundPlayerBufferIndex = 0;
     }
+    
+    
+    //TODO: Have one index pointer for queued  audio
+    //TODO: Second index pointer for generated audio (think circular buffer);
+    //  --- Need array of ingeters much like ModizMusic player
     
     
 //    printf("%i\t%i\t%i\t%i\t%i\n", soundIndex, playerState[0],playerState[1],playerState[2],playerState[3]);
@@ -223,17 +232,21 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     int bufferSize = 4096 * 2;
 
-    free(audio_generation_buffer);
+    free(audioGenerationBuffer);
     free(mBuffers);
+//    free(soundGeneratorFlag);
 
     /* Allocate Audio generation buffer */
-    audio_generation_buffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
+    audioGenerationBuffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
     
     /* Allocate Audio Queue buffers */
-    mBuffers = (AudioQueueBufferRef*) malloc( sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
+    mBuffers = (AudioQueueBufferRef*) malloc(sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
+    
+    soundGeneratorFlag = (int *)malloc(NUM_BUFFERS * sizeof(int));
+    
     
     numFrames = bufferSize / (2 * sizeof(int16_t));
-
+    
     
     static int zeros[4096 * 3] = {0};
     
@@ -253,7 +266,10 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         
         
         /* Allocate buffers for sound generation */
-        audio_generation_buffer[i] = (short int*)malloc(bufferSize);
+        audioGenerationBuffer[i] = (short int*)malloc(bufferSize);
+        
+        /* set each value for the sound generator flag */
+        soundGeneratorFlag[i] = 0;
 
     }
 
@@ -263,8 +279,10 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     [soundThread start];
     
-    soundIndex = 0;
-    memset(audio_generation_buffer[soundIndex], 0, bufferSize);
+    soundGeneratorBufferIndex = 0;
+    soundPlayerBufferIndex = 0;
+    
+    memset(audioGenerationBuffer[soundGeneratorBufferIndex], 0, bufferSize);
 
     return self.modInfo;
 }
@@ -272,7 +290,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 - (void) generateAudioThread {
     
     float timeInterval = .001;
-    int currentIndex = -1;
     
     MCModPlayer *player = self;
     printf("New Thread \t\t%p\n", [NSThread currentThread]);
@@ -283,9 +300,10 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         }
         
         
-        if (currentIndex != soundIndex) {
+        if (soundGeneratorFlag[soundGeneratorBufferIndex] == 0) {
+            soundGeneratorFlag[soundGeneratorBufferIndex] = 1;
 //            printf("currentIndex %i soundIndex %i \n", currentIndex, soundIndex);
-            int32_t *playerState = [player.modPlayer fillBufferNew:audio_generation_buffer[soundIndex] withNumFrames:numFrames];
+            int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
             
             struct StatusObject status;;
             
@@ -294,9 +312,13 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             status.row     = playerState[2];
             status.numRows = playerState[3];
             
-            statuses[soundIndex] = status;
+            statuses[soundGeneratorBufferIndex] = status;
+        }
 
-            currentIndex = soundIndex;
+        soundGeneratorBufferIndex++;
+        
+        if (soundGeneratorBufferIndex > NUM_BUFFERS - 1) {
+            soundGeneratorBufferIndex = 0;
         }
         
         [NSThread sleepForTimeInterval:timeInterval];
