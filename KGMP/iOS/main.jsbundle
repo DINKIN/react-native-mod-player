@@ -52177,8 +52177,8 @@ _this2.hideSpinner();},
 onFavoritesPress:function(){var _this3=this;
 this.showSpinner();
 MCQueueManager.getFavorites(function(rowData){
-console.log('Favorites:');
-console.log(rowData);
+
+
 if(rowData.directory){
 rowData = [rowData];}
 
@@ -53391,7 +53391,31 @@ this.props.onPress && this.props.onPress(this.fileTypeObj);},
 
 render:function(){
 var data=this.props.data,
-state=this.state;
+state=this.state,
+sixteen=16,
+zeroStr='0',
+orderInHex,
+rowInHex,
+patternInHex;
+
+
+rowInHex = state.row.toString(sixteen).toUpperCase();
+
+if(state.row < sixteen){
+rowInHex = zeroStr + rowInHex;}
+
+
+orderInHex = state.order.toString(sixteen).toUpperCase();
+
+if(state.order < sixteen){
+orderInHex = zeroStr + orderInHex;}
+
+
+patternInHex = state.pattern.toString(sixteen).toUpperCase();
+
+if(state.pattern < sixteen){
+patternInHex = zeroStr + patternInHex;}
+
 
 
 
@@ -53421,19 +53445,19 @@ React.createElement(Text,{style:styles.text},data.typeLong)),
 React.createElement(View,{style:styles.summaryRowLarge},
 React.createElement(View,null,
 React.createElement(Text,{style:styles.title},'Order: '),
-React.createElement(Text,{style:styles.text},state.order)),
+React.createElement(Text,{style:styles.text},orderInHex)),
 
 
 
 React.createElement(View,null,
 React.createElement(Text,{style:styles.title},'Pattern: '),
-React.createElement(Text,{style:styles.text},state.pattern)),
+React.createElement(Text,{style:styles.text},patternInHex)),
 
 
 
 React.createElement(View,null,
 React.createElement(Text,{style:styles.title},'Row: '),
-React.createElement(Text,{style:styles.text},state.row)))));}});
+React.createElement(Text,{style:styles.text},rowInHex)))));}});
 });
 __d('KGMP/jsx/player/accessories/MusicControlButton.js',["react-native/Libraries/react-native/react-native.js","KGMP/jsx/BaseComponent.js","KGMP/jsx/player/accessories/MusicControlButtonStyles.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}
 

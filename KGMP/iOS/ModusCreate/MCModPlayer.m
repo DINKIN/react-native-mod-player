@@ -17,7 +17,7 @@ static int32_t *statusInfo;
 static volatile int soundGeneratorBufferIndex, soundPlayerBufferIndex;
 static volatile int *soundGeneratorFlag;
 
-
+int bufferSize;
 
 struct StatusObject {
     int32_t order;
@@ -93,10 +93,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 
     MCModPlayer *player = (__bridge MCModPlayer*)data;
     
-    // Todo: memcpy from sound thread
-//    int32_t *playerState = [player.modPlayer fillBuffer:mBuffer];
-    
-    
     
     memcpy(mBuffer->mAudioData, audioGenerationBuffer[soundPlayerBufferIndex], mBuffer->mAudioDataByteSize);
     AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
@@ -117,14 +113,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         soundPlayerBufferIndex = 0;
     }
     
-    
-    //TODO: Have one index pointer for queued  audio
-    //TODO: Second index pointer for generated audio (think circular buffer);
-    //  --- Need array of ingeters much like ModizMusic player
-    
-    
-//    printf("%i\t%i\t%i\t%i\t%i\n", soundIndex, playerState[0],playerState[1],playerState[2],playerState[3]);
-
     if (player.appActive) {
         // TODO: Should we use GCD to execute this method in the main queue??
         [player notifyInterface:playerState];
@@ -154,7 +142,15 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 #endif
         return NO;
     }
+    
 
+//    Float32 duration = (4096 * 3) * 1.0f / 44100;
+//    
+//    [session setPreferredIOBufferDuration:duration error:&error];
+//    
+//
+//
+//    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
 
 
     return YES;
@@ -230,7 +226,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    int bufferSize = 4096 * 2;
+    bufferSize = 4096;
 
     free(audioGenerationBuffer);
     free(mBuffers);
@@ -248,7 +244,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     numFrames = bufferSize / (2 * sizeof(int16_t));
     
     
-    static int zeros[4096 * 3] = {0};
+    static int zeros[4096] = {0};
     
     
     // Allocate buffers
@@ -287,25 +283,40 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     return self.modInfo;
 }
 
+// Create a thread to generate audio. Helps with skipping when the phone is hibernating, app is pushed to
+// background or foreground.
 - (void) generateAudioThread {
+
     
-    float timeInterval = .001;
+    NSThread *currentThread = [NSThread currentThread];
+    
+    [currentThread setThreadPriority:1.0f];
+    [currentThread setName:@"Audio Gen"];
+    
+    printf("Thread Priority is %f\n", [currentThread threadPriority]);
+
+    float timeInterval = .01;
     
     MCModPlayer *player = self;
-    printf("New Thread \t\t%p\n", [NSThread currentThread]);
+    printf("New Thread \t\t%p\n", currentThread);
     while(1) {
-        if ([[NSThread currentThread] isCancelled]) {
-            printf("Exit thread \t\t%p\n", [NSThread currentThread]);
+    
+        if ([currentThread isCancelled]) {
+            printf("Exit thread \t\t%p\n", currentThread);
             [NSThread exit];
         }
+        
+        [NSThread sleepForTimeInterval:timeInterval];
+
         
         
         if (soundGeneratorFlag[soundGeneratorBufferIndex] == 0) {
             soundGeneratorFlag[soundGeneratorBufferIndex] = 1;
-//            printf("currentIndex %i soundIndex %i \n", currentIndex, soundIndex);
+//            printf("Filling buffer #%i\n", soundGeneratorBufferIndex);
+            
             int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
             
-            struct StatusObject status;;
+            struct StatusObject status;
             
             status.order   = playerState[0];
             status.pattern = playerState[1];
@@ -313,15 +324,20 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             status.numRows = playerState[3];
             
             statuses[soundGeneratorBufferIndex] = status;
+            
+            
+            soundGeneratorBufferIndex++;
+        
+            if (soundGeneratorBufferIndex > NUM_BUFFERS - 1) {
+                soundGeneratorBufferIndex = 0;
+            }
+            
         }
+//        else {
+//            printf("Skipping buffer #%i\n", soundGeneratorBufferIndex);
+//        }
+//
 
-        soundGeneratorBufferIndex++;
-        
-        if (soundGeneratorBufferIndex > NUM_BUFFERS - 1) {
-            soundGeneratorBufferIndex = 0;
-        }
-        
-        [NSThread sleepForTimeInterval:timeInterval];
     }
 
 
