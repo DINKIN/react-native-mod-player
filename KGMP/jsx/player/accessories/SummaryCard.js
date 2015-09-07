@@ -76,7 +76,31 @@ module.exports  = React.createClass({
 
     render : function() {
         var data  = this.props.data,
-            state = this.state;
+            state = this.state,
+            sixteen = 16,
+            zeroStr = '0',
+            orderInHex,
+            rowInHex,
+            patternInHex;
+
+
+        rowInHex = state.row.toString(sixteen).toUpperCase();
+
+        if (state.row < sixteen) {
+            rowInHex = zeroStr + rowInHex;
+        }
+
+        orderInHex = state.order.toString(sixteen).toUpperCase();
+
+        if (state.order < sixteen) {
+            orderInHex = zeroStr + orderInHex;
+        }
+
+        patternInHex = state.pattern.toString(sixteen).toUpperCase();
+
+        if (state.pattern < sixteen) {
+            patternInHex = zeroStr + patternInHex;
+        }        
 
         // console.log(data);
         // console.log(data.typeLong)
@@ -106,19 +130,19 @@ module.exports  = React.createClass({
                 <View style={styles.summaryRowLarge}>
                     <View>
                         <Text style={styles.title}>Order: </Text>
-                        <Text style={styles.text}>{state.order}</Text>
+                        <Text style={styles.text}>{orderInHex}</Text>
                     </View>
 
 
                     <View>
                         <Text style={styles.title}>Pattern: </Text>
-                        <Text style={styles.text}>{state.pattern}</Text>
+                        <Text style={styles.text}>{patternInHex}</Text>
                     </View>  
               
 
                     <View>
                         <Text style={styles.title}>Row: </Text>
-                        <Text style={styles.text}>{state.row}</Text>
+                        <Text style={styles.text}>{rowInHex}</Text>
                     </View>
                 </View>
                 {/* 

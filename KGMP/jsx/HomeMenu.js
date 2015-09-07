@@ -218,8 +218,8 @@ Object.assign(HomeMenu.prototype, {
         onFavoritesPress : function() {
             this.showSpinner();
             MCQueueManager.getFavorites((rowData) => {
-                console.log('Favorites:');
-                console.log(rowData);
+                // console.log('Favorites:');
+                // console.log(rowData);
                 if (rowData.directory) {
                     rowData = [rowData];
                 }
