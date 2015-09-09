@@ -181,7 +181,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     if (soundThread) {
         [soundThread cancel];
         // Give the current sound thread time to finish work.
-        [NSThread sleepForTimeInterval:.010];
+        [NSThread sleepForTimeInterval:.025];
         
         soundThread = nil;
     }
@@ -266,7 +266,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
         
         /* set each value for the sound generator flag */
         soundGeneratorFlag[i] = 0;
-
     }
 
     self.isPrimed = true;
@@ -293,16 +292,17 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     [currentThread setThreadPriority:1.0f];
     [currentThread setName:@"Audio Gen"];
     
-    printf("Thread Priority is %f\n", [currentThread threadPriority]);
+//    printf("Thread Priority is %f\n", [currentThread threadPriority]);
 
     float timeInterval = .01;
     
     MCModPlayer *player = self;
-    printf("New Thread \t\t%p\n", currentThread);
+//    printf("\n\nNew Thread \t\t%p\n", currentThread);
+    
     while(1) {
     
         if ([currentThread isCancelled]) {
-            printf("Exit thread \t\t%p\n", currentThread);
+//            printf("Exit thread \t\t%p\n", currentThread);
             [NSThread exit];
         }
         

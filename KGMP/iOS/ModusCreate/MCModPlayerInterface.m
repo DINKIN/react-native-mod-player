@@ -254,19 +254,24 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     [commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         NSLog(@"nextTrackCommand");
         
+        
+        MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
+        
+        NSDictionary *file = [qMgr getNext];
+        [player pause];
+        
+        
+        NSDictionary *modInfo = [self loadFileViaDictionary:file];
+        [player play];
+        
         if (player.appActive) {
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"next"
+                @"eventType" : @"UIUpdate",
+                @"modObject" : modInfo,
+                @"file"      : file
             }];
         }
         else {
-            MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
-            
-            NSDictionary *file = [qMgr getNext];
-            [player pause];
-            [self loadFileViaDictionary:file];
-            [player play];
-            
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
@@ -284,19 +289,22 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     [commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         NSLog(@"previousTrackCommand");
         
+        MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
+
+        NSDictionary *file = [qMgr getPrevious];
+        [player pause];
+        
+        NSDictionary *modInfo = [self loadFileViaDictionary:file];
+        [player play];
+        
         if (player.appActive) {
-           [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"prev"
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"UIUpdate",
+                @"modObject" : modInfo,
+                @"file"      : file
             }];
         }
         else {
-            MCQueueManager *qMgr = [_bridge.modules valueForKey:@"MCQueueManager"];
-            
-            NSDictionary *file = [qMgr getPrevious];
-            [player pause];
-            [self loadFileViaDictionary:file];
-            [player play];
-            
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
@@ -305,7 +313,6 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
                     @"file"      : file
                 }];
             }];
-            
         }
         
         return success;

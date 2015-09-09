@@ -25,7 +25,7 @@
     
     char *loadedFileData;
    
-//    printf("Loading file\n%s\n", [path UTF8String]);
+    printf("Loading file\n%s\n", [path UTF8String]);
     FILE *file = fopen([path cStringUsingEncoding:NSASCIIStringEncoding], "rb");
     
     if (file == NULL) {

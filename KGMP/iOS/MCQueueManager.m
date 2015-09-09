@@ -203,6 +203,10 @@ RCT_EXPORT_METHOD(getNextRandomAndClearQueue:(RCTResponseSenderBlock)successCall
     [queue removeAllObjects];
     browseType = 2;
     
+    NSString *query = @"UPDATE songs SET in_queue = 0;";
+    [self execQuery:query];
+    
+    
     NSDictionary *file = [self getRandomFile];
     
     [queue addObject:file];
@@ -281,8 +285,18 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
 
 - (NSDictionary *) getRandomFile {
-    NSMutableArray *rows = [self execQuery:@"SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;"];
-    return [rows objectAtIndex:0];
+    NSMutableArray *rows = [self execQuery:@"SELECT * FROM songs where like_value IS NOT '-1' AND in_queue IS NOT 1  ORDER BY RANDOM() LIMIT 1;"];
+    
+    NSDictionary *file = [rows objectAtIndex:0];
+ 
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSString *query = [NSString stringWithFormat:@"UPDATE songs SET in_queue = %@ WHERE id_md5 = '%@';", @"1", [file valueForKey:@"id_md5"]];
+        
+        [self execQuery:query];
+    });
+    
+    return file;
+
 }
 
 
@@ -366,10 +380,12 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
     }
     else {
         file = [self getRandomFile];
+        
         [queue addObject:file];
         queueIndex = [queue indexOfObject:file];
     }
     
+    printf ("QUEUE INDEX == %lu\n", queueIndex);
     return file;
 }
 
@@ -448,7 +464,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 }
 
 - (NSMutableArray *) execQuery:(NSString *)statementString {
-//    printf("Query: %s", [statementString UTF8String]);
+//    printf(" ***** Query: \n\t\t\t%s\n", [statementString UTF8String]);
     
     sqlite3 *db = [self openDb];
     
