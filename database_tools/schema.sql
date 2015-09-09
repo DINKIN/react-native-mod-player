@@ -10,7 +10,8 @@ CREATE TABLE songs (
     name       TEXT, 
     file_name_short  TEXT, 
     directory  TEXT, 
-    like_value INT
+    like_value INT,
+    in_queue   INT
 );
 
 CREATE TABLE directories (

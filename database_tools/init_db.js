@@ -6,7 +6,7 @@ var fs         = require('fs'),
     util       = require('util'),
     // modFiles   = require('./mod_files.in'),
     sqlFile    = 'data_to_insert.sql',
-    insertSongsSQL = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", "%s", 0);\n',
+    insertSongsSQL = 'INSERT INTO songs VALUES("%s", "%s", "%s", "%s", "%s", 0, 0);\n',
     insertDirSQL   = 'INSERT INTO directories VALUES("%s", "%s");\n';
 
 
