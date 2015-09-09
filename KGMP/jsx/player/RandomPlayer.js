@@ -28,6 +28,10 @@ class RandomPlayer extends AbstractPlayer {
         else {
             MCQueueManager.getNextRandom((rowData) => {
                 this.loadFile(rowData);
+                // setTimeout(() => {
+                //     this.nextTrack();
+
+                // }, 500);
             });
         }
 

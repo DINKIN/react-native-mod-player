@@ -5,7 +5,6 @@ var React    = require('react-native'),
     sqlite   = require('react-native-sqlite'),
     Main     = require('./Main')
 
-window.db = require('./db.js');
 
 var {
         AppRegistry,

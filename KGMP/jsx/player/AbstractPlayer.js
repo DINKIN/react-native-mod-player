@@ -347,14 +347,13 @@ class AbstractPlayer extends BaseComponent {
         });
     }
 
-    onCommandCenterEventUIUpdate(eventObj) {
+    onCommandCenterEventFileLoad(eventObj) {
         var {
                 modObject,
                 file 
             } = eventObj;
 
 
-        debugger;
         this.showSpinner();
 
         this.loading = false;
@@ -438,7 +437,7 @@ Object.assign(AbstractPlayer.prototype, {
             console.log(eventObj);
 
             if (eventObj.eventType == 'UIUpdate') {
-                this.onCommandCenterEventUIUpdate(eventObj);
+                this.onCommandCenterEventFileLoad(eventObj);
             }
             else {
                 this.onButtonPress(eventObj.eventType);
