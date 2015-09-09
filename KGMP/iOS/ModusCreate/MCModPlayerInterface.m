@@ -154,9 +154,7 @@ RCT_EXPORT_METHOD(resume:(RCTResponseSenderBlock)callback) {
     }
     
     callback(@[]);
-    
-    
-    
+
 }
 
 RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
@@ -166,7 +164,6 @@ RCT_EXPORT_METHOD(getFileInfo:(NSString *)path
     NSMutableDictionary *gameObject = [[MCModPlayer sharedManager] getInfo:path];
     
     if (gameObject == nil) {
-       
         errorCallback(@[]);
     }
  
@@ -266,7 +263,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
         
         if (player.appActive) {
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"UIUpdate",
+                @"eventType" : @"fileLoad",
                 @"modObject" : modInfo,
                 @"file"      : file
             }];
@@ -275,7 +272,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"UIUpdate",
+                    @"eventType" : @"fileLoad",
                     @"modObject" : modInfo,
                     @"file"      : file
                 }];
@@ -299,7 +296,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
         
         if (player.appActive) {
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"UIUpdate",
+                @"eventType" : @"fileLoad",
                 @"modObject" : modInfo,
                 @"file"      : file
             }];
@@ -308,7 +305,7 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"UIUpdate",
+                    @"eventType" : @"fileLoad",
                     @"modObject" : modInfo,
                     @"file"      : file
                 }];

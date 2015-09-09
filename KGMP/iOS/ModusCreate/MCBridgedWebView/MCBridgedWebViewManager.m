@@ -28,18 +28,15 @@ RCT_EXPORT_VIEW_PROPERTY(shouldInjectAJAXHandler, BOOL);
     return [[MCBridgedWebView alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
 }
 
--(NSDictionary *) customDirectEventTypes {
-    NSDictionary *eventTypes = @{
-        @"wkWebViewEvent" : @{
-            @"registrationName" : @"onWkWebViewEvent"
-        }
-    };
-
-    return eventTypes;
+-(NSArray *) customDirectEventTypes {
+    return @[
+        @"onWkWebViewEvent"
+    
+    ];
 }
 
 
-RCT_EXPORT_METHOD(exec:(NSNumber *)reactTag JSCall:(NSString *)jsCall)
+RCT_EXPORT_METHOD(exec:(nonnull NSNumber *)reactTag JSCall:(NSString *)jsCall)
 {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, RCTSparseArray *viewRegistry) {
         id view = viewRegistry[reactTag];
