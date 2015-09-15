@@ -24,8 +24,7 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
 var {
         MCModPlayerInterface,
         MCQueueManager
-
-    } = require('NativeModules')
+    } = require('NativeModules');
 
 var updateStart = 'up(',
     updateEnd   = ')'
@@ -358,16 +357,19 @@ class AbstractPlayer extends BaseComponent {
 
         this.loading = false;
 
-        this.refs.progressView.setState({
-            numberOfCells   : modObject.patternOrds.length,
-            highlightNumber : 0
-        });
+        // alert('here')
 
         modObject.id_md5 = file.id_md5;
         modObject.record = file;
 
         this.modObject = modObject;
         modObject.fileName = file.name;
+
+        this.setState({});
+        this.refs.progressView.setState({
+            numberOfCells   : modObject.patternOrds.length,
+            highlightNumber : 0
+        });
 
         this.hideSpinner();
     }
@@ -433,10 +435,10 @@ Object.assign(AbstractPlayer.prototype, {
 
         onCommandCenterEvent : function(eventObj) {
             // debugger;
-            console.log('onCommandCenterEvent ' + eventObj.eventType);
-            console.log(eventObj);
+            // console.log('onCommandCenterEvent ' + eventObj.eventType);
+            // console.log(eventObj);
 
-            if (eventObj.eventType == 'UIUpdate') {
+            if (eventObj.eventType == 'fileLoad') {
                 this.onCommandCenterEventFileLoad(eventObj);
             }
             else {

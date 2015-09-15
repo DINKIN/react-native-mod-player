@@ -31,7 +31,7 @@ class RandomPlayer extends AbstractPlayer {
                 // setTimeout(() => {
                 //     this.nextTrack();
 
-                // }, 500);
+                // }, 1500);
             });
         }
 

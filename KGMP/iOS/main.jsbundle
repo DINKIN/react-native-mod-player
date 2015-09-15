@@ -52775,7 +52775,6 @@ ProgressView=require('KGMP/jsx/player/accessories/ProgressView.js');var _require
 
 
 
-
 require('NativeModules');var MCModPlayerInterface=_require.MCModPlayerInterface;var MCQueueManager=_require.MCQueueManager;
 
 var updateStart='up(',
@@ -53109,9 +53108,6 @@ this.showSpinner();
 
 this.loading = false;
 
-this.refs.progressView.setState({
-numberOfCells:modObject.patternOrds.length,
-highlightNumber:0});
 
 
 modObject.id_md5 = file.id_md5;
@@ -53119,6 +53115,12 @@ modObject.record = file;
 
 this.modObject = modObject;
 modObject.fileName = file.name;
+
+this.setState({});
+this.refs.progressView.setState({
+numberOfCells:modObject.patternOrds.length,
+highlightNumber:0});
+
 
 this.hideSpinner();}}]);return AbstractPlayer;})(BaseComponent);
 
@@ -53184,10 +53186,10 @@ this[methodName] && this[methodName]();},
 
 onCommandCenterEvent:function(eventObj){
 
-console.log('onCommandCenterEvent ' + eventObj.eventType);
-console.log(eventObj);
 
-if(eventObj.eventType == 'UIUpdate'){
+
+
+if(eventObj.eventType == 'fileLoad'){
 this.onCommandCenterEventFileLoad(eventObj);}else 
 
 {
