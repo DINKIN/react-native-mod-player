@@ -18,6 +18,7 @@ static volatile int soundGeneratorBufferIndex, soundPlayerBufferIndex;
 static volatile int *soundGeneratorFlag;
 
 int bufferSize;
+pthread_mutex_t audio_mutex;
 
 struct StatusObject {
     int32_t order;
@@ -42,6 +43,9 @@ struct StatusObject statuses[NUM_BUFFERS];
     NSLog(@"MCModPlayer init");
     
     if (self = [super init]) {
+        pthread_mutex_init(&audio_mutex, NULL);
+        
+        
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
         [notificationCenter addObserver:self
@@ -93,30 +97,41 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 
     MCModPlayer *player = (__bridge MCModPlayer*)data;
     
-    
+    pthread_mutex_lock(&audio_mutex);
     memcpy(mBuffer->mAudioData, audioGenerationBuffer[soundPlayerBufferIndex], mBuffer->mAudioDataByteSize);
     AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
 
-    
-    int32_t playerState[4];
-    struct StatusObject status = statuses[soundPlayerBufferIndex];
-    
-    playerState[0] = status.order;
-    playerState[1] = status.pattern;
-    playerState[2] = status.row;
-    playerState[3] = status.numRows;
-
     soundGeneratorFlag[soundPlayerBufferIndex] = 0;
-    
+    pthread_mutex_unlock(&audio_mutex);
+//    printf("RD  \t#%i\t\t%i\n", soundPlayerBufferIndex, abs(soundPlayerBufferIndex - soundGeneratorBufferIndex));   fflush(stdout);
+
+    unsigned long index = soundPlayerBufferIndex;
     soundPlayerBufferIndex++;
-    if (soundPlayerBufferIndex > NUM_BUFFERS - 1) {
+  
+
+    if (soundPlayerBufferIndex == NUM_BUFFERS) {
         soundPlayerBufferIndex = 0;
     }
-    
+
+
     if (player.appActive) {
         // TODO: Should we use GCD to execute this method in the main queue??
-        [player notifyInterface:playerState];
+        
+//         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
+        
+            struct StatusObject status = statuses[index];
+            int32_t playerState[4];
+
+            playerState[0] = status.order;
+            playerState[1] = status.pattern;
+            playerState[2] = status.row;
+            playerState[3] = status.numRows;
+
+            [player notifyInterface:playerState];
+
+//        });
     }
+    
 }
 
 
@@ -134,6 +149,12 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     }
     
     
+
+    Float32 duration = (SOUND_BUFFER_SAMPLE_SIZE * 4) * 1.0f/PLAYBACK_FREQ;
+    [session setPreferredIOBufferDuration:duration error:&error];
+    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
+
+ 
     success = [session setActive:YES error:&error];
     
     if (! success) {
@@ -142,15 +163,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 #endif
         return NO;
     }
-    
-
-//    Float32 duration = (4096 * 3) * 1.0f / 44100;
-//    
-//    [session setPreferredIOBufferDuration:duration error:&error];
-//    
-//
-//
-//    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
 
 
     return YES;
@@ -226,11 +238,10 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    bufferSize = 4096;
+    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2;
 
     free(audioGenerationBuffer);
     free(mBuffers);
-//    free(soundGeneratorFlag);
 
     /* Allocate Audio generation buffer */
     audioGenerationBuffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
@@ -243,20 +254,15 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     numFrames = bufferSize / (2 * sizeof(int16_t));
     
-    
-    static int zeros[4096] = {0};
-    
-    
     // Allocate buffers
     for (int i = 0; i < NUM_BUFFERS; i++) {
         /* Allocate buffers for AudioQueue */
         AudioQueueBufferRef mBuffer;
 		AudioQueueAllocateBuffer(mAudioQueue, bufferSize, &mBuffer);
-		
 		mBuffers[i] = mBuffer;
         mBuffer->mAudioDataByteSize = bufferSize;
 
-        memcpy(mBuffer->mAudioData, zeros, bufferSize);
+        memset(mBuffer->mAudioData, 0, bufferSize);
         
         AudioQueueEnqueueBuffer(mAudioQueue, mBuffer, 0, NULL);
         
@@ -277,8 +283,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     soundGeneratorBufferIndex = 0;
     soundPlayerBufferIndex = 0;
     
-    memset(audioGenerationBuffer[soundGeneratorBufferIndex], 0, bufferSize);
-
     return self.modInfo;
 }
 
@@ -289,55 +293,54 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     NSThread *currentThread = [NSThread currentThread];
     
-    [currentThread setThreadPriority:1.0f];
+    [currentThread setThreadPriority:0.9f];
     [currentThread setName:@"Audio Gen"];
     
-//    printf("Thread Priority is %f\n", [currentThread threadPriority]);
-
-    float timeInterval = .01;
+    float timeInterval = .001;
     
     MCModPlayer *player = self;
 //    printf("\n\nNew Thread \t\t%p\n", currentThread);
     
     while(1) {
-    
+   
+         [NSThread sleepForTimeInterval:timeInterval];
+   
         if ([currentThread isCancelled]) {
 //            printf("Exit thread \t\t%p\n", currentThread);
             [NSThread exit];
         }
-        
-        [NSThread sleepForTimeInterval:timeInterval];
 
-        
-        
+    
         if (soundGeneratorFlag[soundGeneratorBufferIndex] == 0) {
-            soundGeneratorFlag[soundGeneratorBufferIndex] = 1;
-//            printf("Filling buffer #%i\n", soundGeneratorBufferIndex);
+            pthread_mutex_lock(&audio_mutex);
+//            printf("W \t#%i\n", soundGeneratorBufferIndex); fflush(stdout);
             
+            // Mutex lock start
             int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
-            
+            // Mutex lock end
+
             struct StatusObject status;
             
-            status.order   = playerState[0];
-            status.pattern = playerState[1];
-            status.row     = playerState[2];
-            status.numRows = playerState[3];
-            
+            {
+                status.order   = playerState[0];
+                status.pattern = playerState[1];
+                status.row     = playerState[2];
+                status.numRows = playerState[3];
+            }
             statuses[soundGeneratorBufferIndex] = status;
             
+            soundGeneratorFlag[soundGeneratorBufferIndex] = 1;
+
             
             soundGeneratorBufferIndex++;
         
-            if (soundGeneratorBufferIndex > NUM_BUFFERS - 1) {
+            if (soundGeneratorBufferIndex == NUM_BUFFERS) {
                 soundGeneratorBufferIndex = 0;
             }
             
-        }
-//        else {
-//            printf("Skipping buffer #%i\n", soundGeneratorBufferIndex);
-//        }
-//
-
+            pthread_mutex_unlock(&audio_mutex);
+         }
+        
     }
 
 
@@ -390,41 +393,23 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 /************************************************/
 /* Handle phone calls interruptions             */
 /************************************************/
-//void interruptionListenerCallback (void *inUserData,UInt32 interruptionState ) {
-//	ModizMusicPlayer *mplayer=(ModizMusicPlayer*)inUserData;
-//	if (interruptionState == kAudioSessionBeginInterruption) {
-//		mInterruptShoudlRestart=0;
-//		if ([mplayer isPlaying] && (mplayer.bGlobalAudioPause==0)) {
-//			[mplayer Pause:YES];
-//			mInterruptShoudlRestart=1;
-//		}
-//	}
-//    else if (interruptionState == kAudioSessionEndInterruption) {
-//		// if the interruption was removed, and the app had been playing, resume playback
-//		if (mInterruptShoudlRestart) {
-//            //check if headphone is used?
-//            CFStringRef newRoute;
-//            UInt32 size = sizeof(CFStringRef);
-//            AudioSessionGetProperty(kAudioSessionProperty_AudioRoute,&size,&newRoute);
-//            if (newRoute) {
-//                if (CFStringCompare(newRoute,CFSTR("Headphone"),NULL)==kCFCompareEqualTo) {  //
-//                    mInterruptShoudlRestart=0;
-//                }
-//            }
-//            
-//			if (mInterruptShoudlRestart) [mplayer Pause:NO];
-//			mInterruptShoudlRestart=0;
-//		}
-//		
-//		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-//		AudioSessionSetProperty (
-//								 kAudioSessionProperty_AudioCategory,
-//								 sizeof (sessionCategory),
-//								 &sessionCategory
-//								 );
-//		AudioSessionSetActive (true);
-//	}
-//}
+void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) {
+	MCModPlayer *player = (__bridge MCModPlayer*) inUserData;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+
+    if (interruptionState == kAudioSessionBeginInterruption) {
+		[player pause];
+	}
+    else if (interruptionState == kAudioSessionEndInterruption) {
+		// if the interruption was removed, and the app had been playing, resume playback
+		
+
+        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+
+		[session setActive:YES error:nil];
+        [player resume];
+	}
+}
 
 
 - (void) play {
@@ -441,6 +426,11 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 
 - (void) resume {
     AudioQueueStart(mAudioQueue, NULL);
+}
+
+- (void) dealloc {
+    pthread_mutex_unlock(&audio_mutex);
+    pthread_mutex_destroy(&audio_mutex);
 }
 
 

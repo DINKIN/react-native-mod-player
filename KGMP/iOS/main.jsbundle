@@ -1429,14 +1429,13 @@ GLOBAL.document.createElement = null;}
 
 GLOBAL.MutationObserver = undefined;})(
 this);
-__d('KGMP/jsx/index.ios.js',["react-native/Libraries/react-native/react-native.js","Styles","react-native-sqlite/sqlite3.ios.js","KGMP/jsx/Main.js","KGMP/jsx/db.js","NativeModules"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
+__d('KGMP/jsx/index.ios.js',["react-native/Libraries/react-native/react-native.js","Styles","react-native-sqlite/sqlite3.ios.js","KGMP/jsx/Main.js","NativeModules"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
 var React=require('react-native/Libraries/react-native/react-native.js'),
 styles=require('Styles'),
 sqlite=require('react-native-sqlite/sqlite3.ios.js'),
-Main=require('KGMP/jsx/Main.js');
+Main=require('KGMP/jsx/Main.js');var 
 
-window.db = require('KGMP/jsx/db.js');var 
 
 
 AppRegistry=
@@ -53093,20 +53092,19 @@ modObject.fileName = rowData.name;
 _this4.patterns = modObject.patterns;
 
 _this4.playTrack();
-_this4.hideSpinner();});});}},{key:'onCommandCenterEventUIUpdate',value:
+_this4.hideSpinner();});});}},{key:'onCommandCenterEventFileLoad',value:
 
 
 
 
 
-function onCommandCenterEventUIUpdate(eventObj){var 
+function onCommandCenterEventFileLoad(eventObj){var 
 
 modObject=
 
 eventObj.modObject;var file=eventObj.file;
 
 
-debugger;
 this.showSpinner();
 
 this.loading = false;
@@ -53190,7 +53188,7 @@ console.log('onCommandCenterEvent ' + eventObj.eventType);
 console.log(eventObj);
 
 if(eventObj.eventType == 'UIUpdate'){
-this.onCommandCenterEventUIUpdate(eventObj);}else 
+this.onCommandCenterEventFileLoad(eventObj);}else 
 
 {
 this.onButtonPress(eventObj.eventType);}},
@@ -54583,10 +54581,10 @@ _this2.loadFile(rowData);});}}}]);return RandomPlayer;})(AbstractPlayer);
 
 module.exports = RandomPlayer;
 });
-__d('KGMP/jsx/about/AboutView.js',["react-native/Libraries/react-native/react-native.js","NativeModules","KGMP/jsx/player/accessories/CloseButton.js","RCTDeviceEventEmitter"],function(global, require, requireDynamic, requireLazy, module, exports) {  var 
+__d('KGMP/jsx/about/AboutView.js',["react-native/Libraries/react-native/react-native.js","NativeModules","KGMP/jsx/Extension/MCBridgedWebView.js","KGMP/jsx/player/accessories/CloseButton.js","RCTDeviceEventEmitter"],function(global, require, requireDynamic, requireLazy, module, exports) {  var 
 React=require('react-native/Libraries/react-native/react-native.js'),
 MCModPlayerInterface=require('NativeModules').MCModPlayerInterface,
-
+BridgedWKWebView=require('KGMP/jsx/Extension/MCBridgedWebView.js'),
 CloseButton=require('KGMP/jsx/player/accessories/CloseButton.js'),
 RCTDeviceEventEmitter=require('RCTDeviceEventEmitter');var 
 
@@ -54642,7 +54640,7 @@ _this.registerPatternUpdateHandler();});},
 return (
 React.createElement(View,{style:styles.container},
 React.createElement(View,{style:styles.closeButton},
-React.createElement(CloseButton,{onPress:this.onClosebuttonPress})),'// ',
+React.createElement(CloseButton,{onPress:this.onClosebuttonPress})),
 
 React.createElement(BridgedWKWebView,{ref:"webView",style:styles.webView,localUrl:"cubetest.html"})));},
 
@@ -54828,152 +54826,281 @@ this.setState(state);}}});
 
 module.exports = AboutView;
 });
-__d('KGMP/jsx/db.js',["react-native-sqlite/sqlite3.ios.js"],function(global, require, requireDynamic, requireLazy, module, exports) {  var sqlite=require('react-native-sqlite/sqlite3.ios.js'),
-randomSQL="SELECT * FROM songs where like_value IS NOT '-1' ORDER BY RANDOM() LIMIT 1;",
-randomFavSQL="SELECT * FROM songs where like_value IS '1' ORDER BY RANDOM() LIMIT 1;",
-favoritesSQL="SELECT * FROM songs where like_value IS '1' ORDER BY name;",
-emptyArray=[],
-emptyFn=function(){};
+__d('KGMP/jsx/Extension/MCBridgedWebView.js',["ActivityIndicatorIOS","EdgeInsetsPropType","React","StyleSheet","Text","View","invariant","keyMirror","requireNativeComponent","NativeModules"],function(global, require, requireDynamic, requireLazy, module, exports) {  'use strict';
 
-module.exports = {
-stack:[],
-revStack:[],
 
-currentRecord:null,
 
-clear:function(){
-this.stack.length = 0;
-this.revStack.length = 0;},
 
 
-getRandom:function(successCallback){
-this.execQuery(randomSQL,successCallback);},
 
+var ActivityIndicatorIOS=require('ActivityIndicatorIOS'),
+EdgeInsetsPropType=require('EdgeInsetsPropType'),
+React=require('React'),
+StyleSheet=require('StyleSheet'),
+Text=require('Text'),
+View=require('View');
 
-getRandomFavorite:function(successCallback){
-this.execQuery(randomFavSQL,successCallback);},
+var invariant=require('invariant'),
+keyMirror=require('keyMirror'),
+requireNativeComponent=require('requireNativeComponent');
 
+var PropTypes=React.PropTypes,
+MCBridgedWebViewManager=require('NativeModules').MCBridgedWebViewManager;
 
-getNewRandomCurrentItem:function(cb){var _this=this;
-this.getRandom(function(item){
-_this.currentItem = item;
-cb(item);});},
+var BGWASH='rgba(255,255,255,0.8)',
+RCT_WEBVIEW_REF='webview';
 
+var MCBridgedWebViewState=keyMirror({
+IDLE:null,
+LOADING:null,
+ERROR:null});
 
 
-getByColumn:function(column,value,successCallback){
-var query="SELECT * FROM songs WHERE " + column + " like '" + value + "';";
+var NavigationType={
+click:MCBridgedWebViewManager.NavigationType.LinkClicked,
+formsubmit:MCBridgedWebViewManager.NavigationType.FormSubmitted,
+backforward:MCBridgedWebViewManager.NavigationType.BackForward,
+reload:MCBridgedWebViewManager.NavigationType.Reload,
+formresubmit:MCBridgedWebViewManager.NavigationType.FormResubmitted,
+other:MCBridgedWebViewManager.NavigationType.Other};
 
-this.execQuery(query,successCallback);},
 
 
 
-getNextRandom:function(successCallback){var _this2=this;
-this.getRandom(function(rowData){
-if(_this2.currentItem){
-_this2.stack.push(_this2.currentItem);}
 
 
-_this2.currentItem = rowData;
 
-successCallback(rowData,_this2.stack.length);});},
 
 
 
-getNextRandomFavorite:function(successCallback){var _this3=this;
-this.getRandomFavorite(function(rowData){
-if(_this3.currentItem){
-_this3.stack.push(_this3.currentItem);}
+var defaultRenderLoading=function(){return (
+React.createElement(View,{style:styles.loadingView},
+React.createElement(ActivityIndicatorIOS,null)));};
 
 
-_this3.currentItem = rowData;
 
-successCallback(rowData,_this3.stack.length);});},
+var defaultRenderError=function(errorDomain,errorCode,errorDesc){return (
+React.createElement(View,{style:styles.errorContainer},
+React.createElement(Text,{style:styles.errorTextTitle},'Error loading page'),
 
 
+React.createElement(Text,{style:styles.errorText},
+'Domain: ' + errorDomain),
 
+React.createElement(Text,{style:styles.errorText},
+'Error Code: ' + errorCode),
 
+React.createElement(Text,{style:styles.errorText},
+'Description: ' + errorDesc)));};
 
-getPrevRandomFavorite:function(successCallback){
-var stack=this.stack;
 
-if(stack.length <= 0){
-successCallback(null);
-return;}
 
 
-var item=stack.pop();
-successCallback(item);
-this.currentItem = item;},
+var BridgedWebView=React.createClass({
+statics:{
+NavigationType:NavigationType},
 
 
+propTypes:{
+url:PropTypes.string,
+localUrl:PropTypes.string,
+html:PropTypes.string,
+renderError:PropTypes.func,
+renderLoading:PropTypes.func,
+bounces:PropTypes.bool,
+scrollEnabled:PropTypes.bool,
+automaticallyAdjustContentInsets:PropTypes.bool,
+shouldInjectAJAXHandler:PropTypes.bool,
+contentInset:EdgeInsetsPropType,
+onNavigationStateChange:PropTypes.func,
+startInLoadingState:PropTypes.bool,
+style:View.propTypes.style,
 
-getPrevRandom:function(successCallback){
-var stack=this.stack;
 
-if(stack.length <= 0){
-successCallback(null);
-return;}
 
+javaScriptEnabledAndroid:PropTypes.bool,
 
-var item=stack.pop();
-successCallback(item);
-this.currentItem = item;},
 
 
-getFavorites:function(successCallback){
-this.execQuery(favoritesSQL,successCallback);},
 
+scalesPageToFit:PropTypes.bool,
+onWkWebViewEvent:PropTypes.func},
 
 
-updateLikeViaCurrentItem:function(likeValue,successCallback){
-var id_md5=this.currentItem.id_md5,
-query='UPDATE songs SET like_value = ' + likeValue + ' WHERE id_md5 = "' + id_md5 + '";';
+getInitialState:function(){
+return {
+viewState:MCBridgedWebViewState.IDLE,
+lastErrorEvent:null,
+startInLoadingState:true};},
 
-this.execQuery(query,function(){
-successCallback();});},
 
 
+componentWillMount:function(){
+if(this.props.startInLoadingState){
+this.setState({viewState:MCBridgedWebViewState.LOADING});}},
 
-updateLikeViaFileName:function(fileName,likeValue,successCallback){
-var query='UPDATE songs SET like_value = ' + likeValue + ' WHERE file_name = "' + fileName + '";';
 
-this.execQuery(query,function(){
-successCallback();});},
 
+onWkWebViewEvent:function(event){
+this.props.onWkWebViewEvent && this.props.onWkWebViewEvent(event);},
 
 
-execQuery:function(query,successCallback){
+render:function(){
+var otherView=null;
 
-var database=sqlite.open("keygenmusicplayer.db",function(error,database){
-if(error){
-console.log("Failed to open database:",error);}
+if(this.state.viewState === MCBridgedWebViewState.LOADING){
+otherView = (this.props.renderLoading || defaultRenderLoading)();}else 
 
-console.log(query);
+if(this.state.viewState === MCBridgedWebViewState.ERROR){
+var errorEvent=this.state.lastErrorEvent;
 
-var data=[],
-rowCallback=function(rowData){
-data.push(rowData);},
+invariant(
+errorEvent != null,
+'lastErrorEvent expected to be non-null');
 
-completeCallback=function(error){
 
-if(error){
-console.log("Failed to execute query:",error);
-return;}
+otherView = (this.props.renderError || defaultRenderError)(
+errorEvent.domain,
+errorEvent.code,
+errorEvent.description);}else 
 
 
-database.close(function(error){
-if(error){
-console.log("Failed to close database:",error);
-return;}});
+if(this.state.viewState !== MCBridgedWebViewState.IDLE){
+console.error(
+'MCBridgedWebView invalid state encountered: ' + this.state.loading);}
 
 
 
-var ret=data.length == 1?data[0]:data;
-successCallback(ret);};
+var webViewStyles=[styles.container,this.props.style];
 
+if(this.state.viewState === MCBridgedWebViewState.LOADING || 
+this.state.viewState === MCBridgedWebViewState.ERROR){}
 
-database.executeSQL(query,emptyArray,rowCallback,completeCallback);});}};
+
+
+
+
+
+return (
+React.createElement(View,{style:styles.container},
+React.createElement(MCBridgedWebView,{
+ref:RCT_WEBVIEW_REF,
+key:'webViewKey',
+style:webViewStyles,
+url:this.props.url,
+localUrl:this.props.localUrl,
+html:this.props.html,
+bounces:this.props.bounces,
+scrollEnabled:this.props.scrollEnabled,
+shouldInjectAJAXHandler:this.props.shouldInjectAJAXHandler,
+contentInset:this.props.contentInset,
+automaticallyAdjustContentInsets:this.props.automaticallyAdjustContentInsets,
+onLoadingStart:this.onLoadingStart,
+onLoadingFinish:this.onLoadingFinish,
+onLoadingError:this.onLoadingError,
+onWkWebViewEvent:this.onWkWebViewEvent,
+scalesPageToFit:this.props.scalesPageToFit})));},
+
+
+
+
+
+goForward:function(){
+MCBridgedWebViewManager.goForward(this.getWebWiewHandle());},
+
+
+goBack:function(){
+MCBridgedWebViewManager.goBack(this.getWebWiewHandle());},
+
+
+reload:function(){
+MCBridgedWebViewManager.reload(this.getWebWiewHandle());},
+
+
+
+
+
+
+updateNavigationState:function(event){
+if(this.props.onNavigationStateChange){
+this.props.onNavigationStateChange(event.nativeEvent);}},
+
+
+
+getWebWiewHandle:function(){
+return React.findNodeHandle(this.refs[RCT_WEBVIEW_REF]);},
+
+
+onLoadingStart:function(event){
+this.updateNavigationState(event);},
+
+
+onLoadingError:function(event){
+event.persist();
+console.error('Encountered an error loading page',event.nativeEvent);
+
+this.setState({
+lastErrorEvent:event.nativeEvent,
+viewState:MCBridgedWebViewState.ERROR});},
+
+
+
+onLoadingFinish:function(event){
+this.setState({
+viewState:MCBridgedWebViewState.IDLE});
+
+
+this.updateNavigationState(event);},
+
+
+execJsCall:function(jsCallAsString){
+
+MCBridgedWebViewManager.exec(this.getWebWiewHandle(),jsCallAsString);}});
+
+
+
+
+var black='rgba(0,0,0,0)',
+center='center';
+
+var styles=StyleSheet.create({
+container:{
+flex:1,
+backgroundColor:black},
+
+
+
+
+errorContainer:{
+flex:1,
+justifyContent:center,
+alignItems:center,
+backgroundColor:black},
+
+errorText:{
+fontSize:14,
+textAlign:center,
+marginBottom:2},
+
+errorTextTitle:{
+fontSize:15,
+fontWeight:'500',
+marginBottom:10},
+
+hidden:{
+height:0,
+flex:0},
+
+loadingView:{
+backgroundColor:black,
+flex:1,
+justifyContent:center,
+alignItems:center}});
+
+
+
+var MCBridgedWebView=requireNativeComponent('MCBridgedWebView',BridgedWebView);
+module.exports = BridgedWebView;
 });
 ;require("KGMP/jsx/index.ios.js");
 //@ sourceMappingURL=/jsx/index.ios.map

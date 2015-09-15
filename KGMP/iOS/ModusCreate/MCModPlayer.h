@@ -13,6 +13,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <xmp.h>
 #import <UIKit/UIApplication.h>
+#import <pthread.h>
 
 //#import "MC_XMP.h"
 //#import "MC_MP.h"
@@ -21,8 +22,8 @@
 
 
 #define PLAYBACK_FREQ 44100
-#define SOUND_BUFFER_SIZE_SAMPLE (PLAYBACK_FREQ / 30)
-#define NUM_BUFFERS 16
+#define SOUND_BUFFER_SAMPLE_SIZE (PLAYBACK_FREQ / 30)
+#define NUM_BUFFERS 8
 
 @interface MCModPlayer : NSObject {
     AudioQueueRef mAudioQueue;
@@ -43,6 +44,8 @@
     int audioBufferIndex;
     
     size_t numFrames;
+    
+    
     
 }
 
