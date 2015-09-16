@@ -15,14 +15,10 @@
 #import <UIKit/UIApplication.h>
 #import <pthread.h>
 
-//#import "MC_XMP.h"
-//#import "MC_MP.h"
 #import "MC_OMPT.h"
 
-
-
 #define PLAYBACK_FREQ 44100
-#define SOUND_BUFFER_SAMPLE_SIZE (PLAYBACK_FREQ / 30)
+#define SOUND_BUFFER_SAMPLE_SIZE (PLAYBACK_FREQ / 15)
 #define NUM_BUFFERS 8
 
 @interface MCModPlayer : NSObject {

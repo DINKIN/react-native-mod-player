@@ -53037,18 +53037,18 @@ this.showLikeSpinner();
 MCQueueManager.updateLikeStatus(1,this.modObject.id_md5,function(rowData){
 setTimeout(function(){
 window.main.hideSpinner();},
-250);
-
-console.log(rowData);});}},{key:'dislike',value:
+500);});}},{key:'dislike',value:
 
 
 
 function dislike(){var _this3=this;
 this.showDislikeSpinner();
 
-MCQueueManager.updateLikeStatus(-1,this.modObject.id_md5,function(rowData){
-_this3.loadFile(rowData);});}},{key:'loadFile',value:
+setTimeout(function(){
+MCQueueManager.updateLikeStatus(-1,_this3.modObject.id_md5,function(rowData){
+_this3.loadFile(rowData);});},
 
+350);}},{key:'loadFile',value:
 
 
 function loadFile(rowData){var _this4=this;

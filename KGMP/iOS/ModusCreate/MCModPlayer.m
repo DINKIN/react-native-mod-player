@@ -99,10 +99,8 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     pthread_mutex_lock(&audio_mutex);
     memcpy(mBuffer->mAudioData, audioGenerationBuffer[soundPlayerBufferIndex], mBuffer->mAudioDataByteSize);
-    AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
 
     soundGeneratorFlag[soundPlayerBufferIndex] = 0;
-    pthread_mutex_unlock(&audio_mutex);
 //    printf("RD  \t#%i\t\t%i\n", soundPlayerBufferIndex, abs(soundPlayerBufferIndex - soundGeneratorBufferIndex));   fflush(stdout);
 
     unsigned long index = soundPlayerBufferIndex;
@@ -112,12 +110,11 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     if (soundPlayerBufferIndex == NUM_BUFFERS) {
         soundPlayerBufferIndex = 0;
     }
-
-
+    
     if (player.appActive) {
         // TODO: Should we use GCD to execute this method in the main queue??
         
-//         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
+         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
         
             struct StatusObject status = statuses[index];
             int32_t playerState[4];
@@ -127,10 +124,16 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             playerState[2] = status.row;
             playerState[3] = status.numRows;
 
+//            printf("%i\t%i\n", status.pattern, status.row);
             [player notifyInterface:playerState];
 
-//        });
+        });
     }
+    
+    
+    AudioQueueEnqueueBuffer(mQueue, mBuffer, 0, NULL);
+    pthread_mutex_unlock(&audio_mutex);
+
     
 }
 
@@ -238,7 +241,8 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2 * 2;
+    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2;
+    printf("bufferSize == %i\n", bufferSize);
 
     free(audioGenerationBuffer);
     free(mBuffers);

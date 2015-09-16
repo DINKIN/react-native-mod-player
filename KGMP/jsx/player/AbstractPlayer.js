@@ -286,18 +286,18 @@ class AbstractPlayer extends BaseComponent {
         MCQueueManager.updateLikeStatus(1, this.modObject.id_md5, (rowData) => {
             setTimeout(function() {
                 window.main.hideSpinner();
-            }, 250);
-
-            console.log(rowData);
+            }, 500);
         });
     }
 
     dislike () {
         this.showDislikeSpinner();
 
-        MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
-            this.loadFile(rowData);
-        });
+        setTimeout(() => {
+            MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
+                this.loadFile(rowData);
+            });
+        }, 350);
     }
 
     loadFile(rowData) {
