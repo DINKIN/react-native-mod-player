@@ -114,7 +114,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     if (player.appActive) {
         // TODO: Should we use GCD to execute this method in the main queue??
         
-         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
+//         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{ // 1
         
             struct StatusObject status = statuses[index];
             int32_t playerState[4];
@@ -127,7 +127,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 //            printf("%i\t%i\n", status.pattern, status.row);
             [player notifyInterface:playerState];
 
-        });
+//        });
     }
     
     
@@ -241,7 +241,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2;
+    bufferSize = SOUND_BUFFER_SAMPLE_SIZE;
     printf("bufferSize == %i\n", bufferSize);
 
     free(audioGenerationBuffer);
