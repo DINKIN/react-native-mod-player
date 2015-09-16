@@ -52,6 +52,7 @@
 @property NSDictionary *modInfo;
 @property NSString *loadedFileName;
 @property BOOL isPrimed;
+@property BOOL isPlaying;
 
 
 //@property xmp_context xmpContext;

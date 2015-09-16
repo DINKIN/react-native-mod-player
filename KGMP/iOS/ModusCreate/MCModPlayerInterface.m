@@ -215,6 +215,23 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
                 @"eventType" : @"playPause"
             }];
         }
+        else {
+            NSString *eventType;
+            
+            if (player.isPlaying) {
+                eventType = @"playSleep";
+            }
+            else {
+                eventType = @"pauseSleep";
+            }
+            
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                    @"eventType" : @"pauseSleep"
+                }];
+            }];
+            
+        }
         
         return success;
     }];
@@ -228,6 +245,14 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
 
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
                 @"eventType" : @"play"
+            }];
+        }
+        else {
+            // When the UI becomes active, emit this event
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                    @"eventType" : @"playSleep"
+                }];
             }];
         }
         
@@ -244,7 +269,15 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
                 @"eventType" : @"pause"
             }];
         }
-        
+        else {
+            // When the UI becomes active, emit this event
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                    @"eventType" : @"pauseSleep"
+                }];
+            }];
+        }
+
         return success;
     }];
 
@@ -313,6 +346,26 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
         }
         
         return success;
+    }];
+    
+    
+//    [commandCenter.likeCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+//        NSLog(@"like!");
+//        
+//        return YES;
+//    }];
+//    
+//        
+//    [commandCenter.dislikeCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+//        NSLog(@"DISlike!");
+//        
+//        return YES;
+//    }];
+    
+    [commandCenter.ratingCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+        NSLog(@"Rating!");
+        
+        return YES;
     }];
     
 //    [commandCenter.seekBackwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {

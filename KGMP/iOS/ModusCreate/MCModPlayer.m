@@ -238,7 +238,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2;
+    bufferSize = SOUND_BUFFER_SAMPLE_SIZE * 2 * 2;
 
     free(audioGenerationBuffer);
     free(mBuffers);
@@ -417,15 +417,20 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
     AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
     AudioQueueStart(mAudioQueue, NULL);
     self.isPrimed = false;
+    self.isPlaying = true;
 }
 
 - (void) pause {
     AudioQueuePause(mAudioQueue);
     AudioQueueFlush(mAudioQueue);
+    self.isPlaying = false;
+
 }
 
 - (void) resume {
     AudioQueueStart(mAudioQueue, NULL);
+    self.isPlaying = true;
+
 }
 
 - (void) dealloc {

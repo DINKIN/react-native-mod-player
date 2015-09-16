@@ -437,9 +437,16 @@ Object.assign(AbstractPlayer.prototype, {
             // debugger;
             // console.log('onCommandCenterEvent ' + eventObj.eventType);
             // console.log(eventObj);
+            var eventType = eventObj.eventType;
 
-            if (eventObj.eventType == 'fileLoad') {
+            if (eventType == 'fileLoad') {
                 this.onCommandCenterEventFileLoad(eventObj);
+            }
+            else if(eventType == 'playSleep') {
+                this.setState({playingSong:1});
+            }
+            else if(eventType == 'pauseSleep') {
+                this.setState({playingSong:0});
             }
             else {
                 this.onButtonPress(eventObj.eventType);
