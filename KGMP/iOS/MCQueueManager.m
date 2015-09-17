@@ -249,6 +249,9 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
         if (queueIndex > numFiles) {
             queueIndex = numFiles;
         }
+        else if (queueIndex == numFiles) {
+            queueIndex--;
+        }
 
     
         numFiles = [queue count];
