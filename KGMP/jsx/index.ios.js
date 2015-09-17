@@ -2,7 +2,6 @@
 
 var React    = require('react-native'),
     styles   = require('./Styles'),
-    sqlite   = require('react-native-sqlite'),
     Main     = require('./Main')
 
 

@@ -300,7 +300,13 @@ class AbstractPlayer extends BaseComponent {
 
         setTimeout(() => {
             MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
-                this.loadFile(rowData);
+                if (rowData) {
+                    this.loadFile(rowData);                    
+                }
+                else {
+                    this.onClosebuttonPress();
+                    alert('Apologies, there are no more files in the queue');
+                }
             });
         }, 350);
     }

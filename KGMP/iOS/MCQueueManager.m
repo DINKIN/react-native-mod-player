@@ -148,7 +148,7 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
 
 RCT_EXPORT_METHOD(getNextFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
     NSDictionary *file = [self getNextFileFromCurrentSet];
-    NSLog(@"%@      browseType = %i\n", self, browseType);
+//    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     successCallback(@[file]);
     
@@ -156,13 +156,13 @@ RCT_EXPORT_METHOD(getNextFileFromCurrentSet:(RCTResponseSenderBlock)successCallb
 
 RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
     NSDictionary *file = [self getPreviousFileFromCurrentSet];
-    NSLog(@"%@      browseType = %i\n", self, browseType);
+//    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     successCallback(@[file]);
 }
 
 RCT_EXPORT_METHOD(setQueueIndex:(nonnull NSNumber *)index) {
-    printf("QueueIndex now set to %lld\n", [index longLongValue]);
+//    printf("QueueIndex now set to %lld\n", [index longLongValue]);
     queueIndex = [index longLongValue];
 }
 
@@ -242,27 +242,37 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
     // If we dislike a song, we just need to replace it in the queue.
     if ((int)[likeValue integerValue] == -1) {
+       unsigned long numFiles = [queue count] - 1;
+ 
+        [queue removeObjectAtIndex:queueIndex];
         
-        // directory listings || Favorites list ||  Random favorites
-        if (browseType == 0 || browseType == 1 || browseType == 3) {
-            [queue removeObjectAtIndex:queueIndex];
-            
-            unsigned long numFiles = [queue count] - 1;
-            
-            if (queueIndex > numFiles) {
-                queueIndex = numFiles;
-            }
+        if (queueIndex > numFiles) {
+            queueIndex = numFiles;
+        }
 
+    
+        numFiles = [queue count];
+        // We have no more items!
+        if (numFiles == 0) {
+        
+            // directory listings || Favorites list ||  Random favorites
+            if (browseType == 0 || browseType == 1 || browseType == 3) {
+                successCallback(@[]);
+                return;
+            }
+            // Random Files
+            else if (browseType == 2) {
+                file = [self getRandomFile];
+                [queue addObject:file];
+                queueIndex = [queue indexOfObject:file];
+            }
+            
+        }
+        else {
             file = [queue objectAtIndex:queueIndex];
         }
-        // Random files from directories
-        else if (browseType == 2) {
-            file = [self getRandomFile];
-          
-            [queue replaceObjectAtIndex:queueIndex withObject:file];
-        }
-        
-        
+
+    
         successCallback(@[file]);
         return;
     }
@@ -341,8 +351,6 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
         queueIndex = 0;
     }
     
-    printf("queueIndex = %lu\n", queueIndex);
-
     return [queue objectAtIndex:queueIndex];
 }
 
@@ -361,7 +369,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
         file = [queue objectAtIndex:queueIndex];
     }
     
-    printf("queueIndex = %lu\n", queueIndex);
+//    printf("queueIndex = %lu\n", queueIndex);
 
     return file;
 }
@@ -396,20 +404,20 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 */
 -(NSDictionary *) getPreviousRandom {
     NSDictionary *file;
-    unsigned long totalItems = [queue count];
+    int totalItems = (int)[queue count];
     
-    if (queueIndex > 0) {
+//    if (queueIndex > -1) {
         queueIndex--;
-    }
+//    }
     
-    if (queueIndex == 0) {
+    if (queueIndex == -1) {
         file = [self getRandomFile];
         
         [queue insertObject:file atIndex:0];
         queueIndex = [queue indexOfObject:file];
     }
     else if (queueIndex <= totalItems - 1) {
-        file = [queue objectAtIndex:queueIndex];
+        file = [queue objectAtIndex:(unsigned long)queueIndex];
         queueIndex = [queue indexOfObject:file];
     }
     
