@@ -37,10 +37,12 @@ class ListPlayer extends AbstractPlayer {
         this.loading = true;
         this.showSpinner();
 
+
         MCQueueManager.getNextFileFromCurrentSet((record)=> {
             this.pauseTrack(() => {
                 this.loadFile(record, () => {
-                    this.hideSpinner();
+                    var index = this.props.rowData.indexOf(record);
+                    
                 });
             });
         });

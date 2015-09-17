@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SRCDIR="cubetest_src"
+SRCDIR="demo_src"
 HEAD=`cat $SRCDIR/head.html`
 TAIL=`cat $SRCDIR/tail.html`
 OUTFILE="cubetest.html"

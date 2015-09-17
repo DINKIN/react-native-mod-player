@@ -52688,10 +52688,12 @@ return;}
 this.loading = true;
 this.showSpinner();
 
+
 MCQueueManager.getNextFileFromCurrentSet(function(record){
 _this2.pauseTrack(function(){
 _this2.loadFile(record,function(){
-_this2.hideSpinner();});});});}}]);return ListPlayer;})(AbstractPlayer);
+var index=_this2.props.rowData.indexOf(record);});});});}}]);return ListPlayer;})(AbstractPlayer);
+
 
 
 
@@ -52920,7 +52922,7 @@ React.createElement(MusicControlButton,{onPress:this.onButtonPress,btnChar:"like
 
 
 
-function componentWillMount(){
+function componentWillMount(){var _this=this;
 this.patterns = this.props.patterns;
 
 this.commandCenterEventHandler = RCTDeviceEventEmitter.addListener(
@@ -52928,7 +52930,10 @@ this.commandCenterEventHandler = RCTDeviceEventEmitter.addListener(
 this.onCommandCenterEvent);
 
 
-this.modObject = this.props.modObject;}},{key:'componentWillUnmount',value:
+this.modObject = this.props.modObject;
+setTimeout(function(){
+_this.playTrack();},
+450);}},{key:'componentWillUnmount',value:
 
 
 function componentWillUnmount(){
@@ -52936,8 +52941,10 @@ this.deregisterPatternUpdateHandler();
 
 if(this.commandCenterEventHandler){
 this.commandCenterEventHandler.remove();
-this.commandCenterEventHandler = null;}}},{key:'deregisterPatternUpdateHandler',value:
+this.commandCenterEventHandler = null;}
 
+
+MCModPlayerInterface.pause(function(){});}},{key:'deregisterPatternUpdateHandler',value:
 
 
 
@@ -52980,7 +52987,7 @@ this.playTrack();}}},{key:'playTrack',value:
 
 
 
-function playTrack(){var _this=this;
+function playTrack(){var _this2=this;
 var props=this.props,
 state=this.state;
 
@@ -52992,8 +52999,8 @@ MCModPlayerInterface.resume(
 function(){
 state.songLoaded = 1;
 state.playingSong = 1;
-_this.registerPatternUpdateHandler();
-_this.setState(state);});}else 
+_this2.registerPatternUpdateHandler();
+_this2.setState(state);});}else 
 
 
 
@@ -53003,8 +53010,8 @@ state.playingSong = 1;
 
 MCModPlayerInterface.resume(
 function(){
-_this.registerPatternUpdateHandler();
-_this.setState(state);});}}},{key:'pauseTrack',value:
+_this2.registerPatternUpdateHandler();
+_this2.setState(state);});}}},{key:'pauseTrack',value:
 
 
 
@@ -53013,14 +53020,14 @@ _this.setState(state);});}}},{key:'pauseTrack',value:
 
 
 
-function pauseTrack(callback){var _this2=this;
+function pauseTrack(callback){var _this3=this;
 var state=this.state;
 
 if(state.playingSong){
 this.deregisterPatternUpdateHandler();
 MCModPlayerInterface.pause(function(){
 state.playingSong = 0;
-_this2.setState(state);
+_this3.setState(state);
 
 callback && callback();});}else 
 
@@ -53041,17 +53048,17 @@ window.main.hideSpinner();},
 
 
 
-function dislike(){var _this3=this;
+function dislike(){var _this4=this;
 this.showDislikeSpinner();
 
 setTimeout(function(){
-MCQueueManager.updateLikeStatus(-1,_this3.modObject.id_md5,function(rowData){
-_this3.loadFile(rowData);});},
+MCQueueManager.updateLikeStatus(-1,_this4.modObject.id_md5,function(rowData){
+_this4.loadFile(rowData);});},
 
 350);}},{key:'loadFile',value:
 
 
-function loadFile(rowData){var _this4=this;
+function loadFile(rowData,callback){var _this5=this;
 this.patterns = {};
 this.patternsRegistered = false;
 
@@ -53065,33 +53072,36 @@ MCModPlayerInterface.loadFile(
 filePath,
 
 function(data){
-_this4.hideSpinner();
+_this5.hideSpinner();
 
 alert('failure in loading file ' + unescape(rowData.name));
 console.log(data);
-_this4.loading = false;},
+_this5.loading = false;},
 
 
 
 function(modObject){
-_this4.loading = false;
+_this5.loading = false;
 
-_this4.refs.progressView.setState({
+_this5.refs.progressView.setState({
 numberOfCells:modObject.patternOrds.length,
 highlightNumber:0});
 
 
 modObject.id_md5 = rowData.id_md5;
 
-_this4.modObject = modObject;
+_this5.modObject = modObject;
 modObject.fileName = rowData.name;
 
 
 
-_this4.patterns = modObject.patterns;
+_this5.patterns = modObject.patterns;
 
-_this4.playTrack();
-_this4.hideSpinner();});});}},{key:'onCommandCenterEventFileLoad',value:
+_this5.playTrack();
+_this5.hideSpinner();
+
+
+callback && callback();});});}},{key:'onCommandCenterEventFileLoad',value:
 
 
 
@@ -54192,7 +54202,10 @@ modObject.directory = record.directory;
 
 modObject.fileName = fileName;
 
-var rowData=ownerList.props.rowData;
+var rowData=ownerList.props.rowData,
+index=rowData.indexOf(record);
+
+
 modObject.record = record;
 modObject.id_md5 = record.id_md5;
 modObject.record = record;
@@ -54205,12 +54218,14 @@ ownerList:ownerList,
 modObject:modObject,
 patterns:modObject.patterns,
 rowData:rowData,
-rowID:rowData.indexOf(record),
+rowID:index,
 record:record}});
 
 
 
-_this3.hideSpinner();});}}]);return FavoritesListNavigator;})(BaseComponent);
+_this3.hideSpinner();
+
+MCQueueManager.setQueueIndex(index);});}}]);return FavoritesListNavigator;})(BaseComponent);
 
 
 

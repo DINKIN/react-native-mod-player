@@ -412,12 +412,16 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
 - (void) audioRouteChanged:(NSNotification *)notification {
     NSInteger routeChangeReason = [notification.userInfo[AVAudioSessionRouteChangeReasonKey] integerValue];
     
-    if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
-        [[MCModPlayer sharedManager] pause];
-    };
     
     NSLog(@"Route change, %ld", (long)routeChangeReason);
-    
+
+    if (routeChangeReason == AVAudioSessionRouteChangeReasonUnknown) {
+        [[MCModPlayer sharedManager] pause];
+        
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+            @"eventType" : @"pause"
+        }];
+    };
     
 /*
 switch (routeChangeReason) {

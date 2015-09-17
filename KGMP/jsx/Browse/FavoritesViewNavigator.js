@@ -129,7 +129,10 @@ class FavoritesListNavigator extends BaseComponent{
 
                 modObject.fileName = fileName;
 
-                var rowData = ownerList.props.rowData;
+                var rowData = ownerList.props.rowData,
+                    index = rowData.indexOf(record);
+
+
                 modObject.record = record;
                 modObject.id_md5 = record.id_md5;
                 modObject.record = record;
@@ -142,12 +145,14 @@ class FavoritesListNavigator extends BaseComponent{
                         modObject : modObject,
                         patterns  : modObject.patterns,
                         rowData   : rowData,
-                        rowID     : rowData.indexOf(record),
+                        rowID     : index,
                         record    : record
                     }
                 });
                 
                 this.hideSpinner();
+
+                MCQueueManager.setQueueIndex(index);
 
             }
         );

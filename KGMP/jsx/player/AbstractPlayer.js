@@ -178,6 +178,9 @@ class AbstractPlayer extends BaseComponent {
         );
 
         this.modObject = this.props.modObject;
+        setTimeout(()=> {
+            this.playTrack();
+        }, 450);
     }
 
     componentWillUnmount() {
@@ -187,6 +190,8 @@ class AbstractPlayer extends BaseComponent {
             this.commandCenterEventHandler.remove();
             this.commandCenterEventHandler = null;
         }
+
+        MCModPlayerInterface.pause(function() {});
 
     }
 
@@ -300,7 +305,7 @@ class AbstractPlayer extends BaseComponent {
         }, 350);
     }
 
-    loadFile(rowData) {
+    loadFile(rowData, callback) {
         this.patterns = {};
         this.patternsRegistered = false;
 
@@ -341,6 +346,9 @@ class AbstractPlayer extends BaseComponent {
                     // this.onWkWebViewInit();
                     this.playTrack();
                     this.hideSpinner();
+
+
+                    callback && callback();
                 }
             );
         });

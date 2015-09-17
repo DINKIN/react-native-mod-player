@@ -41,7 +41,7 @@
             ░ Favorites
  
     ░ Good queue manager (next, previous)
-    - Hook in Command Center
+    ░ Hook in Command Center
     - Hook in app launch, hibernate, awake
 */
 
@@ -162,6 +162,7 @@ RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successC
 }
 
 RCT_EXPORT_METHOD(setQueueIndex:(nonnull NSNumber *)index) {
+    printf("QueueIndex now set to %lld\n", [index longLongValue]);
     queueIndex = [index longLongValue];
 }
 
