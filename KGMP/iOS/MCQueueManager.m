@@ -135,7 +135,7 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
     queueIndex = 0;
 
     browseType = 0;
-    NSLog(@"%@      browseType = %i\n", self, browseType);
+//    NSLog(@"%@      browseType = %i\n", self, browseType);
     if (queue == nil) {
         errorCallback(@[]);
     }
@@ -280,7 +280,11 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
         return;
     }
     
-    successCallback(@[]);
+    NSArray *items = [self execQuery:[NSString stringWithFormat:@"SELECT * from songs where id_md5 IS '%@'", id_md5]];
+    
+    file = [items objectAtIndex:0];
+    
+    successCallback(@[file]);
 }
 
 
@@ -315,7 +319,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
 
 - (NSDictionary *) getNext {
-    NSLog(@"%@      browseType = %i\n", self, browseType);
+//    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     // directory listings || Favorites list || random favorites list
     if (browseType == 0 || browseType == 1 || browseType == 3) {
@@ -330,7 +334,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 }
 
 - (NSDictionary *) getPrevious {
-    NSLog(@"%@      browseType = %i\n", self, browseType);
+//    NSLog(@"%@      browseType = %i\n", self, browseType);
     // directory listings || Favorites list || random favorites list
     if (browseType == 0 || browseType == 1 || browseType == 3) {
         return [self getPreviousFileFromCurrentSet];

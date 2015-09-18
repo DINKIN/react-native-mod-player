@@ -44,7 +44,7 @@
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"KGMP"
                                                initialProperties:nil
-                                                   launchOptions:launchOptions];
+                                                    launchOptions:launchOptions];
     
 //  
 //

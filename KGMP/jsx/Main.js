@@ -199,7 +199,7 @@ class Main extends BaseComponent  {
             spinner        : false,
             likeSpinner    : false,
             dislikeSpinner : false
-        })
+        });
     }
 };
 

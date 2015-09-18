@@ -26,8 +26,13 @@ class MusicControlButton extends BaseComponent {
             pressedState    = this.state.pressed,
             btnPressedStyle = pressedState ? styles[btnChar + 'ButtonPressed'] : '',
             txtPressedStyle = pressedState ? styles.buttonPressedText : {},
-            fontStyle       = styles.buttonFont;
+            fontStyle       = styles.buttonFont,
+            likedStyle;
             // fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
+
+        if (this.props.liked) {
+            likedStyle = styles.greenColor;
+        }
 
         return (
             <View style={[styles.button, styles[props.btnStyle], btnPressedStyle]}>
@@ -42,7 +47,7 @@ class MusicControlButton extends BaseComponent {
                             for styling. #sadface
                         */}
                         <View style={styles.buttonInnerContainer}>
-                            <Text style={[fontStyle, txtPressedStyle]}>
+                            <Text style={[fontStyle, txtPressedStyle, likedStyle]}>
                                 {this.buttonChars[btnChar]}
                             </Text>
                         </View>

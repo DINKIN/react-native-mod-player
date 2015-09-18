@@ -139,7 +139,7 @@ class BrowseListNavigator extends React.Component{
     // Todo:  Clean this method up. Shit, it's a mess!
     loadModFile(record, childNavigator, ownerList) {
         window.main.showSpinner();
-        var fileName = unescape (record.name);
+        var fileName = unescape(record.name);
 
         MCModPlayerInterface.loadFile(
             window.bundlePath + unescape(record.directory) + fileName,
@@ -153,6 +153,7 @@ class BrowseListNavigator extends React.Component{
             (modObject) => {
                 var rowData = ownerList.props.rowData,
                     rowID = rowData.indexOf(record);
+
                 
                 MCQueueManager.setQueueIndex(rowID);
 
@@ -163,14 +164,15 @@ class BrowseListNavigator extends React.Component{
                     title            : 'Player',
                     component        : ListPlayer,
                     componentConfig  : {
-                        ownerList : ownerList,
-                        modObject : modObject,
-                        patterns  : modObject.patterns,
-                        rowData   : rowData,
-                        rowID     : rowID,
-                        record    : record
+                        ownerList  : ownerList,
+                        modObject  : modObject,
+                        patterns   : modObject.patterns,
+                        rowData    : rowData,
+                        rowID      : rowID,
+                        fileRecord : record
                     }
                 });
+
                 window.main.hideSpinner();
 
             }

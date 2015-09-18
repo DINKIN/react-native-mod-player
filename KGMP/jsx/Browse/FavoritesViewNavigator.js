@@ -83,7 +83,7 @@ class FavoritesListNavigator extends BaseComponent{
                     // debugger;
                     var rtBtnText,
                         rtBtnHandler;
-
+                    
                     modObject.fileName = record.name;
                     modObject.id_md5   = record.id_md5;
                     modObject.record   = record;
@@ -95,7 +95,8 @@ class FavoritesListNavigator extends BaseComponent{
                         componentConfig  : {
                             modObject   : modObject,
                             isFavorites : true,
-                            patterns    : modObject.patterns
+                            patterns    : modObject.patterns,
+                            fileRecord  : record
                         }
                     });
   
@@ -141,12 +142,12 @@ class FavoritesListNavigator extends BaseComponent{
                     title            : 'Player',
                     component        : ListPlayer,
                     componentConfig  : {
-                        ownerList : ownerList,
-                        modObject : modObject,
-                        patterns  : modObject.patterns,
-                        rowData   : rowData,
-                        rowID     : index,
-                        record    : record
+                        ownerList  : ownerList,
+                        modObject  : modObject,
+                        patterns   : modObject.patterns,
+                        rowData    : rowData,
+                        rowID      : index,
+                        fileRecord : record
                     }
                 });
                 

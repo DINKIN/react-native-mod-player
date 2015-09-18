@@ -103,4 +103,9 @@ module.exports =  StyleSheet.create({
         top  : top
     },
 
+    greenColor : {
+        color : '#00FF00',
+        fontWeight : 'bold'
+    }
+
 });

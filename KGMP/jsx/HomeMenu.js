@@ -5,7 +5,9 @@ var React         = require('react-native'),
     BaseComponent = require('./BaseComponent'),
     AboutView     = require('./about/AboutView.js');
 
-
+var mLogo = require('image!mlogo_tiny');
+mLogo.height *= 1.5;
+mLogo.width *= 1.5;
 
 var { 
         MCModPlayerInterface,
@@ -17,8 +19,11 @@ var {
     TouchableHighlight,
     StyleSheet,
     Text,
+    Image,
     StatusBarIOS,
-    View
+    View,
+    LinkingIOS,
+    TouchableWithoutFeedback
 } = React;
 
 
@@ -37,7 +42,7 @@ var styles = StyleSheet.create({
     highlightCt : {
         width          : 210,
         height         : 35,
-        borderWidth    : .5,
+        borderWidth    : 1,
         borderColor    : '#333333',
         // borderRadius   : 3,
         flexDirection  : 'row',
@@ -96,26 +101,11 @@ class HomeMenu extends BaseComponent {
         );
     }
      
-    // componentDidMount () {
-    //     let startTime;
-    //     const loop = t => {
-    //       requestAnimationFrame(loop);
-    //       if (!startTime) {
-    //           startTime = t
-    //       };
-          
-    //       const time = (t - startTime) / 1000;
-    //       this.setState({ time: time });
-    //     };
-
-    //     requestAnimationFrame(loop);
-    // }
-
     render() {
         // setTimeout(()=> {
         //     this.onRandomPress();
         // }, 100);
-        
+
         return (
             <View style={styles.mainCt}>
                 <View style={{flexDirection:'row', justifyContent : 'center'}}>
@@ -135,11 +125,21 @@ class HomeMenu extends BaseComponent {
                     this.createButton(this.onBrowsePress,    "Browse"),
                     this.createButton(this.onFavoritesPress, "Favorites"),
                     // this.createButton(this.onSearchPress,    "Search"),
-                    this.createButton(this.onAboutPress,     "About")
+                    // this.createButton(this.onAboutPress,     "About")
                 ]}
-
+                <TouchableWithoutFeedback onPress={this.onModusPress}>
+                    <View style={{ flexDirection : 'row', alignItems : 'center', justifyContent : 'center', height:100,}}>
+                        <Image style={{marginRight : 10}} source={mLogo} />
+                        <Text style={{color:'#FFFFFF', fontFamily : 'PerfectDOSVGA437Win', fontWeight : 'bold', fontSize : 24, marginTop: 12}}>Modus Create</Text>
+                    </View>
+                </TouchableWithoutFeedback>
             </View>
+
         );
+    }
+
+    onModusPress() {
+        LinkingIOS.openURL('http://moduscreate.com');
     }
 
 
@@ -171,7 +171,6 @@ Object.assign(HomeMenu.prototype, {
                     (data) => {
                         this.hideSpinner();
                         alert('Failure loading ' + unescape(rowData.name));
-                        console.log(data);
                     },        
                     //success
                     (modObject) => {
@@ -188,8 +187,9 @@ Object.assign(HomeMenu.prototype, {
                             rightButtonTitle : rtBtnText,
                             component        : RandomPlayer,
                             componentConfig  : {
-                                modObject : modObject,
-                                patterns  : modObject.patterns
+                                modObject  : modObject,
+                                patterns   : modObject.patterns,
+                                fileRecord : rowData
                             }
                         });
       

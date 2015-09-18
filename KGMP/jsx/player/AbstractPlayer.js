@@ -48,7 +48,10 @@ class AbstractPlayer extends BaseComponent {
             modObject = this.modObject || props.modObject,
             dictInfo  = props.dictInfo;
 
+        this.fileRecord = this.fileRecord || props.fileRecord;
+
         var buttonChars = this.buttonChars,
+            liked       = this.fileRecord.like_value == 1,
             centerBtnChar,
             centerBtnStyle;
 
@@ -163,7 +166,7 @@ class AbstractPlayer extends BaseComponent {
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle}/>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true}/>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
                 </View>                     
             </View>
         );
@@ -180,7 +183,7 @@ class AbstractPlayer extends BaseComponent {
         this.modObject = this.props.modObject;
         setTimeout(()=> {
             this.playTrack();
-        }, 450);
+        }, 350);
     }
 
     componentWillUnmount() {
@@ -289,23 +292,27 @@ class AbstractPlayer extends BaseComponent {
         this.showLikeSpinner();
 
         MCQueueManager.updateLikeStatus(1, this.modObject.id_md5, (rowData) => {
-            setTimeout(function() {
+            setTimeout(() => {
                 window.main.hideSpinner();
+                this.fileRecord.like_value = 1;
+                this.setState({});
+
             }, 500);
         });
     }
 
     dislike () {
+        this.pauseTrack();
         this.showDislikeSpinner();
-
         setTimeout(() => {
             MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
                 if (rowData) {
                     this.loadFile(rowData);                    
                 }
                 else {
-                    this.onClosebuttonPress();
                     alert('Apologies, there are no more files in the queue');
+                    window.main.hideSpinner();
+                    window.mainNavigator.popToTop();
                 }
             });
         }, 350);
@@ -340,7 +347,9 @@ class AbstractPlayer extends BaseComponent {
                         numberOfCells   : modObject.patternOrds.length,
                         highlightNumber : 0
                     });
-
+                    
+                    this.fileRecord = rowData;
+                    console.log(rowData)
                     modObject.id_md5 = rowData.id_md5;
 
                     this.modObject = modObject;

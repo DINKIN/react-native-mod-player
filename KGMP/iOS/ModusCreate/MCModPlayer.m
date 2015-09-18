@@ -241,8 +241,8 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
                              0,
                              &mAudioQueue);
     
-    bufferSize = SOUND_BUFFER_SAMPLE_SIZE;
-    printf("bufferSize == %i\n", bufferSize);
+    bufferSize = SOUND_BUFFER_SAMPLE_SIZE / 2;
+//    printf("bufferSize == %i\n", bufferSize);
 
     free(audioGenerationBuffer);
     free(mBuffers);
