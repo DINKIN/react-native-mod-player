@@ -338,6 +338,7 @@
 		7161A11F1AE14B3E006378D0 /* libopenmpt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = libopenmpt.h; path = ../src/libopenmpt.h; sourceTree = "<group>"; };
 		7161A1201AE14B3E006378D0 /* libopenmpt.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = libopenmpt.hpp; path = ../src/libopenmpt.hpp; sourceTree = "<group>"; };
 		7161A12F1AE14BF1006378D0 /* svn_version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = svn_version.h; path = ../build/svn_version/svn_version.h; sourceTree = "<group>"; };
+		88D024C41BB047CF00965CD7 /* svn_version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = svn_version.h; sourceTree = "<group>"; };
 		CC33B2891AB8197E009608E8 /* liblibopenmpt.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibopenmpt.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -363,6 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				7161A12F1AE14BF1006378D0 /* svn_version.h */,
+				88D024C41BB047CF00965CD7 /* svn_version.h */,
 				CC33B2981AB819C9009608E8 /* common */,
 				716EA94A1ADEC5C70033FCC2 /* libopenmpt */,
 				7161A1131AE14B3E006378D0 /* libopenmpt_c.cpp */,
