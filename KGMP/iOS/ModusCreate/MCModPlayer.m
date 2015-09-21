@@ -8,7 +8,9 @@
 #import "MCModPlayer.h"
 
 @implementation MCModPlayer {
-
+    float initialGain;
+    float frequencyBands[3];
+    NVPeakingEQFilter *PEQ[3];
 }
 
 
@@ -45,6 +47,23 @@ struct StatusObject statuses[NUM_BUFFERS];
     if (self = [super init]) {
         pthread_mutex_init(&audio_mutex, NULL);
         
+        // Should be 0.0f, but for testing purposes going to turn it up by default
+        initialGain = 5.0f;
+        
+        frequencyBands[0] = 40.0f;
+        frequencyBands[1] = 500.0f;
+        frequencyBands[2] = 12000.0f;
+        
+        
+        for(int i = 0; i < 3; i++) {
+            
+            NVPeakingEQFilter *peq = [[NVPeakingEQFilter alloc] initWithSamplingRate:PLAYBACK_FREQ];
+            peq.Q = 0.0f;
+            peq.centerFrequency = frequencyBands[i];
+            peq.G = initialGain;
+            
+            PEQ[i] = peq;
+        }
         
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
@@ -59,6 +78,8 @@ struct StatusObject statuses[NUM_BUFFERS];
                                  object:nil];
 
         return self;
+        
+        
     }
     
     return nil;
@@ -99,7 +120,12 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     pthread_mutex_lock(&audio_mutex);
     memcpy(mBuffer->mAudioData, audioGenerationBuffer[soundPlayerBufferIndex], mBuffer->mAudioDataByteSize);
+    
+    
+// TEST applying Filter in Callback
+//        [player->PEQ[2] filterData:mBuffer->mAudioData numFrames:367 numChannels:2];
 
+    
     soundGeneratorFlag[soundPlayerBufferIndex] = 0;
 //    printf("RD  \t#%i\t\t%i\n", soundPlayerBufferIndex, abs(soundPlayerBufferIndex - soundGeneratorBufferIndex));   fflush(stdout);
 
@@ -321,8 +347,13 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             
             // Mutex lock start
             int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
-            // Mutex lock end
+            
+            // TEST Applying filter in generateAudioThread
+            [player->PEQ[2] filterData:audioGenerationBuffer[soundGeneratorBufferIndex] numFrames:367 numChannels:2 ];
 
+            
+            // Mutex lock end
+            
             struct StatusObject status;
             
             {
