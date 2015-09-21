@@ -48,7 +48,7 @@ struct StatusObject statuses[NUM_BUFFERS];
         pthread_mutex_init(&audio_mutex, NULL);
         
         // Should be 0.0f, but for testing purposes going to turn it up by default
-        initialGain = 5.0f;
+        initialGain = 10.0f;
         
         frequencyBands[0] = 40.0f;
         frequencyBands[1] = 500.0f;
@@ -58,7 +58,7 @@ struct StatusObject statuses[NUM_BUFFERS];
         for(int i = 0; i < 3; i++) {
             
             NVPeakingEQFilter *peq = [[NVPeakingEQFilter alloc] initWithSamplingRate:PLAYBACK_FREQ];
-            peq.Q = 0.0f;
+            peq.Q = 2.0f;
             peq.centerFrequency = frequencyBands[i];
             peq.G = initialGain;
             
@@ -124,6 +124,8 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
 // TEST applying Filter in Callback
 //        [player->PEQ[2] filterData:mBuffer->mAudioData numFrames:367 numChannels:2];
+//    
+
 
     
     soundGeneratorFlag[soundPlayerBufferIndex] = 0;
@@ -348,9 +350,19 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
             // Mutex lock start
             int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
             
+            float nvdsp_data[numFrames*2];
+            for (int i=0;i<numFrames;i++) {
+                nvdsp_data[i*2]=(float)(((short int *)audioGenerationBuffer[soundGeneratorBufferIndex])[i*2])/32768.0;
+                nvdsp_data[i*2+1]=(float)(((short int *)audioGenerationBuffer[soundGeneratorBufferIndex])[i*2+1])/32768.0;
+            }
+                                        
             // TEST Applying filter in generateAudioThread
-            [player->PEQ[2] filterData:audioGenerationBuffer[soundGeneratorBufferIndex] numFrames:numFrames numChannels:2 ];
+            [player->PEQ[2] filterData:nvdsp_data numFrames:(int)numFrames numChannels:2 ];
 
+            for (int i=0;i<numFrames;i++) {
+                ((short int *)audioGenerationBuffer[soundGeneratorBufferIndex])[i*2]=nvdsp_data[i*2]*32767.0;
+                ((short int *)audioGenerationBuffer[soundGeneratorBufferIndex])[i*2+1]=nvdsp_data[i*2+1]*32767.0;
+            }
             
             // Mutex lock end
             
