@@ -45,6 +45,14 @@ var styles = StyleSheet.create({
         fontFamily : 'fontello', 
         fontSize   : 60,
         color      : '#FFFFFF'
+    },
+
+    redSpinner : {
+        color : '#FF0000'
+    },
+
+    greenSpinner : {
+        color : '#00FF00'
     }
 });
 
@@ -68,11 +76,12 @@ var chars = {
     like    : '\uE81C',
     dislike : '\uE81D'
 }
+
 class LikeSpinner extends BaseComponent {
     render() {
         return (
             <View style={styles.spinnerContainer}>
-                <Text style={styles.buttonFont}>{chars['like']}</Text>
+                <Text style={[styles.buttonFont, styles.greenSpinner]}>{chars['like']}</Text>
             </View>
         );
     }
@@ -83,11 +92,12 @@ class DislikeSpinner extends BaseComponent {
     render() {
         return (
             <View style={styles.spinnerContainer}>
-                <Text style={styles.buttonFont}>{chars['dislike']}</Text>
+                <Text style={[styles.buttonFont, styles.redSpinner]}>{chars['dislike']}</Text>
             </View>
         );
     }
 }
+
 class Main extends BaseComponent  {
     setInitialState() {
         this.state = {
