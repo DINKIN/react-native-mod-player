@@ -33,10 +33,17 @@ var styles = StyleSheet.create({
     mainCt : {
         flex           : 1,
         flexDirection  : 'column',
-        justifyContent : 'center',
         backgroundColor : '#000000',
         // borderWidth    : 2,
         // borderColor    : '#00FF00'
+    },
+
+    menuCt : {
+        flex           : 1,
+        flexDirection  : 'column',
+        justifyContent : 'center',
+
+
     },
 
     highlightCt : {
@@ -108,31 +115,35 @@ class HomeMenu extends BaseComponent {
 
         return (
             <View style={styles.mainCt}>
-                <View style={{flexDirection:'row', justifyContent : 'center'}}>
-                    <Text style={styles.titleRed}>K</Text>
-                    <Text style={styles.titleGreen}>ey</Text>
-                    <Text style={styles.titleRed}>G</Text>
-                    <Text style={styles.titleGreen}>en</Text>
-                    <Text style={[styles.titleRed, {marginLeft: 10}]}>M</Text>
-                    <Text style={styles.titleGreen}>usic</Text>
-                </View>
-                <View style={{flexDirection:'row', justifyContent : 'center', marginBottom : 30}}>
-                    <Text style={styles.titleRed}>P</Text>
-                    <Text style={styles.titleGreen}>layer</Text>
-                </View>
-                {[
-                    this.createButton(this.onRandomPress,    "Random"),
-                    this.createButton(this.onBrowsePress,    "Browse"),
-                    this.createButton(this.onFavoritesPress, "Favorites"),
-                    // this.createButton(this.onSearchPress,    "Search"),
-                    // this.createButton(this.onAboutPress,     "About")
-                ]}
-                <TouchableWithoutFeedback onPress={this.onModusPress}>
-                    <View style={{ flexDirection : 'row', alignItems : 'center', justifyContent : 'center', height:100,}}>
-                        <Image style={{marginRight : 10}} source={mLogo} />
-                        <Text style={{color:'#FFFFFF', fontFamily : 'PerfectDOSVGA437Win', fontWeight : 'bold', fontSize : 24, marginTop: 12}}>Modus Create</Text>
+                <View style={styles.menuCt}>
+                    <View style={{flexDirection:'row', justifyContent : 'center'}}>
+                        <Text style={styles.titleRed}>K</Text>
+                        <Text style={styles.titleGreen}>ey</Text>
+                        <Text style={styles.titleRed}>G</Text>
+                        <Text style={styles.titleGreen}>en</Text>
+                        <Text style={[styles.titleRed, {marginLeft: 10}]}>M</Text>
+                        <Text style={styles.titleGreen}>usic</Text>
                     </View>
-                </TouchableWithoutFeedback>
+                    <View style={{flexDirection:'row', justifyContent : 'center', marginBottom :60}}>
+                        <Text style={styles.titleRed}>P</Text>
+                        <Text style={styles.titleGreen}>layer</Text>
+                    </View>
+                    {[
+                        this.createButton(this.onRandomPress,    "Random"),
+                        this.createButton(this.onBrowsePress,    "Browse"),
+                        this.createButton(this.onFavoritesPress, "Favorites"),
+                        // this.createButton(this.onSearchPress,    "Search"),
+                        // this.createButton(this.onAboutPress,     "About")
+                    ]}
+                </View>
+                <View style={{marginBottom: 60}}>
+                    <TouchableWithoutFeedback onPress={this.onModusPress}>
+                        <View style={{ flexDirection : 'row', alignItems : 'center', justifyContent : 'center'}}>
+                            <Image style={{marginRight : 10}} source={mLogo} />
+                            <Text style={{color:'#FFFFFF', fontFamily : 'PerfectDOSVGA437Win', fontWeight : 'bold', fontSize : 24, marginTop: 12}}>Modus Create</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
             </View>
 
         );

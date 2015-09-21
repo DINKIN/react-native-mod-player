@@ -98,7 +98,7 @@ var FavoritesView = React.createClass({
 
         if (numRecords > 2) {
             shuffleButton = (
-                <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center', borderTopWidth: .5, borderTopColor: '#222222'}}>
+                <View style={{ height: 45,  backgroundColor: '#000000', justifyContent : 'center', borderTopWidth: 1, borderTopColor: '#222222'}}>
                     <View style={styles.touchableCt}>
 
                         <TouchableHighlight
@@ -251,7 +251,7 @@ var styles = StyleSheet.create({
     highlightCt : {
         width          : 160,
         height         : 28,
-        borderWidth    : .5,
+        borderWidth    : 1,
         borderColor    : '#333333',
         // borderRadius   : 3,
         flexDirection  : 'row',

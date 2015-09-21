@@ -77,7 +77,7 @@ module.exports = StyleSheet.create({
         overflow        : 'hidden',
         // width       : 375,
         alignSelf       : stretch,  // This doesn't effing work!
-        borderTopWidth  : .5,
+        borderTopWidth  : 1,
         borderColor     : borderColor,
         backgroundColor : blackColor
     },
@@ -86,7 +86,7 @@ module.exports = StyleSheet.create({
         position         : absolute,
         top              : (508/2),
         width            : 20,
-        borderRightWidth : .5,
+        borderRightWidth : 1,
         borderColor      : blackColor,
     },
     

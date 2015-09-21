@@ -29,7 +29,7 @@ var styles = StyleSheet.create({
 
         // height : 374,
         padding : 5,
-        borderBottomWidth : .5,
+        borderBottomWidth : 1,
         borderBottomColor : white
     },
     title : {

@@ -185,11 +185,7 @@ var AboutView = React.createClass({
 
         jsCall = 'u(' +  jsCallArgs[0] + ',' + jsCallArgs[1] + ',' + jsCallArgs[2] + ')';
 
-        // console.log(jsCall);
-
-
         this.refs.webView.execJsCall(jsCall);
-
 
         
         return;

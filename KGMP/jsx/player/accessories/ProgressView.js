@@ -59,7 +59,7 @@ var styles = StyleSheet.create({
     container : {
         flexDirection : 'row',
         height : 5,
-        borderTopWidth : .5,
+        borderTopWidth : 1,
         borderTopColor : white,
         // borderBottomWidth : .5,
         // borderBottomColor : white
