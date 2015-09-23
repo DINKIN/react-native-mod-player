@@ -335,7 +335,7 @@ class AbstractPlayer extends BaseComponent {
                     this.hideSpinner();
 
                     alert('failure in loading file ' + unescape(rowData.name));
-                    console.log(data);
+                    // console.log(data);
                     this.loading = false;
 
                 },        
@@ -349,7 +349,7 @@ class AbstractPlayer extends BaseComponent {
                     });
                     
                     this.fileRecord = rowData;
-                    console.log(rowData)
+                    // console.log(rowData)
                     modObject.id_md5 = rowData.id_md5;
 
                     this.modObject = modObject;
@@ -549,8 +549,8 @@ Object.assign(AbstractPlayer.prototype, {
             var body   = event.nativeEvent.body,
                 matrix = this.wkWebViewEventMatrix;
 
-            console.log('WK WEBVIEW EVENT:');
-            console.log(body);
+            // console.log('WK WEBVIEW EVENT:');
+            // console.log(body);
 
             if (matrix[body]) {
                 this[matrix[body]](body);

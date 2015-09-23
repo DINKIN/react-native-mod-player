@@ -272,7 +272,16 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
             
         }
         else {
-            file = [queue objectAtIndex:queueIndex];
+            // random files and at the end of queue
+            if (browseType == 2) {
+                file = [self getRandomFile];
+                [queue addObject:file];
+                queueIndex = [queue indexOfObject:file];
+            }
+            else {
+                // Use file at the end of the queue
+                file = [queue objectAtIndex:queueIndex];
+            }
         }
 
     
@@ -401,7 +410,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
         queueIndex = [queue indexOfObject:file];
     }
     
-    printf ("QUEUE INDEX == %lu\n", queueIndex);
+//    printf ("QUEUE INDEX == %lu\n", queueIndex);
     return file;
 }
 
