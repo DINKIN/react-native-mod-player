@@ -21,12 +21,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.mm */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		7116F9431BB5B11E00346912 /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 7116F9421BB5B11E00346912 /* KEYGENMUSiC MusicPack */; settings = {ASSET_TAGS = (); }; };
 		7118B4AD1B4188CD0071C0F4 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7118B4AC1B4188BE0071C0F4 /* liblibopenmpt.a */; };
 		7118B4B51B418AA80071C0F4 /* MCFsTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B01B418AA80071C0F4 /* MCFsTool.m */; };
 		7118B4B61B418AA80071C0F4 /* MCModPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B21B418AA80071C0F4 /* MCModPlayer.m */; };
 		7118B4B71B418AA80071C0F4 /* MCModPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B41B418AA80071C0F4 /* MCModPlayerInterface.m */; };
 		7118B4BA1B418AAF0071C0F4 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */; };
-		7122B4C71B4430B10037D38D /* webview-files in Resources */ = {isa = PBXBuildFile; fileRef = 7122B4C61B4430B10037D38D /* webview-files */; };
 		7122B4DC1B443DA50037D38D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7122B4DB1B443DA50037D38D /* WebKit.framework */; };
 		717DFFEF1BAB06CB00FC0459 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 717DFFEE1BAB06CB00FC0459 /* libsqlite3.0.tbd */; };
 		71AEDB791B781D1900B4B71C /* MCQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71AEDB781B781D1900B4B71C /* MCQueueManager.m */; };
@@ -35,7 +35,6 @@
 		71DDCB671B94C3660051B2D7 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71DDCB661B94C3660051B2D7 /* fontello.ttf */; };
 		71E2A1AE1BA091B100A91D23 /* MCBridgedWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */; };
 		71E2A1BB1BA091B300A91D23 /* MCBridgedWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7122B4CE1B443CA40037D38D /* MCBridgedWebViewManager.m */; };
-		71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +137,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = iOS/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = iOS/main.mm; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		7116F9421BB5B11E00346912 /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
 		7118B4A71B4188BE0071C0F4 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = snd_libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		7118B4AF1B418AA80071C0F4 /* MCFsTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCFsTool.h; path = iOS/ModusCreate/MCFsTool.h; sourceTree = "<group>"; };
 		7118B4B01B418AA80071C0F4 /* MCFsTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCFsTool.m; path = iOS/ModusCreate/MCFsTool.m; sourceTree = "<group>"; };
@@ -147,7 +147,6 @@
 		7118B4B41B418AA80071C0F4 /* MCModPlayerInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCModPlayerInterface.m; path = iOS/ModusCreate/MCModPlayerInterface.m; sourceTree = "<group>"; };
 		7118B4B81B418AAF0071C0F4 /* MC_OMPT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MC_OMPT.h; path = iOS/ModusCreate/Players/MC_OMPT.h; sourceTree = "<group>"; };
 		7118B4B91B418AAF0071C0F4 /* MC_OMPT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MC_OMPT.m; path = iOS/ModusCreate/Players/MC_OMPT.m; sourceTree = "<group>"; };
-		7122B4C61B4430B10037D38D /* webview-files */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "webview-files"; path = "../webview-files"; sourceTree = "<group>"; };
 		7122B4CB1B443CA40037D38D /* MCBridgedWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCBridgedWebView.h; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebView.h; sourceTree = "<group>"; };
 		7122B4CC1B443CA40037D38D /* MCBridgedWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCBridgedWebView.m; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebView.m; sourceTree = "<group>"; };
 		7122B4CD1B443CA40037D38D /* MCBridgedWebViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCBridgedWebViewManager.h; path = iOS/ModusCreate/MCBridgedWebView/MCBridgedWebViewManager.h; sourceTree = "<group>"; };
@@ -159,7 +158,6 @@
 		71AEDB7A1B7826E400B4B71C /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../database_tools/keygenmusicplayer.db; sourceTree = "<group>"; };
 		71DDCB641B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Perfect DOS VGA 437 Win.ttf"; path = "resources/fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf"; sourceTree = "<group>"; };
 		71DDCB661B94C3660051B2D7 /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = fontello.ttf; path = resources/fonts/fontello/font/fontello.ttf; sourceTree = "<group>"; };
-		71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -391,8 +389,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				7118B4A61B4188A60071C0F4 /* snd_libs */,
 				7118B4A11B4187900071C0F4 /* fonts */,
-				71FF0B7D1B41939600B3B75C /* KEYGENMUSiC MusicPack */,
-				7122B4C61B4430B10037D38D /* webview-files */,
+				7116F9421BB5B11E00346912 /* KEYGENMUSiC MusicPack */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
@@ -595,13 +592,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				71DDCB651B94C35E0051B2D7 /* Perfect DOS VGA 437 Win.ttf in Resources */,
+				7116F9431BB5B11E00346912 /* KEYGENMUSiC MusicPack in Resources */,
 				71AEDB7B1B7826E400B4B71C /* keygenmusicplayer.db in Resources */,
 				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				71DDCB671B94C3660051B2D7 /* fontello.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				71FF0B7E1B41939600B3B75C /* KEYGENMUSiC MusicPack in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				7122B4C71B4430B10037D38D /* webview-files in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +641,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -655,7 +652,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = org.ModusCreate.KGMP;
 				PRODUCT_NAME = KGMP;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -665,6 +664,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -675,7 +675,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = org.ModusCreate.KGMP;
 				PRODUCT_NAME = KGMP;
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

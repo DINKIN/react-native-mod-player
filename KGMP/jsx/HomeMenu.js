@@ -85,7 +85,7 @@ var styles = StyleSheet.create({
         color      : '#00FF00'
     }
 });
-
+x = false;
 
 class HomeMenu extends BaseComponent {
     setInitialState() {
@@ -110,7 +110,11 @@ class HomeMenu extends BaseComponent {
      
     render() {
         // setTimeout(()=> {
-        //     this.onRandomPress();
+        //     if (!x) {
+        //         this.onAboutPress();
+        //         x = true;
+        //     }
+
         // }, 100);
 
         return (
@@ -133,7 +137,7 @@ class HomeMenu extends BaseComponent {
                         this.createButton(this.onBrowsePress,    "Browse"),
                         this.createButton(this.onFavoritesPress, "Favorites"),
                         // this.createButton(this.onSearchPress,    "Search"),
-                        // this.createButton(this.onAboutPress,     "About")
+                        this.createButton(this.onAboutPress,     "About")
                     ]}
                 </View>
                 <View style={{marginBottom: 60}}>
@@ -248,29 +252,29 @@ Object.assign(HomeMenu.prototype, {
         
         onAboutPress : function() {
 
-            this.showSpinner();
-            MCModPlayerInterface.loadModusAboutMod(
-                //failure
-                (data) => {
-                    alert('Apologies. This file could not be loaded.');
-                    console.log(data);
-                },        
-                //success
-                (modObject) => {
+            // this.showSpinner();
+            // MCModPlayerInterface.loadModusAboutMod(
+            //     //failure
+            //     (data) => {
+            //         alert('Apologies. This file could not be loaded.');
+            //         console.log(data);
+            //     },        
+            //     //success
+            //     (modObject) => {
 
-                    modObject.directory = unescape(modObject.directory);
-                    modObject.file_name = unescape(modObject.file_name);
+            //         modObject.directory = unescape(modObject.directory);
+            //         modObject.file_name = unescape(modObject.file_name);
 
                     window.mainNavigator.push({
                         title           : 'About',
                         component       : AboutView,
                         componentConfig : {
-                            modObject : modObject
+                            // modObject : modObject
                         }
                     });
-                    this.hideSpinner();
-                }
-            );        
+                    // this.hideSpinner();
+            //     }
+            // );        
         },
         
         onSearchPress : function() {

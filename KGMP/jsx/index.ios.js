@@ -20,7 +20,7 @@ var {
 
 // Cache the bundlepath globally so we can access it later =)
 MCFsTool.getBundlePath((bundlepath) => {
-    console.log(bundlepath)
+    // console.log(bundlepath)
     window.bundlePath = bundlepath;
 });
 

@@ -45,8 +45,11 @@
                                                       moduleName:@"KGMP"
                                                initialProperties:nil
                                                     launchOptions:launchOptions];
+        
     
-//  
+//    NSString *value = (__bridge_transfer NSString *)CFDictionaryGetValue(CFBundleGetInfoDictionary(CFBundleGetMainBundle()),
+//                                                                     (const void *)(@"CFBundleIdentifier"));
+//
 //
 //  [qMgr getRandomFile];
 //    [qMgr getDirectories];
