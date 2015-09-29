@@ -18,7 +18,8 @@ var {
         LinkingIOS
     } = React;
 
-var isIphone4 = (window.height == 480);
+var isIphone4 = (window.height == 480),
+    isIphone5 = window.height == 568;
 
 var styles = StyleSheet.create({
     container : {
@@ -90,24 +91,48 @@ var AboutView = React.createClass({
     modObject  : null,
 
     render: function() {
+        var kgmPaddingTop,
+            playerMarginBottom,
+            developedByMarginBottom,
+            developedByMarginTop;
+
+        // Todo: Abstract this shit out!
+        if (isIphone4) {
+            kgmPaddingTop = 0;
+            playerMarginBottom = 0;
+            developedByMarginBottom = 35;
+            developedByMarginTop = 30;
+
+        }
+        else if (isIphone5) {
+            kgmPaddingTop = 0;
+            playerMarginBottom = 0;
+            developedByMarginBottom = 35;
+            developedByMarginTop = 40;
+        }
+        else {
+            kgmPaddingTop = 30;
+            playerMarginBottom = 40;
+            developedByMarginBottom = 65;
+            developedByMarginTop = 50;
+        }
 
         var kgmStyle = {
                 flexDirection:'row', 
                 justifyContent : 'center', 
-                paddingTop : isIphone4 ? 0 : 30
+                paddingTop : kgmPaddingTop
             },
             playerStyle = {
                 flexDirection:'row', 
                 justifyContent : 'center', 
-                marginBottom : isIphone4 ? 0 : 40
+                marginBottom : playerMarginBottom
             },
             developedByStyle = {
                 alignItems : 'center', 
-                marginTop : isIphone4 ? 30 : 50,
-                marginBottom : isIphone4 ? 35 : 65
-            }
-
-
+                marginTop : developedByMarginTop,
+                marginBottom : developedByMarginBottom
+            };
+            
         return (
             <View style={styles.container}>
                 <View style={styles.closeButton}>

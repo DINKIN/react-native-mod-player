@@ -120,13 +120,18 @@ class HomeMenu extends BaseComponent {
             playerSeparatorStyle;
 
         // Todo: Clean this isht up!
-        if (window.height > 480) {
-            footerStyle = {marginBottom: 60};
+
+        if (window.height == 480) {
+            footerStyle = {marginBottom: 20};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom : 20};
+        }
+        else if (window.height == 568) {
+            footerStyle = {marginBottom: 10};
             playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :60};
         }
         else {
-            footerStyle = {marginBottom: 20};
-            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom : 20};
+            footerStyle = {marginBottom: 40};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :60};
         }
 
         return (
