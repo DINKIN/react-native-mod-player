@@ -6,6 +6,7 @@ var React         = require('react-native'),
     AboutView     = require('./about/AboutView.js');
 
 var mLogo = require('image!mlogo_tiny');
+
 mLogo.height *= 1.5;
 mLogo.width *= 1.5;
 
@@ -42,8 +43,6 @@ var styles = StyleSheet.create({
         flex           : 1,
         flexDirection  : 'column',
         justifyContent : 'center',
-
-
     },
 
     highlightCt : {
@@ -59,8 +58,8 @@ var styles = StyleSheet.create({
     touchableCt : {
         flexDirection  : 'row',
         justifyContent : 'center',
-        marginTop      : 20,
-        marginBottom   : 20,
+        marginTop      : window.height > 480 ? 20 : 10,
+        marginBottom   : window.height > 480 ? 20 : 15,
         // borderWidth    : 2,
         // borderColor    : '#FF0000'
     },  
@@ -117,6 +116,19 @@ class HomeMenu extends BaseComponent {
 
         // }, 100);
 
+        var footerStyle,
+            playerSeparatorStyle;
+
+        // Todo: Clean this isht up!
+        if (window.height > 480) {
+            footerStyle = {marginBottom: 60};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :60};
+        }
+        else {
+            footerStyle = {marginBottom: 20};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom : 20};
+        }
+
         return (
             <View style={styles.mainCt}>
                 <View style={styles.menuCt}>
@@ -128,7 +140,7 @@ class HomeMenu extends BaseComponent {
                         <Text style={[styles.titleRed, {marginLeft: 10}]}>M</Text>
                         <Text style={styles.titleGreen}>usic</Text>
                     </View>
-                    <View style={{flexDirection:'row', justifyContent : 'center', marginBottom :60}}>
+                    <View style={playerSeparatorStyle}>
                         <Text style={styles.titleRed}>P</Text>
                         <Text style={styles.titleGreen}>layer</Text>
                     </View>
@@ -140,7 +152,7 @@ class HomeMenu extends BaseComponent {
                         this.createButton(this.onAboutPress,     "About")
                     ]}
                 </View>
-                <View style={{marginBottom: 60}}>
+                <View style={footerStyle}>
                     <TouchableWithoutFeedback onPress={this.onModusPress}>
                         <View style={{ flexDirection : 'row', alignItems : 'center', justifyContent : 'center'}}>
                             <Image style={{marginRight : 10}} source={mLogo} />

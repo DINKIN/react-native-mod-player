@@ -1,7 +1,7 @@
 
 var React                 = require('react-native'),
     MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
-    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     CloseButton           = require('../player/accessories/CloseButton'),
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
    
@@ -18,6 +18,8 @@ var {
         LinkingIOS
     } = React;
 
+var isIphone4 = (window.height == 480);
+
 var styles = StyleSheet.create({
     container : {
         flex        : 1,
@@ -29,14 +31,14 @@ var styles = StyleSheet.create({
 
     closeButton : {
         // position    : 'absolute',
-        marginTop : 30,
+        marginTop : 25,
         // width       : 50,
         // borderWidth : 1,
         // borderColor : '#00FF00'
     },
     aboutCt : {
         flex : 1,
-        paddingTop : 20
+        paddingTop : isIphone4 ? 0 : 40 
         // borderWidth : 1,
         // borderColor : '#AEAEAE'
     },
@@ -89,13 +91,30 @@ var AboutView = React.createClass({
 
     render: function() {
 
+        var kgmStyle = {
+                flexDirection:'row', 
+                justifyContent : 'center', 
+                paddingTop : isIphone4 ? 0 : 30
+            },
+            playerStyle = {
+                flexDirection:'row', 
+                justifyContent : 'center', 
+                marginBottom : isIphone4 ? 0 : 40
+            },
+            developedByStyle = {
+                alignItems : 'center', 
+                marginTop : isIphone4 ? 30 : 50,
+                marginBottom : isIphone4 ? 35 : 65
+            }
+
+
         return (
             <View style={styles.container}>
                 <View style={styles.closeButton}>
                     <CloseButton onPress={this.onClosebuttonPress}/>
                 </View>
                 <View style={styles.aboutCt}>   
-                    <View style={{flexDirection:'row', justifyContent : 'center', paddingTop : 30}}>
+                    <View style={kgmStyle}>
                         <Text style={styles.titleRed}>K</Text>
                         <Text style={styles.titleGreen}>ey</Text>
                         <Text style={styles.titleRed}>G</Text>
@@ -104,12 +123,12 @@ var AboutView = React.createClass({
                         <Text style={styles.titleGreen}>usic</Text>
                     </View>
 
-                    <View style={{flexDirection:'row', justifyContent : 'center', marginBottom : 40}}>
+                    <View style={playerStyle}>
                         <Text style={styles.titleRed}>P</Text>
                         <Text style={styles.titleGreen}>layer</Text>
                     </View>
 
-                    <View style={{alignItems : 'center', marginTop : 50, marginBottom : 65}}>
+                    <View style={developedByStyle}>
                         <Text style={styles.aboutTextTitle}>Lovingly developed by:</Text>
                         <TouchableWithoutFeedback onPress={this.onJayPress}>
                             <View style={styles.imgCenterCt}>

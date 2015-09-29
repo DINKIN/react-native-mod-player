@@ -26,7 +26,6 @@ var styles = StyleSheet.create({
         // flex            : 1,
         paddingTop      : 20,
         backgroundColor : '#EAEAEA',
-
     },
     spinnerContainer : {
         height : screenHeight,
