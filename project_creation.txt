@@ -7,4 +7,7 @@
 - add sound libraries
 - Ensure header search paths are updated
 - move JSX source to jsx/
-- update app delegate accordingly.
+- update app delegate accordingly
+- Add Icons
+- Add launch images
+- Link SQLLite
