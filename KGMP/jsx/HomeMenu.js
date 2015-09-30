@@ -59,7 +59,7 @@ var styles = StyleSheet.create({
         flexDirection  : 'row',
         justifyContent : 'center',
         marginTop      : window.height > 480 ? 20 : 10,
-        marginBottom   : window.height > 480 ? 20 : 15,
+        marginBottom   : window.height > 480 ? 10 : 15,
         // borderWidth    : 2,
         // borderColor    : '#FF0000'
     },  
