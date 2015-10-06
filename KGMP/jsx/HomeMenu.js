@@ -3,7 +3,8 @@ var React         = require('react-native'),
     FavsViewNav   = require('./Browse/FavoritesViewNavigator'),
     RandomPlayer  = require('./player/RandomPlayer'),
     BaseComponent = require('./BaseComponent'),
-    AboutView     = require('./about/AboutView.js');
+    AboutView     = require('./about/AboutView'),
+    AboutWKWV     = require('./about/AboutViewWKWV');
 
 var mLogo = require('image!mlogo_tiny');
 
@@ -154,13 +155,14 @@ class HomeMenu extends BaseComponent {
                         this.createButton(this.onBrowsePress,    "Browse"),
                         this.createButton(this.onFavoritesPress, "Favorites"),
                         // this.createButton(this.onSearchPress,    "Search"),
-                        this.createButton(this.onAboutPress,     "About")
+                        this.createButton(this.onAboutPress,     "About"),
+                        // this.createButton(this.onWKWVDemo,     "WKWV Demo")
                     ]}
                 </View>
                 <View style={footerStyle}>
                     <TouchableWithoutFeedback onPress={this.onModusPress}>
                         <View style={{ flexDirection : 'row', alignItems : 'center', justifyContent : 'center'}}>
-                            <Image style={{marginRight : 10}} source={mLogo} />
+                            <Image style={{marginRight : 10}} source={mLogo} /> 
                             <Text style={{color:'#FFFFFF', fontFamily : 'PerfectDOSVGA437Win', fontWeight : 'bold', fontSize : 24, marginTop: 12}}>Modus Create</Text>
                         </View>
                     </TouchableWithoutFeedback>
@@ -267,6 +269,33 @@ Object.assign(HomeMenu.prototype, {
             });
         },
         
+        onWKWVDemo : function() {
+
+            this.showSpinner();
+            MCModPlayerInterface.loadModusAboutMod(
+                //failure
+                (data) => {
+                    alert('Apologies. This file could not be loaded.');
+                    console.log(data);
+                },        
+                //success
+                (modObject) => {
+
+                    modObject.directory = unescape(modObject.directory);
+                    modObject.file_name = unescape(modObject.file_name);
+
+                    window.mainNavigator.push({
+                        title           : 'WKWVDemo',
+                        component       : AboutWKWV,
+                        componentConfig : {
+                            modObject : modObject
+                        }
+                    });
+                    this.hideSpinner();
+                }
+            ); 
+        },
+
         onAboutPress : function() {
 
             // this.showSpinner();

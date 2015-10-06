@@ -11,7 +11,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import <xmp.h>
 #import <UIKit/UIApplication.h>
 #import <pthread.h>
 

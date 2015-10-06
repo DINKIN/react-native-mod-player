@@ -2,7 +2,7 @@
 
 var React    = require('react-native'),
     styles   = require('./jsx/Styles'),
-    Main     = require('./jsx/Main')
+    Main     = require('./jsx/Main');
 
 
 var {
@@ -24,7 +24,7 @@ MCFsTool.getBundlePath((bundlepath) => {
     window.bundlePath = bundlepath;
 });
 
-// StatusBarIOS.setStyle('light-content', true);
+StatusBarIOS.setStyle('light-content', true);
 
 var KGMP = React.createClass({
     render : function() {
