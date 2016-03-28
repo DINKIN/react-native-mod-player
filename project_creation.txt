@@ -11,3 +11,4 @@
 - Add Icons
 - Add launch images
 - Link SQLLite
+- Add database to xcode proj
