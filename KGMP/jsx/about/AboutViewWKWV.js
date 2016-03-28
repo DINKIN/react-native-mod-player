@@ -1,7 +1,7 @@
 
 var React                 = require('react-native'),
     MCModPlayerInterface  = require('NativeModules').MCModPlayerInterface,
-    BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
+    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
     CloseButton           = require('../player/accessories/CloseButton'),
     RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
    

@@ -1,0 +1,33 @@
+//
+//  MCPlotGlViewManager.h
+//  UIExplorer
+//
+//  Created by Jesus Garcia on 3/8/15.
+//  Copyright (c) 2015 Facebook. All rights reserved.
+//
+
+#import "RCTViewManager.h"
+
+#import "MCPlotGlView.h"
+#import "MCModPlayer.h"
+#import <pthread.h>
+
+
+@interface MCPlotGlViewManager : RCTViewManager {
+    NSThread *updateThread;
+    
+    SInt16 *bufferData;
+    
+    float *bufferLeft,
+          *bufferRight;
+    
+    int numFrames;
+}
+
+@property MCPlotGlView *ltView;
+@property MCPlotGlView *rtView;
+
+-(void) updateBuffers:(SInt16*)inBuffer withSize:(int)numFrames;
+-(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames;
+
+@end

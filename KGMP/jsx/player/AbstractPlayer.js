@@ -1,14 +1,13 @@
-var React = require('react-native');
 
-var {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-    VibrationIOS,
-    TouchableWithoutFeedback
-} = React;
+import React, {
+  AppRegistry,
+  Component,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView
+} from 'react-native';
+
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./accessories/SummaryCard'),
@@ -19,7 +18,8 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseComponent         = require('../BaseComponent'),
     // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
-    ProgressView          = require('./accessories/ProgressView');
+    ProgressView          = require('./accessories/ProgressView'),
+    MCAudioPlotGlView     = require('./MCAudioPlotGlView');
 
 var {
         MCModPlayerInterface,
@@ -27,7 +27,7 @@ var {
     } = require('NativeModules');
 
 var updateStart = 'up(',
-    updateEnd   = ')'
+    updateEnd   = ')',
     comma       = ',',
     currentPattern = null;
 
@@ -37,7 +37,9 @@ class AbstractPlayer extends BaseComponent {
         this.state = {
             songLoaded     : 0,
             playingSong    : 0,
-            numberPatterns : 0
+            numberPatterns : 0,
+            leftSide       : 'l',
+            rightSide      : 'r'
         }
     }
 
@@ -93,6 +95,7 @@ class AbstractPlayer extends BaseComponent {
             rowStyle    = styles.instrumentRow,
             greenText   = styles.instrumentText,
             whiteText   = styles.instrumentName,
+            rowStr      = 'row_',
             colonStr    = ':',
             sixteen     = 16,
             zeroStr     = '0',
@@ -110,7 +113,7 @@ class AbstractPlayer extends BaseComponent {
                 }
 
                 instViews[i] = (
-                    <View style={rowStyle}>
+                    <View style={rowStyle} key={rowStr + rowInHex}>
                         <Text style={greenText}>{rowInHex + colonStr}</Text> 
                         <Text style={whiteText}>{instruments[i]}</Text>
                     </View>
@@ -121,7 +124,7 @@ class AbstractPlayer extends BaseComponent {
 
         else {
             instViews[0] = (
-                <View style={rowStyle}>
+                <View style={rowStyle} key="wtf">
                     <Text style={whiteText}>{"Not available for this song."}</Text>
                 </View>
             );
@@ -140,9 +143,10 @@ class AbstractPlayer extends BaseComponent {
                     <Text style={styles.instrumentsLabel}>Instruments:</Text>
                 </View>
 
-                 <ScrollView style={{flex:1, padding: 5}}>
-                     {{instViews}}
-                 </ScrollView>
+                <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
+                    {instViews}
+                </ScrollView>
+                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
 
                 {/*
 
@@ -158,9 +162,14 @@ class AbstractPlayer extends BaseComponent {
                     </View>
                     <View style={styles.playerBarTop}/>
                     <View style={styles.playerBarBottom}/>
-                    */}
-                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
-                
+                <View style={styles.vizContainer}>
+                    <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
+                    <View style={styles.vizSeparator}/>
+                    <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
+                </View>
+
+                */}
+
                 <View style={styles.controlsContainer}>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
                     <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
@@ -173,7 +182,7 @@ class AbstractPlayer extends BaseComponent {
     }
 
     componentWillMount() {
-        this.patterns = this.props.patterns;
+        // this.patterns = this.props.patterns;
 
         this.commandCenterEventHandler = RCTDeviceEventEmitter.addListener(
             'commandCenterEvent',
@@ -181,20 +190,51 @@ class AbstractPlayer extends BaseComponent {
         );
 
         this.modObject = this.props.modObject;
+
+
+    }
+
+
+    componentDidMount() {
+        // this.refs;
+
+        // This is a hack for now :( 
+        // this.refs.rtGLV.setPlotterRegistered('r');
+        // this.refs.ltGLV.setPlotterRegistered('l');
+
+
+        console.log(this.refs)
+
         setTimeout(()=> {
+            // debugger;
+            // this.refs.rtGLV.setPlotterRegistered('r');
+            // this.refs.ltGLV.setPlotterRegistered('l');
             this.playTrack();
         }, 350);
     }
 
     componentWillUnmount() {
+        MCModPlayerInterface.pause(function() {});
         this.deregisterPatternUpdateHandler();
+
+        this.setState({
+            songLoaded     : 0,
+            playingSong    : 0,
+            numberPatterns : 0,
+            leftSide       : 'lU',
+            rightSide      : 'rU'
+        })
+
+        // this.refs.ltGLV.side = 'lU';
+        // this.refs.ltGLV.side = 'rU';
+        // this.refs.ltGLV.setPlotterUnRegistered('lU')
+        // this.refs.rtGLV.setPlotterUnRegistered('rU');
 
         if (this.commandCenterEventHandler) {
             this.commandCenterEventHandler.remove();
             this.commandCenterEventHandler = null;
         }
 
-        MCModPlayerInterface.pause(function() {});
 
     }
 
@@ -349,7 +389,6 @@ class AbstractPlayer extends BaseComponent {
                     });
                     
                     this.fileRecord = rowData;
-                    // console.log(rowData)
                     modObject.id_md5 = rowData.id_md5;
 
                     this.modObject = modObject;
@@ -361,7 +400,6 @@ class AbstractPlayer extends BaseComponent {
                     // this.onWkWebViewInit();
                     this.playTrack();
                     this.hideSpinner();
-
 
                     callback && callback();
                 }

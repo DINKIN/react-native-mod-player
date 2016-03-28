@@ -117,7 +117,7 @@ var FavoritesView = React.createClass({
 
         
         return (
-            <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>
+            <View style={{flex:1, backgroundColor : '#0000FF', paddingTop : 60}}>
                 <ListView 
                     style={styles.listView} 
                     dataSource={this.state.dataSource} 
@@ -133,24 +133,6 @@ var FavoritesView = React.createClass({
 
     _renderRow: function(rowData, sectionID, rowID) {
         
-        // debugger;
-        // var record      = this.props.rowData[rowID],
-        //     isDir       = (record.type == 'dir');
-            // prefix      = null,
-            // folder      = '\uE805',
-            // vgmIcon     = '\uE80A',
-            // playingIcon = '\uE80D',
-            // emptyIcon   = '\uE999';
-
-        // if (isDir) {
-        //     prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
-        // }
-        // else if (record.isPlaying) {
-        //     prefix = <Text style={styles.rowPrefix}>{playingIcon}</Text>;
-        // }
-        // else {
-        //     prefix = <Text style={styles.rowPrefixHidden}>{playingIcon}</Text>;
-        // }
        
         return (
             <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => this._pressRow(rowID)}>

@@ -85,7 +85,9 @@ var styles = StyleSheet.create({
         color      : '#00FF00'
     }
 });
-x = false;
+
+
+var x = false;
 
 class HomeMenu extends BaseComponent {
     setInitialState() {
@@ -109,13 +111,13 @@ class HomeMenu extends BaseComponent {
     }
      
     render() {
-        // setTimeout(()=> {
-        //     if (!x) {
-        //         this.onAboutPress();
-        //         x = true;
-        //     }
+        setTimeout(()=> {
+            if (!x) {
+                this.onRandomPress();
+                x = true;
+            }
 
-        // }, 100);
+        }, 100);
 
         var footerStyle,
             playerSeparatorStyle;
@@ -128,11 +130,11 @@ class HomeMenu extends BaseComponent {
         }
         else if (window.height == 568) {
             footerStyle = {marginBottom: 10};
-            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :60};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :30};
         }
         else {
             footerStyle = {marginBottom: 40};
-            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :60};
+            playerSeparatorStyle = {flexDirection:'row', justifyContent : 'center', marginBottom :30};
         }
 
         return (

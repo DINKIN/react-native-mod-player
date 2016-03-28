@@ -1,5 +1,13 @@
 
-React = require('React');
+import React, {
+  AppRegistry,
+  Component,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+
+
 
 /* 
     This class and pattern for auto-binding methods was created before ReactNative 0.6.0rc, 

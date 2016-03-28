@@ -38,14 +38,14 @@ module.exports = StyleSheet.create({
         borderTopWidth    : 1,
         borderBottomWidth : 1,
         borderColor       : borderColor,
-        flexDirection  : row,
-        justifyContent : 'center'
+        flexDirection     : row,
+        justifyContent    : 'center'
     },
 
 
     gameImage : {
-        alignSelf   : stretch,
-        resizeMode  : Image.resizeMode.fit
+        alignSelf  : stretch,
+        resizeMode : Image.resizeMode.fit
     },
     
     controlsContainer : {
@@ -61,8 +61,10 @@ module.exports = StyleSheet.create({
         justifyContent : 'space-around',
     },
     vizItem : {
-        width       : 187,
-        alignSelf   : stretch
+        width : 187,
+        flex  : 1,
+        // borderWidth : 1,
+        // borderColor : '#FF0000'
     },
 
     timeText : {
@@ -97,7 +99,11 @@ module.exports = StyleSheet.create({
         left      : 20,
         alignSelf : stretch
     },
-
+    vizSeparator : {
+        borderWidth : 1,
+        borderColor : '#FFFFFF',
+        width : 2
+    },
     playerBarTop : {
         position    : absolute,
         height      : 1,
@@ -163,6 +169,17 @@ module.exports = StyleSheet.create({
         fontSize   : 16,
         color      : '#FFFFFF',
         fontWeight : 'bold' 
-    }
+    },
+    vizContainer : {
+        height         : 50,
+        width          : 375,
+        // borderWidth    : 1,
+        flexDirection  : 'row',
+        justifyContent : 'space-around',
+        borderTopWidth : 1,
+        borderTopColor : '#FFFFFF'
+        // flex           : 'stretch',
+        // borderColor    : "#00FF00"
+    },
 
 });

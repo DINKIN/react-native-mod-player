@@ -28,9 +28,9 @@ StatusBarIOS.setStyle('light-content', true);
 
 var KGMP = React.createClass({
     render : function() {
-        return (<Main />);
+        return <Main sceneStyle={{backgroundColor:'#000'}}/>);
     }
-})
+});
 
 AppRegistry.registerComponent('KGMP', () => KGMP);
 
