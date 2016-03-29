@@ -17,7 +17,6 @@ class BaseView extends React.Component {
     }   
 
     render() {
-        console.log();
         return <View><Text style={{fontSize: 50, color : 'white'}}>{this.constructor.name}</Text></View>
     }
 

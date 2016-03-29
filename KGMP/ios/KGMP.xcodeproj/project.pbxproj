@@ -30,6 +30,14 @@
 		713A28A01CA96201000D9060 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 713A289F1CA96201000D9060 /* MC_OMPT.m */; };
 		713A28A91CA9621F000D9060 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28A81CA96213000D9060 /* liblibopenmpt.a */; };
 		713A28AB1CA96225000D9060 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */; };
+		71D1183E1CAAFFEF008D0DA2 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118361CAAFFEF008D0DA2 /* Entypo.ttf */; };
+		71D1183F1CAAFFEF008D0DA2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */; };
+		71D118401CAAFFEF008D0DA2 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */; };
+		71D118411CAAFFEF008D0DA2 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118391CAAFFEF008D0DA2 /* Foundation.ttf */; };
+		71D118421CAAFFEF008D0DA2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */; };
+		71D118431CAAFFEF008D0DA2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */; };
+		71D118441CAAFFEF008D0DA2 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */; };
+		71D118451CAAFFEF008D0DA2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */; };
 		71EA077E1CA9A92100995808 /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71EA077D1CA9A92100995808 /* KEYGENMUSiC MusicPack */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -146,6 +154,14 @@
 		713A289F1CA96201000D9060 /* MC_OMPT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MC_OMPT.m; path = ModusCreate/Players/MC_OMPT.m; sourceTree = "<group>"; };
 		713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = ../external_libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		71D118361CAAFFEF008D0DA2 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		71D118391CAAFFEF008D0DA2 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		71EA077D1CA9A92100995808 /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "KEYGENMUSiC MusicPack"; path = "../../KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
@@ -265,6 +281,7 @@
 		713A28891CA96138000D9060 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				71D1182A1CAAFFE5008D0DA2 /* vector-icons */,
 				713A288C1CA961B3000D9060 /* fontello.ttf */,
 				713A288E1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf */,
 			);
@@ -311,6 +328,21 @@
 				713A28A81CA96213000D9060 /* liblibopenmpt.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		71D1182A1CAAFFE5008D0DA2 /* vector-icons */ = {
+			isa = PBXGroup;
+			children = (
+				71D118361CAAFFEF008D0DA2 /* Entypo.ttf */,
+				71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */,
+				71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */,
+				71D118391CAAFFEF008D0DA2 /* Foundation.ttf */,
+				71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */,
+				71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */,
+				71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */,
+				71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */,
+			);
+			name = "vector-icons";
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
@@ -561,9 +593,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				713A288F1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf in Resources */,
+				71D118411CAAFFEF008D0DA2 /* Foundation.ttf in Resources */,
+				71D118421CAAFFEF008D0DA2 /* Ionicons.ttf in Resources */,
+				71D1183E1CAAFFEF008D0DA2 /* Entypo.ttf in Resources */,
 				713A288B1CA96144000D9060 /* keygenmusicplayer.db in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				71D118451CAAFFEF008D0DA2 /* Zocial.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				71D118401CAAFFEF008D0DA2 /* FontAwesome.ttf in Resources */,
+				71D118431CAAFFEF008D0DA2 /* MaterialIcons.ttf in Resources */,
+				71D1183F1CAAFFEF008D0DA2 /* EvilIcons.ttf in Resources */,
+				71D118441CAAFFEF008D0DA2 /* Octicons.ttf in Resources */,
 				713A288D1CA961B3000D9060 /* fontello.ttf in Resources */,
 				71EA077E1CA9A92100995808 /* KEYGENMUSiC MusicPack in Resources */,
 			);

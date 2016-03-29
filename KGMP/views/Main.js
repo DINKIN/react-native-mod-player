@@ -17,8 +17,11 @@ import React, {
     Dimensions
 } from 'react-native';
 
-
-
+var {
+    Spinner,
+    LikeSpinner,
+    DislikeSpinner
+} = require('./Spinners')
 
 
 var styles = StyleSheet.create({
@@ -85,24 +88,21 @@ class Main extends BaseView  {
     }
 
     render() {
-        var initialRoute = {
+        let state = this.state,
+            initialRoute = {
                 component : HomeMenu
             },
-            spinner,
-            likeSpinner,
-            dislikeSpinner;
+            spinner;
 
 
-        if (this.state.spinner) {
+        if (state.spinner) {
             spinner = React.createElement(Spinner);
         }
-
-        if (this.state.likeSpinner) {
-            likeSpinner = React.createElement(LikeSpinner);
+        else if (state.likeSpinner) {
+            spinner = React.createElement(LikeSpinner);
         }
-
-        if (this.state.dislikeSpinner) {
-            dislikeSpinner = React.createElement(DislikeSpinner);
+        else if (state.dislikeSpinner) {
+            spinner = React.createElement(DislikeSpinner);
         }
 
         window.main = this;
@@ -116,8 +116,6 @@ class Main extends BaseView  {
                 />
                 
                 {spinner}
-                {likeSpinner}
-                {dislikeSpinner}
             </View>
         );
     }
