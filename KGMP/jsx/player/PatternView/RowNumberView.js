@@ -29,17 +29,11 @@ var styles = StyleSheet.create({
 });
 
 
-module.exports  = React.createClass({
-    fileTypeObj : null, // used for wiki reading
-
-    props : {
-        rows : React.PropTypes.number
-    },
-
-
+const RowNumberView = React.createClass({
     render : function() {
-        var numRows  = this.props.rows,
+        var numRows  = this.props.numRows,
             state = this.state,
+            zeroStr = '0',
             i     = 0;
 
         if (typeof numRows == 'undefined') {
@@ -54,7 +48,7 @@ module.exports  = React.createClass({
             rowInHex = i.toString(sixteen).toUpperCase();
 
             if (i < sixteen) {
-                rowInHex = '0'+rowInHex;
+                rowInHex = zeroStr + rowInHex;
             }
 
             items[i] = (
@@ -63,9 +57,11 @@ module.exports  = React.createClass({
         }   
 
         return (
-            <View style={styles.rowContainer}>
+            <View style={[styles.rowContainer, this.props.style]}>
                 {items}      
             </View>
         );
     }
 });
+
+module.exports  = RowNumberView;

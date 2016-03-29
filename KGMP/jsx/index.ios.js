@@ -28,7 +28,7 @@ StatusBarIOS.setStyle('light-content', true);
 
 var KGMP = React.createClass({
     render : function() {
-        return <Main sceneStyle={{backgroundColor:'#000'}}/>);
+        return <Main/>;
     }
 });
 

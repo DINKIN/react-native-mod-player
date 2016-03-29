@@ -5,21 +5,19 @@ import React, {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from 'react-native';
 
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./accessories/SummaryCard'),
     MusicControlButton    = require('./accessories/MusicControlButton'),
-    // PatternView           = require('./PatternView'),
-    // RowNumberView         = require('./RowNumberView'),
+    PatternView           = require('./PatternView/CompositeView'),
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseComponent         = require('../BaseComponent'),
-    // BridgedWKWebView      = require('../Extension/MCBridgedWebView'),
-    ProgressView          = require('./accessories/ProgressView'),
-    MCAudioPlotGlView     = require('./MCAudioPlotGlView');
+    ProgressView          = require('./accessories/ProgressView');
 
 var {
         MCModPlayerInterface,
@@ -31,15 +29,22 @@ var updateStart = 'up(',
     comma       = ',',
     currentPattern = null;
 
+
+var dims = Dimensions.get('window');
+dims.mid = (dims.height - 30) / 2;
+   
+
 class AbstractPlayer extends BaseComponent {
 
     setInitialState() {
         this.state = {
+            prevPat        : -1,
+            pattern        : -1,
             songLoaded     : 0,
             playingSong    : 0,
             numberPatterns : 0,
             leftSide       : 'l',
-            rightSide      : 'r'
+            rightSide      : 'r',
         }
     }
 
@@ -49,6 +54,8 @@ class AbstractPlayer extends BaseComponent {
             props     = this.props,
             modObject = this.modObject || props.modObject,
             dictInfo  = props.dictInfo;
+
+        // console.log('render() modObject', modObject);
 
         this.fileRecord = this.fileRecord || props.fileRecord;
 
@@ -68,7 +75,7 @@ class AbstractPlayer extends BaseComponent {
 
         // debugger;
         var fileName = modObject.file_name ? modObject.file_name : modObject.fileName,
-            pattern,
+            pattern  = modObject.patterns[modObject.patternOrds[0]],
             newTopPosition;
 
         /*
@@ -89,46 +96,46 @@ class AbstractPlayer extends BaseComponent {
         }
         */
 
-        var instViews   = [],
-            instruments = modObject.instruments,
-            len         = instruments.length,
-            rowStyle    = styles.instrumentRow,
-            greenText   = styles.instrumentText,
-            whiteText   = styles.instrumentName,
-            rowStr      = 'row_',
-            colonStr    = ':',
-            sixteen     = 16,
-            zeroStr     = '0',
-            rowInHex;
+        // var instViews   = [],
+        //     // instruments = modObject.instruments,
+        //     len         = instruments.length,
+        //     rowStyle    = styles.instrumentRow,
+        //     greenText   = styles.instrumentText,
+        //     whiteText   = styles.instrumentName,
+        //     rowStr      = 'row_',
+        //     colonStr    = ':',
+        //     sixteen     = 16,
+        //     zeroStr     = '0',
+        //     rowInHex;
 
-        instViews.length = len;
+        // instViews.length = len;
 
-        if (len > 0) {
-            for (var i=0; i < len; i++) {
+        // if (len > 0) {
+        //     for (var i=0; i < len; i++) {
 
-                rowInHex = i.toString(sixteen).toUpperCase();
+        //         rowInHex = i.toString(sixteen).toUpperCase();
 
-                if (i < sixteen) {
-                    rowInHex = zeroStr + rowInHex;
-                }
+        //         if (i < sixteen) {
+        //             rowInHex = zeroStr + rowInHex;
+        //         }
 
-                instViews[i] = (
-                    <View style={rowStyle} key={rowStr + rowInHex}>
-                        <Text style={greenText}>{rowInHex + colonStr}</Text> 
-                        <Text style={whiteText}>{instruments[i]}</Text>
-                    </View>
-                );
+        //         instViews[i] = (
+        //             <View style={rowStyle} key={rowStr + rowInHex}>
+        //                 <Text style={greenText}>{rowInHex + colonStr}</Text> 
+        //                 <Text style={whiteText}>{instruments[i]}</Text>
+        //             </View>
+        //         );
 
-            }
-        }
+        //     }
+        // }
 
-        else {
-            instViews[0] = (
-                <View style={rowStyle} key="wtf">
-                    <Text style={whiteText}>{"Not available for this song."}</Text>
-                </View>
-            );
-        }
+        // else {
+        //     instViews[0] = (
+        //         <View style={rowStyle} key="wtf">
+        //             <Text style={whiteText}>{"Not available for this song."}</Text>
+        //         </View>
+        //     );
+        // }
 
         return (
             <View style={styles.container}>
@@ -139,35 +146,40 @@ class AbstractPlayer extends BaseComponent {
                 </View>
 
                 <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
-                <View style={{padding:5}}>
-                    <Text style={styles.instrumentsLabel}>Instruments:</Text>
-                </View>
+                
+                <View style={{flex:1, overflow: 'hidden', backgroundColor:'#FF0000'}}>
 
-                <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
-                    {instViews}
-                </ScrollView>
+                </View>
                 <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
 
                 {/*
+                <View style={{padding:5}}>
+                    <Text style={styles.instrumentsLabel}>Instruments:</Text>
+                </View>
+                <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
+                    {instViews}
+                </ScrollView>
 
+                <View style={[styles.bar, {top: dims.mid}]}/>
+                 */}
+
+                {/*
                 <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
-                
-                  
-                    <View style={[styles.rowNumberz, newTopPosition]}>
-                        <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
-                    </View>
-                   
-                    <View style={[styles.patternView, newTopPosition]}>
-                        <PatternView ref={"patternView"} rows={pattern}/>
-                    </View>
-                    <View style={styles.playerBarTop}/>
-                    <View style={styles.playerBarBottom}/>
+                <View style={[styles.rowNumberz, newTopPosition]}>
+                    <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
+                </View>
+               
+                <View style={[styles.patternView, newTopPosition]}>
+                    <PatternView ref={"patternView"} rows={pattern}/>
+                </View>
+                <View style={styles.playerBarTop}/>
+                <View style={styles.playerBarBottom}/>
+
                 <View style={styles.vizContainer}>
                     <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
                     <View style={styles.vizSeparator}/>
                     <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
                 </View>
-
                 */}
 
                 <View style={styles.controlsContainer}>
@@ -196,14 +208,7 @@ class AbstractPlayer extends BaseComponent {
 
 
     componentDidMount() {
-        // this.refs;
-
-        // This is a hack for now :( 
-        // this.refs.rtGLV.setPlotterRegistered('r');
-        // this.refs.ltGLV.setPlotterRegistered('l');
-
-
-        console.log(this.refs)
+        // console.log(this.refs)
 
         setTimeout(()=> {
             // debugger;
@@ -401,6 +406,9 @@ class AbstractPlayer extends BaseComponent {
                     this.playTrack();
                     this.hideSpinner();
 
+                    console.log('Mod Object', modObject)
+
+
                     callback && callback();
                 }
             );
@@ -462,6 +470,8 @@ Object.assign(AbstractPlayer.prototype, {
 
     loading : false, // used to control floods of loading from the UI
     
+
+    prevPat : null,
     
     
     // Event handler function keys 
@@ -515,8 +525,6 @@ Object.assign(AbstractPlayer.prototype, {
         },
         
         onPatternUpdateEvent : function(position) {
-            // console.log('onPatternUpdateEvent')
-            // console.log(pos)
             var refs    = this.refs,
                 order   = position[0], 
                 pattern = position[1],
@@ -541,7 +549,9 @@ Object.assign(AbstractPlayer.prototype, {
             
 
             // curentPattern = pattern;
+
             /** For the pattern view, which is disabled for now **/
+
             // var order   = position[0], 
             //     pattern = position[1],
             //     row     = position[2],
@@ -579,6 +589,34 @@ Object.assign(AbstractPlayer.prototype, {
             //     this.setState(state);
             // }
 
+
+            // var state = this.state;
+
+            // dims.newTop = dims.mid - (row * 11);
+
+            // var r = this.refs.patternView;
+            // console.log(typeof r,r)
+            // if (!this.refs.patternView) {
+            //     return;
+            // }
+
+
+            // refs.patternView.setNativeProps({
+            //     style : {top : dims.newTop}
+            // });
+
+            // console.log(dims.newTop)
+
+
+            // console.log(position[1], state.prevPat, this.prevPat)
+            // if (position[1] != this.prevPat) {
+            //     console.log("new state")
+            //     this.prevPat = state.prevPat = position[1];
+            //     state.order = position[0];
+            //     state.pattern = this.modObject.patterns[position[1]];
+            //     state.row = position[2];
+            //     this.setState(state);
+            // }
         },
 
         onWkWebViewEvent : function(event) {
@@ -586,9 +624,6 @@ Object.assign(AbstractPlayer.prototype, {
 
             var body   = event.nativeEvent.body,
                 matrix = this.wkWebViewEventMatrix;
-
-            // console.log('WK WEBVIEW EVENT:');
-            // console.log(body);
 
             if (matrix[body]) {
                 this[matrix[body]](body);
@@ -619,10 +654,6 @@ Object.assign(AbstractPlayer.prototype, {
             this.patternsRegistered = true;
             this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]); 
         }
-
-
-
-
     }
 });
 

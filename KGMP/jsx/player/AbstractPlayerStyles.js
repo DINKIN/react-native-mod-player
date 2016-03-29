@@ -3,7 +3,7 @@
 var React = require('react-native');
 
 
-var {StyleSheet, Image} = React;
+var {StyleSheet, Image, Dimensions} = React;
 
 
 //TODO: more fluid layouting!!!
@@ -16,8 +16,21 @@ var dosFont     = 'PerfectDOSVGA437Win',
     absolute    = 'absolute',
     stretch     = 'stretch'
 
-module.exports = StyleSheet.create({
+var dims = Dimensions.get('window');
+dims.mid = (dims.height - 30) / 2;
+   
 
+module.exports = StyleSheet.create({
+    bar : {
+        height : 13, 
+        backgroundColor : 'transparent', 
+        borderWidth : 1, 
+        borderColor : '#FF0000', 
+        position : 'absolute', 
+        // top : 50,
+        top : dims.mid,
+        width : dims.width * .5 
+    },
     soundFormat : {
         flexDirection  : row,
     },
@@ -93,12 +106,15 @@ module.exports = StyleSheet.create({
     },
     
     patternView : {
-        // width    : 900,
-        position  : absolute,
-        top       : (508/2),
-        left      : 20,
+        position : 'absolute',
+        top : dims.mid,
+        backgroundColor : '#FF0000',
+        flex:1, 
+        overflow:'hidden',
         alignSelf : stretch
     },
+
+
     vizSeparator : {
         borderWidth : 1,
         borderColor : '#FFFFFF',
