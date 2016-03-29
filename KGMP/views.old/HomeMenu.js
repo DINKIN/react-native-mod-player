@@ -111,13 +111,13 @@ class HomeMenu extends BaseComponent {
     }
      
     render() {
-        setTimeout(()=> {
-            if (!x) {
-                this.onRandomPress();
-                x = true;
-            }
+        // setTimeout(()=> {
+        //     if (!x) {
+        //         this.onRandomPress();
+        //         x = true;
+        //     }
 
-        }, 100);
+        // }, 100);
 
         var footerStyle,
             playerSeparatorStyle;

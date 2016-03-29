@@ -10,13 +10,12 @@ import React, {
 
 
 
-var styles = require('./jsx/Styles'),
-    Main   = require('./jsx/Main');
+// var styles = require('./jsx/Styles'),
 
 
+const Main = require('./views/Main');
 
-
-var { 
+const { 
     MCFsTool,
     MCModPlayerInterface
 } = require('NativeModules');
@@ -33,9 +32,9 @@ MCFsTool.getBundlePath((bundlepath) => {
 
 StatusBar.setBarStyle('light-content', true);
 
-var KGMP = React.createClass({
+const KGMP = React.createClass({
     render : function() {
-        return (<Main />);
+        return <Main/>;
     }
 });
 
