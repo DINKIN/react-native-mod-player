@@ -111,7 +111,8 @@ class BrowseListNavigator extends React.Component{
 
         if (isDir) {
             title = unescape(record.name);
-            window.main.showSpinner();
+            // window.main.showSpinner();
+            
             getDirectories(record.name, (rowData)=> {
                 var route = {
                     title     : title,
@@ -125,7 +126,7 @@ class BrowseListNavigator extends React.Component{
                 };
 
                 childNavigator.push(route);
-                window.main.hideSpinner();
+                // window.main.hideSpinner();
             });
 
         }
@@ -184,7 +185,7 @@ class BrowseListNavigator extends React.Component{
 
 var styles = StyleSheet.create({
     container : {
-        backgroundColor : '#000000',
+        backgroundColor : window.styles.backgroundColor,
         // borderWidth     : 3,
         // borderColor     : '#0000FF',
         // marginTop       : 20,

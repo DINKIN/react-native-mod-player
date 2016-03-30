@@ -20,44 +20,38 @@ var BrowseView = React.createClass({
     data      : null,
     fileNames : null,
 
-    extractNamesForRow : function(daters) {
-        var rowData  = [],
-            itemType = 'dir',
-            len      = daters.length,
-            i        = 0,
-            dataItem,
-            name;
+    // extractNamesForRow : function(daters) {
+    //     var rowData  = [],
+    //         itemType = 'dir',
+    //         len      = daters.length,
+    //         i        = 0,
+    //         dataItem,
+    //         name;
 
-        for (; i < len; i++) {
-            dataItem = daters[i];
-            name     = unescape(dataItem.name);
+    //     for (; i < len; i++) {
+    //         dataItem = daters[i];
+    //         name     = unescape(dataItem.name);
+    //         console.log(dataItem)
+    //         rowData.push(name);
+    //     }
 
-            rowData.push(name);
-        }
+    //     return rowData;
 
-        return rowData;
-
-    },
+    // },
 
     getInitialState: function() {
-        var daters     = this.props.rowData,
+        var rowData    = this.props.rowData,
             dataSource = new ListView.DataSource({
                 rowHasChanged : function(r1, r2) {
                     return r1 !== r2;
                 }
-            }),
-            rowData;
+            });
             
         
-        if (daters) {
-            rowData = this.extractNamesForRow(daters);
-
-            var dSrc = dataSource.cloneWithRows(rowData);
-            // var dSrc = dataSource.cloneWithRows([rowData[0]]);
+        if (rowData) {
             return {
-                dataSource : dSrc
+                dataSource : dataSource.cloneWithRows(rowData)
             };
-
         }  
 
         return {};
@@ -95,7 +89,7 @@ var BrowseView = React.createClass({
 
     render: function() {
         return (
-            <View style={{height: window.height - 60, backgroundColor : '#0000FF'}}>
+            <View style={{height: window.height - 60}}>
                 <ListView 
                     style={styles.listView} 
                     dataSource={this.state.dataSource} 
@@ -120,14 +114,20 @@ var BrowseView = React.createClass({
         // if (isDir) {
         //     prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
         // }
+
+        var split = unescape(rowData.name).split(' - '),
+            name  = split[1] ? split[1] : rowData.name,
+            tunes = rowData.number_files ? <Text style={styles.numTunes}>{rowData.number_files} Tunes</Text> : null;
+
+        // console.log(name, split)
         
         return (
             <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => this._pressRow(rowID)}>
                 <View>
                     <View style={styles.row}>
-                        <Text style={styles.rowText}>{rowData}</Text>
+                        <Text style={styles.rowText}>{name}</Text>
+                        {tunes}
                     </View>
-                    <View style={styles.separator} />
                 </View>
             </TouchableHighlight>
         );
@@ -164,14 +164,16 @@ var BrowseView = React.createClass({
 
 var styles = StyleSheet.create({
     listView : {
-        backgroundColor : '#000000',
+        backgroundColor : window.styles.backgroundColor,
         height          : window.height - 60
     },
     row : {
         flexDirection   : 'row',
         justifyContent  : 'center',
-        padding         : 10,
-        backgroundColor : '#000000',
+        padding         : 15,
+        backgroundColor : window.styles.backgroundColor,
+        borderBottomWidth : 2,
+        borderBottomColor : window.styles.baseBorderColor
         // backgroundColor : '#F6F6F6',
     },
     
@@ -186,16 +188,21 @@ var styles = StyleSheet.create({
     },
 
     rowText : {
-        fontFamily : 'PerfectDOSVGA437Win',
-        fontWeight : 'bold',
-        color      : '#00FF00',
         flex       : 1,
-        fontSize   : 18
+        color      : window.styles.white,        
+        fontSize   : 20
     },
-    
+
+
+    numTunes : {
+        // fontFamily : 'PerfectDOSVGA437Win',
+        color      : '#535486',        
+        fontSize   : 16
+    },
+
     rowPrefix : {
         fontFamily  : 'fontello',
-        color       : '#FFFFFF', 
+        color       : window.styles.white, 
         fontSize    : 15,
         marginRight : 5,
         marginTop   : 2

@@ -11,6 +11,15 @@ import React, {
 
 
 
+window.styles = {
+    baseBorderColor : '#363757',
+    center          : 'center',
+    backgroundColor : '#2b2e48',
+    white           : '#FFFFFF'
+}
+
+
+
 // var styles = require('./jsx/Styles'),
 
 
