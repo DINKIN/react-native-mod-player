@@ -41,6 +41,46 @@ dims.mid = (dims.height - 30) / 2;
 
 class AbstractPlayer extends BaseView {
 
+    data     = null;  // Used to paint out the view (song title, num tracks, etc)
+    plotters = null;  // References to the child plotter instances (LibEzPlotGlView)
+
+    dirInfo   : null;
+    rowID     : null;
+    modObject : null; // used to override the props. TODO= figure out how to overwite props
+
+    patternsRegistered : null; // used to check if patterns are registered by wkwebview
+
+    commandCenterEventHandler : null; 
+    patternUpdateHandler      : null;
+        
+    patterns           : null; // used to store pattern data.
+    gettingPatternData : false;
+
+    loading : false; // used to control floods of loading from the UI
+    
+
+    prevPat : null;
+    
+    
+    // Event handler function keys 
+    audioControlMethodMap : {
+        prev      : 'previousTrack',
+        next      : 'nextTrack',
+        play      : 'playTrack',
+        pause     : 'pauseTrack',
+        like      : 'like',
+        dislike   : 'dislike',
+        playPause : 'playPause',
+        seekBack  : () => {},
+        seekFwd   : () => {} 
+    };
+
+    wkWebViewEventMatrix : {
+        init   : 'onWkWebViewInit',
+        patReg : 'onWkWebViewPatternsRegistered'
+    };
+
+
     setInitialState() {
         this.state = {
             prevPat        : -1,
@@ -207,8 +247,6 @@ class AbstractPlayer extends BaseView {
         );
 
         this.modObject = this.props.modObject;
-
-
     }
 
 
@@ -260,21 +298,15 @@ class AbstractPlayer extends BaseView {
             return;
         }
 
+
+        // return;
+        // debugger;
         this.patternUpdateHandler = RCTDeviceEventEmitter.addListener(
             'rowPatternUpdate',
             this.onPatternUpdateEvent
         );
     }
  
-    // TODO: Merge into a single Next/Prev method for cleanliness
-    previousTrack() {
-        // EXTEND
-    }
-
-    // Todo: clean this up
-    nextTrack() {
-        // EXTEND
-    }
 
     playPause() {
         var state = this.state;
@@ -447,220 +479,171 @@ class AbstractPlayer extends BaseView {
 
         this.hideSpinner();
     }
-}
 
+    onClosebuttonPress = () => {
+        window.mainNavigator.pop();
+    }
 
-AbstractPlayer.propTypes = {
-    modObject : React.PropTypes.object,
-    ownerList : React.PropTypes.object,
-    patterns  : React.PropTypes.object,
-    navigator : React.PropTypes.object
-}
-
-Object.assign(AbstractPlayer.prototype, {
-    data     : null,  // Used to paint out the view (song title, num tracks, etc)
-    plotters : null,  // References to the child plotter instances (LibEzPlotGlView)
-
-    dirInfo   : null,
-    rowID     : null,
-    modObject : null, // used to override the props. TODO= figure out how to overwite props
-
-    patternsRegistered : null, // used to check if patterns are registered by wkwebview
-
-    commandCenterEventHandler : null, 
-    patternUpdateHandler      : null,
-        
-    patterns           : null, // used to store pattern data.
-    gettingPatternData : false,
-
-    loading : false, // used to control floods of loading from the UI
     
+    onButtonPress = (buttonType) => {
+        var methodName = this.audioControlMethodMap[buttonType];
+        this[methodName] && this[methodName]();
+    }
 
-    prevPat : null,
-    
-    
-    // Event handler function keys 
-    audioControlMethodMap : {
-        prev      : 'previousTrack',
-        next      : 'nextTrack',
-        play      : 'playTrack',
-        pause     : 'pauseTrack',
-        like      : 'like',
-        dislike   : 'dislike',
-        playPause : 'playPause',
-        seekBack  : () => {},
-        seekFwd   : () => {} 
-    },
+    onCommandCenterEvent = (eventObj) => {
+        // debugger;
+        // console.log('onCommandCenterEvent ' + eventObj.eventType);
+        // console.log(eventObj);
+        var eventType = eventObj.eventType;
 
-    wkWebViewEventMatrix : {
-        init   : 'onWkWebViewInit',
-        patReg : 'onWkWebViewPatternsRegistered'
-    },
-
-    bindableMethods : {
-
-        onClosebuttonPress : function() {
-            window.mainNavigator.pop();
-        },
- 
-        
-        onButtonPress : function(buttonType) {
-            var methodName = this.audioControlMethodMap[buttonType];
-            this[methodName] && this[methodName]();
-        },
-
-        onCommandCenterEvent : function(eventObj) {
-            // debugger;
-            // console.log('onCommandCenterEvent ' + eventObj.eventType);
-            // console.log(eventObj);
-            var eventType = eventObj.eventType;
-
-            if (eventType == 'fileLoad') {
-                this.onCommandCenterEventFileLoad(eventObj);
-            }
-            else if(eventType == 'playSleep') {
-                this.setState({playingSong:1});
-            }
-            else if(eventType == 'pauseSleep') {
-                this.setState({playingSong:0});
-            }
-            else {
-                this.onButtonPress(eventObj.eventType);
-            }
-        },
-        
-        onPatternUpdateEvent : function(position) {
-            var refs    = this.refs,
-                order   = position[0], 
-                pattern = position[1],
-                row     = position[2];
-
-            // refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
-
-            refs.summaryCard.setState({
-                order   : order,
-                pattern : pattern,
-                row     : row
-            });
-
-            // debugger;
-
-            if (pattern != currentPattern) {
-                refs.progressView.setState({
-                    numberOfCells   : this.modObject.patternOrds.length,
-                    highlightNumber : order
-                });    
-            }
-            
-
-            // curentPattern = pattern;
-
-            /** For the pattern view, which is disabled for now **/
-
-            // var order   = position[0], 
-            //     pattern = position[1],
-            //     row     = position[2],
-            //     numRows = position[3];
-
-            // var patterns       = this.patterns,
-            //     state          = this.state,
-            //     currentPattern = state.currentPattern,
-            //     targetPattern  = patterns[pattern]; 
-
-            // if (state.playingSong == 0) {
-            //     return;
-            // }
-
-            // if (this.modObject) {
-
-            //     var positionOrder  = position[0],
-            //         positionPattrn = position[1],
-            //         positionRow    = position[2];
-                
-            //     if (patterns && position.pat != state.currentPattern) {
-                    
-            //         var pattern = patterns[positionPattrn];
-
-            //         if (! pattern) {
-            //             return;
-            //         }
-
-            //         var row = pattern[positionRow];
-                    
-            //         state.currentPattern = positionPattrn;
-            //     }
-
-            //     state.currentRow = positionRow;
-            //     this.setState(state);
-            // }
-
-
-            // var state = this.state;
-
-            // dims.newTop = dims.mid - (row * 11);
-
-            // var r = this.refs.patternView;
-            // console.log(typeof r,r)
-            // if (!this.refs.patternView) {
-            //     return;
-            // }
-
-
-            // refs.patternView.setNativeProps({
-            //     style : {top : dims.newTop}
-            // });
-
-            // console.log(dims.newTop)
-
-
-            // console.log(position[1], state.prevPat, this.prevPat)
-            // if (position[1] != this.prevPat) {
-            //     console.log("new state")
-            //     this.prevPat = state.prevPat = position[1];
-            //     state.order = position[0];
-            //     state.pattern = this.modObject.patterns[position[1]];
-            //     state.row = position[2];
-            //     this.setState(state);
-            // }
-        },
-
-        onWkWebViewEvent : function(event) {
-            return;
-
-            var body   = event.nativeEvent.body,
-                matrix = this.wkWebViewEventMatrix;
-
-            if (matrix[body]) {
-                this[matrix[body]](body);
-            }
-        },
-
-        // Register patterns
-        onWkWebViewInit : function() {
-            return;
-            console.log('onWkWebViewInit');
-
-            var newModObj = {},
-                modObject = this.modObject;
-
-            newModObj.patterns    = modObject.patterns;
-            newModObj.patternOrds = modObject.patternOrds;
-            newModObj.currentPat  = modObject.currentPat;
-            
-            newModObj = JSON.stringify(newModObj);
-            // window.modObjStr = newModObj;
-            // window.refz = this.refs;
-            // console.log('do it')
-            this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
-        },
-
-        onWkWebViewPatternsRegistered : function() {
-            console.log('onWkWebViewPatternsRegistered');
-            this.patternsRegistered = true;
-            this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]); 
+        if (eventType == 'fileLoad') {
+            this.onCommandCenterEventFileLoad(eventObj);
+        }
+        else if(eventType == 'playSleep') {
+            this.setState({playingSong:1});
+        }
+        else if(eventType == 'pauseSleep') {
+            this.setState({playingSong:0});
+        }
+        else {
+            this.onButtonPress(eventObj.eventType);
         }
     }
-});
+    
+    onPatternUpdateEvent = (position) => {
+        return;
+        var refs    = this.refs,
+            order   = position[0], 
+            pattern = position[1],
+            row     = position[2];
+
+        // refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
+
+        refs.summaryCard.setState({
+            order   : order,
+            pattern : pattern,
+            row     : row
+        });
+
+        // debugger;
+
+        if (pattern != currentPattern) {
+            refs.progressView.setState({
+                numberOfCells   : this.modObject.patternOrds.length,
+                highlightNumber : order
+            });    
+        }
+        
+
+        // curentPattern = pattern;
+
+        /** For the pattern view, which is disabled for now **/
+
+        // var order   = position[0], 
+        //     pattern = position[1],
+        //     row     = position[2],
+        //     numRows = position[3];
+
+        // var patterns       = this.patterns,
+        //     state          = this.state,
+        //     currentPattern = state.currentPattern,
+        //     targetPattern  = patterns[pattern]; 
+
+        // if (state.playingSong == 0) {
+        //     return;
+        // }
+
+        // if (this.modObject) {
+
+        //     var positionOrder  = position[0],
+        //         positionPattrn = position[1],
+        //         positionRow    = position[2];
+            
+        //     if (patterns && position.pat != state.currentPattern) {
+                
+        //         var pattern = patterns[positionPattrn];
+
+        //         if (! pattern) {
+        //             return;
+        //         }
+
+        //         var row = pattern[positionRow];
+                
+        //         state.currentPattern = positionPattrn;
+        //     }
+
+        //     state.currentRow = positionRow;
+        //     this.setState(state);
+        // }
+
+
+        // var state = this.state;
+
+        // dims.newTop = dims.mid - (row * 11);
+
+        // var r = this.refs.patternView;
+        // console.log(typeof r,r)
+        // if (!this.refs.patternView) {
+        //     return;
+        // }
+
+
+        // refs.patternView.setNativeProps({
+        //     style : {top : dims.newTop}
+        // });
+
+        // console.log(dims.newTop)
+
+
+        // console.log(position[1], state.prevPat, this.prevPat)
+        // if (position[1] != this.prevPat) {
+        //     console.log("new state")
+        //     this.prevPat = state.prevPat = position[1];
+        //     state.order = position[0];
+        //     state.pattern = this.modObject.patterns[position[1]];
+        //     state.row = position[2];
+        //     this.setState(state);
+        // }
+    }
+
+    onWkWebViewEvent  = (event) => {
+        return;
+
+        var body   = event.nativeEvent.body,
+            matrix = this.wkWebViewEventMatrix;
+
+        if (matrix[body]) {
+            this[matrix[body]](body);
+        }
+    }
+
+    // Register patterns
+    onWkWebViewInit = () => {
+        return;
+        console.log('onWkWebViewInit');
+
+        var newModObj = {},
+            modObject = this.modObject;
+
+        newModObj.patterns    = modObject.patterns;
+        newModObj.patternOrds = modObject.patternOrds;
+        newModObj.currentPat  = modObject.currentPat;
+        
+        newModObj = JSON.stringify(newModObj);
+        // window.modObjStr = newModObj;
+        // window.refz = this.refs;
+        // console.log('do it')
+        this.refs.webView.execJsCall('rp(\'' + newModObj + '\')');
+    }
+
+    onWkWebViewPatternsRegistered =  () => {
+        console.log('onWkWebViewPatternsRegistered');
+        this.patternsRegistered = true;
+        this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]); 
+    }
+}
+
+
 
 
 
