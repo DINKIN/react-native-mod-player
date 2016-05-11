@@ -33,14 +33,6 @@ var styles = StyleSheet.create({
 });
 
 
-window.styles = {
-    baseBorderColor : '#363757',
-    center          : 'center',
-    backgroundColor : '#363757',
-    white           : '#FFFFFF'
-}
-
-
 
 class Main extends BaseView  {
     setInitialState() {

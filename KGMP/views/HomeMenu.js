@@ -15,6 +15,13 @@ const Icon          = require('react-native-vector-icons/Ionicons'),
       FavsViewNav   = require('./List/FavoritesViewNavigator'),
       RandomPlayer  = require('./player/RandomPlayer');
 
+let windowStyles = {
+    white : '#FFFFFF',
+    center : 'center',
+    baseBorderColor : '#535486'
+
+}
+
 class HomeMenu extends BaseView {
     render() {
         let styles = this.styles;
@@ -40,7 +47,7 @@ class HomeMenu extends BaseView {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.randomButton}>
+                <TouchableOpacity style={styles.randomButton} onPress={this.onRandomPress}>
                     <Text style={styles.horizontalButtonTitle}>RANDOM SONG</Text>
                 </TouchableOpacity>
 
@@ -202,13 +209,13 @@ class HomeMenu extends BaseView {
         },
 
         titleContainer : {
-            alignItems : 'center',
+            alignItems : windowStyles.center,
             marginBottom : 30,
             // borderWidth : 1, borderColor : '#AEAEAE'
         },
 
         titleText : {
-            color      : 'white',
+            color      : windowStyles.white,
             fontFamily : 'PerfectDOSVGA437Win', 
             fontSize   : 60,
         },
@@ -222,28 +229,28 @@ class HomeMenu extends BaseView {
         menuItemTitle : {
             fontFamily : 'PerfectDOSVGA437Win',
             fontSize: 20,
-            color : '#FFFFFF'
+            color : windowStyles.white
         },
         icon : {
             fontSize:  75,
-            color : '#FFFFFF'
+            color : windowStyles.white
         },
 
 
         squareButton : {
-            width : 165,
-            height : 125,
-            alignItems : 'center',
-            justifyContent : 'center',
-            borderWidth : 2,
-            borderRadius : 5,
-            borderColor : '#363757',
-            alignItems : 'center'
+            width          : 165,
+            height         : 125,
+            alignItems     : windowStyles.center,
+            justifyContent : windowStyles.center,
+            borderWidth    : 2,
+            borderRadius   : 5,
+            borderColor    : windowStyles.baseBorderColor,
+            alignItems     : windowStyles.center
         },
 
         horizontalButtonTitle : {
-            fontSize: 20,
-            color : '#FFFFFF'
+            fontSize : 20,
+            color    : windowStyles.white
 
         },
         randomButton : {
@@ -251,28 +258,28 @@ class HomeMenu extends BaseView {
             flex           : 1,
             borderWidth    : 2,
             borderRadius   : 5,
-            borderColor    : '#363757',
-            alignItems     : 'center', 
-            justifyContent : 'center', 
+            borderColor    : windowStyles.baseBorderColor,
+            alignItems     : windowStyles.center, 
+            justifyContent : windowStyles.center, 
 
         },
 
         aboutAppButton : {
-            height : 75,
-            flex         : 1,
+            height         : 75,
+            flex           : 1,
             borderWidth    : 2,
             borderRadius   : 5,
-            borderColor    : '#363757',
+            borderColor    : windowStyles.baseBorderColor,
             marginTop      : 10,
-            alignItems     : 'center', 
-            justifyContent : 'center', 
+            alignItems     : windowStyles.center, 
+            justifyContent : windowStyles.center, 
         },
 
         logoContainer : {
-            flex:1, 
-            alignItems: 'center', 
+            flex           : 1, 
+            alignItems     : windowStyles.center, 
             justifyContent : 'flex-end', 
-            paddingBottom : 10
+            paddingBottom  : 10
         }
     });
 }
