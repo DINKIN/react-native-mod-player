@@ -1,17 +1,22 @@
 'use strict';
 
-var React      = require('react-native'),
-    BrowseList = require('./BrowseList'),
+import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
+    AppRegistry,
+    NavigatorIOS,
+    View,
+    Text,
+    StyleSheet
+} from "react-native";
+
+
+var BrowseList = require('./BrowseList'),
     ListPlayer = require('../player/ListPlayer'),
     initialPaths;
-
-var {
-        AppRegistry,
-        NavigatorIOS,
-        View,
-        Text,
-        StyleSheet
-    } = React;
 
 var { 
         MCModPlayerInterface,

@@ -1,8 +1,10 @@
-var React         = require('react-native'),
-    BaseView = require('../../BaseView');
 
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-var {
+import {
     Image,
     ScrollView,
     StyleSheet,
@@ -10,7 +12,10 @@ var {
     View,
     VibrationIOS,
     TouchableWithoutFeedback
-} = React;
+} from "react-native";
+
+var BaseView = require('../../BaseView');
+
 
 class ProgressView extends BaseView {
 

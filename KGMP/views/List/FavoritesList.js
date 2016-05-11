@@ -1,11 +1,9 @@
-var React = require('react-native');
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-var { 
-        MCModPlayerInterface
-    } = require('NativeModules');
-
-
-var {
+import {
     Image,
     ListView,
     TouchableHighlight,
@@ -13,7 +11,13 @@ var {
     WebView,
     Text,
     View,
-} = React;
+} from "react-native";
+
+var { 
+        MCModPlayerInterface
+    } = require('NativeModules');
+
+
 
 var FavoritesView = React.createClass({
         

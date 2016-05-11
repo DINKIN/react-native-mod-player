@@ -1,14 +1,19 @@
 'use strict';
 
-var React = require('react-native');
 
 
-var {
+import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
     StyleSheet,
     Text,
     View,
     ScrollView
-} = React;
+} from "react-native";
+
 
 
 var deviceWidth = 375;

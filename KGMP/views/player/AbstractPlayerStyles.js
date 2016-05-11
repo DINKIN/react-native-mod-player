@@ -1,9 +1,15 @@
 'use strict';
 
-var React = require('react-native');
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-
-var {StyleSheet, Image, Dimensions} = React;
+import {
+    Dimensions, 
+    Image, 
+    StyleSheet, 
+} from "react-native";
 
 
 //TODO: more fluid layouting!!!

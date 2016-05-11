@@ -1,16 +1,19 @@
 'use strict';
 
-var React = require('react-native'),
-    PatternView = require('./PatternView'),
-    RowNumberView = require('./RowNumberView');
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-
-var {
+import {
     StyleSheet,
     Text,
     View,
     ScrollView
-} = React;
+} from "react-native";
+
+var PatternView = require('./PatternView'),
+    RowNumberView = require('./RowNumberView');
 
 
 var deviceWidth = 375;

@@ -3,9 +3,12 @@
 const BaseView = require('./BaseView'),
       HomeMenu = require('./HomeMenu');
 
-
-
 import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
     Navigator,
     PixelRatio,
     ScrollView,
@@ -14,8 +17,9 @@ import React, {
     View,
     TouchableHighlight,
     ActivityIndicatorIOS,
-    Dimensions
-} from 'react-native';
+    Dimensions    
+} from "react-native";
+
 
 var {
     Spinner,

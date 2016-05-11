@@ -1,14 +1,18 @@
 'use strict';
 
-var React = require('react-native');
 
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-var {
+import {
     TouchableHighlight,
     StyleSheet,
     Text,
     View
-} = React;
+} from "react-native";
+
 
 
 var deviceWidth = 375;
@@ -32,6 +36,7 @@ var styles = StyleSheet.create({
         borderBottomWidth : 1,
         borderBottomColor : white
     },
+    
     title : {
         fontFamily      : 'PerfectDOSVGA437Win',
         fontSize        : 16,

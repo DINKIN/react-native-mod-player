@@ -1,16 +1,20 @@
 'use strict';
 
-var React         = require('react-native'),
-    BaseView = require('../../BaseView');
 
-var {
+import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
     TouchableWithoutFeedback,
     TouchableHighlight,
     StyleSheet,
     Text,
     View
-} = React;
+} from "react-native";
 
+var BaseView = require('../../BaseView');
 
 /*
 <TouchableWithoutFeedback style={{width : 100}}>

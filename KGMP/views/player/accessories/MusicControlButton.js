@@ -1,17 +1,20 @@
 'use strict';
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
-var React         = require('react-native'),
-    BaseView = require('../../BaseView'),
-    styles        = require('./MusicControlButtonStyles.js');
-
-var {
+import {
     TouchableWithoutFeedback,
     TouchableHighlight,
     StyleSheet,
     Text,
     View
-} = React;
+} from "react-native";
 
+
+var BaseView = require('../../BaseView'),
+    styles        = require('./MusicControlButtonStyles.js');
 
 
 class MusicControlButton extends BaseView {    

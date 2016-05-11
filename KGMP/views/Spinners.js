@@ -1,16 +1,21 @@
 
 import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
     Navigator,
     PixelRatio,
     ScrollView,
     StyleSheet,
     Text,
     View,
-    Component,
     TouchableHighlight,
     ActivityIndicatorIOS,
-    Dimensions
-} from 'react-native';
+    Dimensions   
+} from "react-native";
+
 
 
 var winder       = Dimensions.get('window'),

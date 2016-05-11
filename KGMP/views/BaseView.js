@@ -1,15 +1,18 @@
-
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+    Component, 
+    PropTypes
+} from "react";
+
+import {
+    View, 
+    Text, 
+    StyleSheet, 
+    TouchableHighlight, 
+    TextInput
+} from "react-native";
 
 
-
-class BaseView extends React.Component {
+class BaseView extends Component {
     constructor(opts) {
         super(opts);   
 

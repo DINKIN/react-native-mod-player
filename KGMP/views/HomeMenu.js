@@ -1,12 +1,16 @@
 
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from 'react-native';
+    Component, 
+    PropTypes
+} from "react";
+
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity
+} from "react-native";
 
 
 const Icon          = require('react-native-vector-icons/Ionicons'),
@@ -78,7 +82,8 @@ class HomeMenu extends BaseView {
                 (data) => {
                     this.hideSpinner();
                     alert('Failure loading ' + unescape(rowData.name));
-                },        
+                },       
+
                 //success
                 (modObject) => {
                     // debugger;
@@ -249,8 +254,10 @@ class HomeMenu extends BaseView {
         },
 
         horizontalButtonTitle : {
-            fontSize : 20,
-            color    : windowStyles.white
+            fontSize : 24,
+            color    : windowStyles.white,
+            fontFamily : 'PerfectDOSVGA437Win',
+
 
         },
         randomButton : {

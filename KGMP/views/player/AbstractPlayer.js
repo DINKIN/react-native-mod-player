@@ -1,13 +1,18 @@
 
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions
-} from 'react-native';
+    Component, 
+    PropTypes
+} from "react";
+
+import {
+    StyleSheet,
+    Text,
+    View,
+    ScrollView,
+    Dimensions
+
+} from "react-native";
+
 
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),

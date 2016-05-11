@@ -1,5 +1,9 @@
-var React = require('react-native'),
-    AbstractPlayer       = require('./AbstractPlayer');
+import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+var    AbstractPlayer       = require('./AbstractPlayer');
 
 var {
         MCModPlayerInterface,

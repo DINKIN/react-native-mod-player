@@ -1,4 +1,7 @@
-var React = require('react-native');
+import React, {
+    Component, 
+    PropTypes
+} from "react";
 
 
 var AbstractPlayer = require('./AbstractPlayer'),

@@ -1,14 +1,18 @@
 
+
+
 import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
   AppRegistry,
-  Component,
   StyleSheet,
   Text,
   View,
   StatusBar
-} from 'react-native';
-
-
+} from "react-native";
 
 
 window.styles = {

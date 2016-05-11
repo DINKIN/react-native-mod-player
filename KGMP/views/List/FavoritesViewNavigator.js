@@ -1,18 +1,22 @@
 'use strict';
 
-var React         = require('react-native'),
-    FavoritesList = require('./FavoritesList'),
+import React, {
+    Component, 
+    PropTypes
+} from "react";
+
+import {
+    NavigatorIOS,
+    View,
+    Text,
+    StyleSheet
+} from "react-native";
+
+
+var FavoritesList = require('./FavoritesList'),
     ListPlayer    = require('../player/ListPlayer'),
     RandomPlayer  = require('../player/RandomPlayer'),
     BaseView      = require('../BaseView');
-
-var {
-        AppRegistry,
-        NavigatorIOS,
-        View,
-        Text,
-        StyleSheet
-    } = React;
 
 var { 
         MCModPlayerInterface,
