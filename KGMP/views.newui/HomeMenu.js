@@ -13,55 +13,20 @@ import {
 } from "react-native";
 
 
-import Navigation from './Navigation';
 
-
-var initialPaths,
-    {
+var {
         MCModPlayerInterface,
         MCQueueManager
     } = require('NativeModules');
 
 
-var getDirectories = function(path, callback) {
-    if (path) {
-        MCQueueManager.getFilesForDirectory(
-            path,
-            // failure
-            () => {
-                console.log('An Error Occurred');
-            },
-            // Success
-            (response) =>  {
-                callback(response)               
-            }
-        );
-    }
-    else {
-        MCQueueManager.getDirectories(
-            // failure
-            () => {
-                console.log('An Error Occurred');
-            },
-            // Success
-            (response) =>  {
-                callback(response)               
-
-                // if (this.rowData) {
-                //     this.state = this.getInitialState();
-                //     this.forceUpdate();
-                // }
-            }
-        );
-    }
-};
 
 
-const Icon         = require('react-native-vector-icons/Ionicons'),
-      BaseView     = require('./BaseView'),
-      BrowseList   = require('./List/BrowseList'),
-      FavsViewNav  = require('./List/FavoritesViewNavigator'),
-      RandomPlayer = require('./player/RandomPlayer');
+const Icon          = require('react-native-vector-icons/Ionicons'),
+      BaseView      = require('./BaseView'),
+      BrowseViewNav = require('./List/BrowseViewNavigator'),
+      FavsViewNav   = require('./List/FavoritesViewNavigator'),
+      RandomPlayer  = require('./player/RandomPlayer');
 
 let windowStyles = {
     white : '#FFFFFF',
@@ -71,89 +36,43 @@ let windowStyles = {
 }
 
 class HomeMenu extends BaseView {
-    state = {
-        initialPaths : null
-    };
-
-    componentWillMount() {
-
-        getDirectories(null, (initialPaths) => {
-            this.setState({
-                initialPaths : initialPaths
-            })
-        });
-    }
-
     render() {
-        let styles = this.styles,
-            state  = this.state,
-            innerView;
-
-        if (state.initialPaths) {
-
-            let initialRoute = {
-                component       : BrowseList,
-                title           : 'Browse',
-
-                componentConfig : {
-                    rowData    : state.initialPaths,
-                    onRowPress : this.onRowPress,
-                    style      : { 
-                        paddingTop : 70,
-                        flex : 1
-                    },
-
-                }
-            }
-
-            innerView =  <Navigation style={{flex:1}} showNavBar={true} ref={"navigator"} initialRoute={initialRoute}/>;
-            // innerView = <BrowseList rowData={state.initialPaths} style={{flex:1}}/>
-        }
-        else {
-            innerView = <View />
-        }
-
-
+        let styles = this.styles;
 
         return (
             <View style={styles.container}>
-                {innerView}
-            </View>       
+                <View style={styles.titleContainer}>
+                    <Text style={styles.titleText}>KEYGEN</Text>
+                    <Text style={styles.titleText}>MUSiC</Text>
+                    <Text style={styles.titleText}>PLAYER</Text>
+                </View>
+
+                <View style={styles.centerContainer}>
+                    <TouchableOpacity style={styles.squareButton} onPress={this.onBrowsePress}>
+                        <Text style={styles.menuItemTitle}>BROWSE</Text>
+                        <Icon name={'ios-list-outline'} style={styles.icon}/>
+                      
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.squareButton} onPress={() => {}}>
+                        <Text style={styles.menuItemTitle}>FAVORiTES</Text>
+                        <Icon name={'android-favorite'} style={styles.icon}/>
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity style={styles.randomButton} onPress={this.onRandomPress}>
+                    <Text style={styles.horizontalButtonTitle}>RANDOM SONG</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.aboutAppButton}>
+                    <Text style={styles.horizontalButtonTitle}>ABOUT THE APP</Text>
+                </TouchableOpacity>
+
+                <View style={styles.logoContainer}>
+                    <Text style={{color:'white',fontSize:20}}>MODUS CREATE LOGO</Text>
+                </View>
+            </View>
         )
-    }
-
-
-    onRowPress = (record, childNavigator, ownerList) => {
-        // TODO: Setup color for selected item
-        var isDir = !! record.number_files,
-            title;
-
-
-        if (isDir) {
-            title = unescape(record.name);
-            getDirectories(record.name, (rowData)=> {
-                var route = {
-                    title     : title,
-                    component : BrowseList,
-                    componentConfig : {
-                        rowData    : rowData,
-                        onRowPress : this.onRowPress,
-                        style      : { 
-                            paddingTop : 70,
-                            flex : 1
-                        },
-                    }
-                };
-
-                childNavigator.push(route);
-            });
-
-        }
-        else {
-            // debugger;
-            this.loadModFile(record, childNavigator, ownerList);                
-        }
-
     }
 
 
@@ -203,6 +122,19 @@ class HomeMenu extends BaseView {
        
     }
     
+    onBrowsePress  = () =>{
+        this.showSpinner();
+
+        setTimeout(() => {
+            this.props.navigator.push({
+                component      : BrowseViewNav,
+                // transitionType : 'PushFromRight'
+            });
+
+            this.hideSpinner();
+        }, 50)
+
+    };
     
     onFavoritesPress  = () => {
         this.showSpinner();
@@ -285,28 +217,86 @@ class HomeMenu extends BaseView {
 
     styles = StyleSheet.create({
         container : {
-            // paddingTop : 50,
-            // paddingHorizontal : 10,
+            paddingTop : 50,
+            paddingHorizontal : 10,
             flex:1
         },
 
         titleContainer : {
-            alignItems   : windowStyles.center,
+            alignItems : windowStyles.center,
             marginBottom : 30,
             // borderWidth : 1, borderColor : '#AEAEAE'
         },
 
         titleText : {
-            color    : windowStyles.white,
-            fontSize : 60,
+            color      : windowStyles.white,
+            fontFamily : 'PerfectDOSVGA437Win', 
+            fontSize   : 60,
         },
 
 
         centerContainer : {
-            flexDirection  : 'row',
+            flexDirection : 'row',
             justifyContent : 'space-between',
-            marginBottom   : 10
+            marginBottom : 10
         },
+        menuItemTitle : {
+            fontFamily : 'PerfectDOSVGA437Win',
+            fontSize: 20,
+            color : windowStyles.white
+        },
+        icon : {
+            fontSize:  75,
+            color : windowStyles.white
+        },
+
+
+        squareButton : {
+            width          : 165,
+            height         : 125,
+            alignItems     : windowStyles.center,
+            justifyContent : windowStyles.center,
+            borderWidth    : 2,
+            borderRadius   : 5,
+            borderColor    : windowStyles.baseBorderColor,
+            alignItems     : windowStyles.center
+        },
+
+        horizontalButtonTitle : {
+            fontSize : 24,
+            color    : windowStyles.white,
+            fontFamily : 'PerfectDOSVGA437Win',
+
+
+        },
+        randomButton : {
+            height         : 100,
+            flex           : 1,
+            borderWidth    : 2,
+            borderRadius   : 5,
+            borderColor    : windowStyles.baseBorderColor,
+            alignItems     : windowStyles.center, 
+            justifyContent : windowStyles.center, 
+
+        },
+
+        aboutAppButton : {
+            height         : 75,
+            flex           : 1,
+            borderWidth    : 2,
+            borderRadius   : 5,
+            borderColor    : windowStyles.baseBorderColor,
+            marginTop      : 10,
+            alignItems     : windowStyles.center, 
+            justifyContent : windowStyles.center, 
+        },
+
+        logoContainer : {
+            flex           : 1, 
+            alignItems     : windowStyles.center, 
+            justifyContent : 'flex-end', 
+            paddingBottom  : 10
+        }
     });
 }
 

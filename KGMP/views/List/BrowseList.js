@@ -14,6 +14,9 @@ import {
 } from "react-native";
 
 
+const DirectoryRow = require('./DirectoryRow'),
+      FileRow      = require('./FileRow');
+
 var { 
         MCModPlayerInterface
     } = require('NativeModules');
@@ -24,25 +27,6 @@ var BrowseView = React.createClass({
     data      : null,
     fileNames : null,
 
-    // extractNamesForRow : function(daters) {
-    //     var rowData  = [],
-    //         itemType = 'dir',
-    //         len      = daters.length,
-    //         i        = 0,
-    //         dataItem,
-    //         name;
-
-    //     for (; i < len; i++) {
-    //         dataItem = daters[i];
-    //         name     = unescape(dataItem.name);
-    //         console.log(dataItem)
-    //         rowData.push(name);
-    //     }
-
-    //     return rowData;
-
-    // },
-
     getInitialState: function() {
         var rowData    = this.props.rowData,
             dataSource = new ListView.DataSource({
@@ -51,7 +35,7 @@ var BrowseView = React.createClass({
                 }
             });
             
-        
+
         if (rowData) {
             return {
                 dataSource : dataSource.cloneWithRows(rowData)
@@ -87,22 +71,25 @@ var BrowseView = React.createClass({
     //     } 
     // },
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return ! this.props.rowData;
+    },
+
     componentWillMount: function() {
         this._pressData = {};
     },
 
     render: function() {
         return (
-            <View style={{height: window.height - 60}}>
-                <ListView 
-                    style={styles.listView} 
-                    dataSource={this.state.dataSource} 
-                    initialListSize={50} 
-                    pageSize={50} 
-                    scrollRenderAheadDistance={150} 
-                    renderRow={this._renderRow}
-                />
-            </View>
+            <ListView 
+                enableEmptySections={false}
+                style={[styles.listView, this.props.style]} 
+                dataSource={this.state.dataSource} 
+                initialListSize={50} 
+                pageSize={50} 
+                scrollRenderAheadDistance={150} 
+                renderRow={this._renderRow}
+            />
         );
     },
 
@@ -119,22 +106,11 @@ var BrowseView = React.createClass({
         //     prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
         // }
 
-        var split = unescape(rowData.name).split(' - '),
-            name  = split[1] ? split[1] : rowData.name,
-            tunes = rowData.number_files ? <Text style={styles.numTunes}>{rowData.number_files} Tunes</Text> : null;
+        return rowData.number_files ? 
+            <DirectoryRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
+            :
+            <FileRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
 
-        // console.log(name, split)
-        
-        return (
-            <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => this._pressRow(rowID)}>
-                <View>
-                    <View style={styles.row}>
-                        <Text style={styles.rowText}>{name}</Text>
-                        {tunes}
-                    </View>
-                </View>
-            </TouchableHighlight>
-        );
     },
 
     
@@ -168,66 +144,11 @@ var BrowseView = React.createClass({
 
 var styles = StyleSheet.create({
     listView : {
-        backgroundColor : window.styles.backgroundColor,
-        height          : window.height - 60
+        // backgroundColor : '#FFFFFF',
+        // borderWidth : 1, borderColor : '#00FF00'
+        // height          : window.height - 60
     },
-    row : {
-        flexDirection   : 'row',
-        justifyContent  : 'center',
-        padding         : 15,
-        backgroundColor : window.styles.backgroundColor,
-        borderBottomWidth : 2,
-        borderBottomColor : window.styles.baseBorderColor
-        // backgroundColor : '#F6F6F6',
-    },
-    
-    separator  : {
-        height          : 1,
-        backgroundColor : '#222222',
-    },
-
-    thumb : {
-        width  : 64,
-        height : 64,
-    },
-
-    rowText : {
-        flex       : 1,
-        color      : window.styles.white,        
-        fontSize   : 20
-    },
-
-
-    numTunes : {
-        // fontFamily : 'PerfectDOSVGA437Win',
-        color      : '#535486',        
-        fontSize   : 16
-    },
-
-    rowPrefix : {
-        fontFamily  : 'fontello',
-        color       : window.styles.white, 
-        fontSize    : 15,
-        marginRight : 5,
-        marginTop   : 2
-    },
-    
-    rowPrefixHidden : {
-        fontFamily  : 'fontello', 
-        fontSize    : 15,
-        marginRight : 5,
-        marginTop   : 2,
-        color       : '#000000'
-        // color       : '#F6F6F6'
-    },
-    
-    rowSuffix : {
-        fontFamily  : 'fontello', 
-        fontSize     : 10,
-        marginLeft   : 5,
-        paddingRight : 3,
-        marginTop    : 2
-    }
+   
 });
 
 module.exports = BrowseView;

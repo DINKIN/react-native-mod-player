@@ -15,12 +15,15 @@ import {
 } from "react-native";
 
 
+
 window.styles = {
     baseBorderColor : '#363757',
     center          : 'center',
     backgroundColor : '#2b2e48',
     white           : '#FFFFFF'
 }
+
+console.disableYellowBox = true; 
 
 
 
@@ -44,7 +47,7 @@ MCFsTool.getBundlePath((bundlepath) => {
 });
 
 
-StatusBar.setBarStyle('light-content', true);
+// StatusBar.setBarStyle('light-content', true);
 
 const KGMP = React.createClass({
     render : function() {
