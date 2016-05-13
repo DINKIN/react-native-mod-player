@@ -30,7 +30,7 @@ class DirectoryRow extends Component {
         if (rowData.song_name) {
             // console.log(rowData.song_name);
             // console.log('\t', decodeURI(rowData.song_name));
-            songName = decodeURI(unescape(rowData.song_name));
+            songName = decodeURI(unescape(rowData.song_name)).trim();
             songName = `"${songName}"`;
             songName = <Text style={styles.songName}>{songName}</Text>;
         }

@@ -22,7 +22,8 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseView              = require('../BaseView'),
-    ProgressView          = require('./accessories/ProgressView');
+    ProgressView          = require('./accessories/ProgressView'),
+    AnimatedLazyImage     = require('../common/AnimatedLazyImage');
 
 var {
         MCModPlayerInterface,
@@ -37,8 +38,8 @@ var updateStart = 'up(',
     currentPattern = null;
 
 
-var dims = Dimensions.get('window');
-dims.mid = (dims.height - 30) / 2;
+var windowDimensions = Dimensions.get('window');
+windowDimensions.mid = (windowDimensions.height - 30) / 2;
    
 
 class AbstractPlayer extends BaseView {
@@ -46,26 +47,25 @@ class AbstractPlayer extends BaseView {
     data     = null;  // Used to paint out the view (song title, num tracks, etc)
     plotters = null;  // References to the child plotter instances (LibEzPlotGlView)
 
-    dirInfo   : null;
-    rowID     : null;
-    modObject : null; // used to override the props. TODO= figure out how to overwite props
+    dirInfo   = null;
+    rowID     = null;
 
-    patternsRegistered : null; // used to check if patterns are registered by wkwebview
+    patternsRegistered = null; // used to check if patterns are registered by wkwebview
 
-    commandCenterEventHandler : null; 
-    patternUpdateHandler      : null;
+    commandCenterEventHandler = null; 
+    patternUpdateHandler      = null;
         
-    patterns           : null; // used to store pattern data.
-    gettingPatternData : false;
+    patterns           = null; // used to store pattern data.
+    gettingPatternData = false;
 
-    loading : false; // used to control floods of loading from the UI
+    loading = false; // used to control floods of loading from the UI
     
 
-    prevPat : null;
+    prevPat = null;
     
     
     // Event handler function keys 
-    audioControlMethodMap : {
+    audioControlMethodMap = {
         prev      : 'previousTrack',
         next      : 'nextTrack',
         play      : 'playTrack',
@@ -77,34 +77,42 @@ class AbstractPlayer extends BaseView {
         seekFwd   : () => {} 
     };
 
-    wkWebViewEventMatrix : {
+    wkWebViewEventMatrix = {
         init   : 'onWkWebViewInit',
         patReg : 'onWkWebViewPatternsRegistered'
     };
 
 
-    setInitialState() {
-        this.state = {
-            prevPat        : -1,
-            pattern        : -1,
-            songLoaded     : 0,
-            playingSong    : 0,
-            numberPatterns : 0,
-            leftSide       : 'l',
-            rightSide      : 'r',
-        }
-    }
+   state = {
+        prevPat        : -1,
+        pattern        : -1,
+        songLoaded     : 0,
+        playingSong    : 0,
+        numberPatterns : 0,
+        leftSide       : 'l',
+        rightSide      : 'r',
+        modObject      : null,
+        fileRecord     : null
+    };
 
     render() {
         // debugger;
         var state     = this.state,
             props     = this.props,
-            modObject = this.modObject || props.modObject,
+            modObject = props.modObject,
             dictInfo  = props.dictInfo;
+
+        if (! modObject) {
+            // console.log('no mod object, returning null')
+            // console.log(state)
+            return null;
+        }
 
         // console.log('render() modObject', modObject);
 
-        this.fileRecord = this.fileRecord || props.fileRecord;
+        this.fileRecord = props.fileRecord;
+
+        // debugger;
 
         var buttonChars = this.buttonChars,
             liked       = this.fileRecord.like_value == 1,
@@ -123,7 +131,17 @@ class AbstractPlayer extends BaseView {
         // debugger;
         var fileName = modObject.file_name ? modObject.file_name : modObject.fileName,
             pattern  = modObject.patterns[modObject.patternOrds[0]],
-            newTopPosition;
+            // newTopPosition,
+            songName = this.fileRecord.song_name;
+
+
+        if (songName) {
+            // console.log(rowData.song_name);
+            // console.log('\t', decodeURI(rowData.song_name));
+            songName = decodeURI(unescape(songName)).trim();
+            songName = `"${songName}"`;   
+        }
+
 
         /*
         if (state.currentPattern != null) {
@@ -184,22 +202,72 @@ class AbstractPlayer extends BaseView {
         //     );
         // }
 
-        return (
-            <View style={styles.container}>
-                <CloseButton onPress={this.onClosebuttonPress} />
+        let targetWidth = windowDimensions.width - 50,
+            mainImageDims = {
+                height: Math.floor((464 / 700) * targetWidth),
+                width: targetWidth
+            };
 
+
+
+        let imgName   = modObject.group,
+            source    = {
+                uri    : `http://localhost/kgmp_images/${imgName}.png`,
+                width  : mainImageDims.width,
+                height : mainImageDims.height
+            },
+            imgStyle = {
+                width         : mainImageDims.width, 
+                height        : mainImageDims.height,
+                shadowColor   : '#000',
+                shadowOpacity : .5,
+                shadowRadius  : 5,
+                shadowOffset  : {
+                    width  : 0,
+                    height : 10
+                }
+            };
+
+        console.log(props.modObject, props.fileRecord)
+
+        return (
+            <View style={[styles.container, this.props.style]}>
+                
                 <View style={styles.titleBar}>
-                    <Text style={styles.fileName}>{fileName}</Text>
+                    <Text style={{fontSize:20, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
+                    <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', marginBottom : 5}}>{songName}</Text>
+                    <Text style={{fontSize:12, fontWeight:'300', color:'#BEBEBE', width: 200, marginBottom : 5}} numberOfLines={1}>
+                        {fileName}
+                    </Text>
                 </View>
+                
+                <View style={{justifyContent:'center', paddingHorizontal:25, marginBottom : 20}}>
+                    <AnimatedLazyImage source={source} style={imgStyle}/>
+                </View>
+
+
+                <View style={{backgroundColor:'#CCC', marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
+                    <Text>Time control here</Text>
+                </View>
+
+                <View style={styles.controlsContainer}>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle}/>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
+                    <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
+                </View>            
+                {/*
 
                 <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
-                
-                <View style={{flex:1, overflow: 'hidden', backgroundColor:'#FF0000'}}>
+                */}                
+                <View style={{flex:1, overflow: 'hidden', backgroundColor:'transparent'}}>
 
                 </View>
-                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
 
                 {/*
+
+                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
                 <View style={{padding:5}}>
                     <Text style={styles.instrumentsLabel}>Instruments:</Text>
                 </View>
@@ -207,7 +275,7 @@ class AbstractPlayer extends BaseView {
                     {instViews}
                 </ScrollView>
 
-                <View style={[styles.bar, {top: dims.mid}]}/>
+                <View style={[styles.bar, {top: windowDimensions.mid}]}/>
                  */}
 
                 {/*
@@ -229,13 +297,7 @@ class AbstractPlayer extends BaseView {
                 </View>
                 */}
 
-                <View style={styles.controlsContainer}>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
-                </View>                     
+         
             </View>
         );
     }
@@ -248,19 +310,18 @@ class AbstractPlayer extends BaseView {
             this.onCommandCenterEvent
         );
 
-        this.modObject = this.props.modObject;
     }
 
 
     componentDidMount() {
         // console.log(this.refs)
 
-        setTimeout(()=> {
-            // debugger;
-            // this.refs.rtGLV.setPlotterRegistered('r');
-            // this.refs.ltGLV.setPlotterRegistered('l');
-            this.playTrack();
-        }, 350);
+        // setTimeout(()=> {
+        //     // debugger;
+        //     // this.refs.rtGLV.setPlotterRegistered('r');
+        //     // this.refs.ltGLV.setPlotterRegistered('l');
+        //     this.playTrack();
+        // }, 350);
     }
 
     componentWillUnmount() {
@@ -284,8 +345,6 @@ class AbstractPlayer extends BaseView {
             this.commandCenterEventHandler.remove();
             this.commandCenterEventHandler = null;
         }
-
-
     }
 
     deregisterPatternUpdateHandler() {
@@ -331,6 +390,7 @@ class AbstractPlayer extends BaseView {
             MCModPlayerInterface.resume(
                 // SUCCESS callback
                 () => {
+                    console.log('resume')
                     state.songLoaded  = 1;
                     state.playingSong = 1;
                     this.registerPatternUpdateHandler();
@@ -375,7 +435,7 @@ class AbstractPlayer extends BaseView {
     like() {
         this.showLikeSpinner();
 
-        MCQueueManager.updateLikeStatus(1, this.modObject.id_md5, (rowData) => {
+        MCQueueManager.updateLikeStatus(1, this.state.modObject.id_md5, (rowData) => {
             setTimeout(() => {
                 window.main.hideSpinner();
                 this.fileRecord.like_value = 1;
@@ -389,7 +449,7 @@ class AbstractPlayer extends BaseView {
         this.pauseTrack();
         this.showDislikeSpinner();
         setTimeout(() => {
-            MCQueueManager.updateLikeStatus(-1, this.modObject.id_md5, (rowData) => {
+            MCQueueManager.updateLikeStatus(-1, this.state.modObject.id_md5, (rowData) => {
                 if (rowData) {
                     this.loadFile(rowData);                    
                 }
@@ -435,7 +495,7 @@ class AbstractPlayer extends BaseView {
                     this.fileRecord = rowData;
                     modObject.id_md5 = rowData.id_md5;
 
-                    this.modObject = modObject;
+                    this.state.modObject = modObject;
                     modObject.fileName = rowData.name;
 
                     // this.forceUpdate();   
@@ -445,7 +505,7 @@ class AbstractPlayer extends BaseView {
                     this.playTrack();
                     this.hideSpinner();
 
-                    console.log('Mod Object', modObject)
+                    // console.log('Mod Object', modObject)
 
 
                     callback && callback();
@@ -470,7 +530,7 @@ class AbstractPlayer extends BaseView {
         modObject.id_md5 = file.id_md5;
         modObject.record = file;
 
-        this.modObject = modObject;
+        this.state.modObject = modObject;
         modObject.fileName = file.name;
 
         this.setState({});
@@ -531,7 +591,7 @@ class AbstractPlayer extends BaseView {
 
         if (pattern != currentPattern) {
             refs.progressView.setState({
-                numberOfCells   : this.modObject.patternOrds.length,
+                numberOfCells   : this.state.modObject.patternOrds.length,
                 highlightNumber : order
             });    
         }
@@ -555,7 +615,7 @@ class AbstractPlayer extends BaseView {
         //     return;
         // }
 
-        // if (this.modObject) {
+        // if (this.state.modObject) {
 
         //     var positionOrder  = position[0],
         //         positionPattrn = position[1],
@@ -581,7 +641,7 @@ class AbstractPlayer extends BaseView {
 
         // var state = this.state;
 
-        // dims.newTop = dims.mid - (row * 11);
+        // windowDimensions.newTop = windowDimensions.mid - (row * 11);
 
         // var r = this.refs.patternView;
         // console.log(typeof r,r)
@@ -591,10 +651,10 @@ class AbstractPlayer extends BaseView {
 
 
         // refs.patternView.setNativeProps({
-        //     style : {top : dims.newTop}
+        //     style : {top : windowDimensions.newTop}
         // });
 
-        // console.log(dims.newTop)
+        // console.log(windowDimensions.newTop)
 
 
         // console.log(position[1], state.prevPat, this.prevPat)
@@ -602,7 +662,7 @@ class AbstractPlayer extends BaseView {
         //     console.log("new state")
         //     this.prevPat = state.prevPat = position[1];
         //     state.order = position[0];
-        //     state.pattern = this.modObject.patterns[position[1]];
+        //     state.pattern = this.state.modObject.patterns[position[1]];
         //     state.row = position[2];
         //     this.setState(state);
         // }
@@ -625,7 +685,7 @@ class AbstractPlayer extends BaseView {
         console.log('onWkWebViewInit');
 
         var newModObj = {},
-            modObject = this.modObject;
+            modObject = this.state.modObject;
 
         newModObj.patterns    = modObject.patterns;
         newModObj.patternOrds = modObject.patternOrds;
@@ -641,7 +701,7 @@ class AbstractPlayer extends BaseView {
     onWkWebViewPatternsRegistered =  () => {
         console.log('onWkWebViewPatternsRegistered');
         this.patternsRegistered = true;
-        this.onPatternUpdateEvent([this.modObject.patternOrds[0], 0,0]); 
+        this.onPatternUpdateEvent([this.state.modObject.patternOrds[0], 0,0]); 
     }
 }
 

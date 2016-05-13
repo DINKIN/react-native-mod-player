@@ -15,12 +15,13 @@ import {
 class BaseView extends Component {
     constructor(opts) {
         super(opts);   
+        this.className = this.constructor.name;
 
         this.setInitialState && this.setInitialState();
     }   
 
     render() {
-        return <View><Text style={{fontSize: 50, color : 'white'}}>{this.constructor.name}</Text></View>
+        return <View><Text style={{fontSize: 50, color : 'white'}}>{this.className}</Text></View>
     }
 
     showSpinner() {
@@ -38,6 +39,8 @@ class BaseView extends Component {
     hideSpinner() {
         window.main.hideSpinner();
     }
+
+    // log()
 }
 
 module.exports = BaseView

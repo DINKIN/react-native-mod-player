@@ -17,6 +17,7 @@ import {
 
 var deviceWidth = 375;
 var white ='#FFFFFF';
+
 var styles = StyleSheet.create({
 
     summaryRow : {
@@ -38,19 +39,19 @@ var styles = StyleSheet.create({
     },
     
     title : {
-        fontFamily      : 'PerfectDOSVGA437Win',
+        // fontFamily      : 'PerfectDOSVGA437Win',
         fontSize        : 16,
-        backgroundColor : '#000000',
-        color           : '#00FF00',
-        fontWeight      : 'bold'
+        // backgroundColor : '#000000',
+        color           : '#000000',
+        // fontWeight      : 'bold'
     },
 
     text : {
-        fontFamily      : 'PerfectDOSVGA437Win',
+        // fontFamily      : 'PerfectDOSVGA437Win',
         fontSize        : 16,
-        backgroundColor : '#000000',
-        color           : white,
-        fontWeight      : 'bold'
+        color : '#000000',
+        // color           : white,
+        // fontWeight      : 'bold'
     },
 
     textLink : {

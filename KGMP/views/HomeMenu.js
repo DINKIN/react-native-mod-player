@@ -9,12 +9,19 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Animated,
+    PanResponder,
+    Dimensions,
+    Easing
 } from "react-native";
 
 
 import Navigation from './Navigation';
+import AnimatedPlayer from './player/AnimatedPlayer';
+import ListPlayer from './player/ListPlayer';
 
+const windowDimensions = Dimensions.get('window');
 
 var initialPaths,
     {
@@ -43,7 +50,7 @@ var getDirectories = function(path, callback) {
             () => {
                 console.log('An Error Occurred');
             },
-            // Success
+            // Success`
             (response) =>  {
                 callback(response)               
 
@@ -55,7 +62,6 @@ var getDirectories = function(path, callback) {
         );
     }
 };
-
 
 const Icon         = require('react-native-vector-icons/Ionicons'),
       BaseView     = require('./BaseView'),
@@ -70,19 +76,36 @@ let windowStyles = {
 
 }
 
+var loadedDirectories; // debug purposes
+
 class HomeMenu extends BaseView {
     state = {
-        initialPaths : null
+        modObject    : null
     };
 
     componentWillMount() {
-
+        MCModPlayerInterface.pause(() => {});
         getDirectories(null, (initialPaths) => {
             this.setState({
                 initialPaths : initialPaths
-            })
+            });
+
+
+            setTimeout(() => {
+                this.onRowPress(initialPaths[1], this.refs.navigator);
+                setTimeout(() => {
+                    this.onRowPress(loadedDirectories[2], this.refs.navigator);
+
+                    setTimeout(() => {
+                        this.refs.modPlayer.show();
+                    }, 1000);
+                }, 500)
+            }, 500)
         });
+
+
     }
+
 
     render() {
         let styles = this.styles,
@@ -94,7 +117,6 @@ class HomeMenu extends BaseView {
             let initialRoute = {
                 component       : BrowseList,
                 title           : 'Browse',
-
                 componentConfig : {
                     rowData    : state.initialPaths,
                     onRowPress : this.onRowPress,
@@ -106,7 +128,7 @@ class HomeMenu extends BaseView {
                 }
             }
 
-            innerView =  <Navigation style={{flex:1}} showNavBar={true} ref={"navigator"} initialRoute={initialRoute}/>;
+            innerView = <Navigation style={{flex:1}} showNavBar={true} ref={"navigator"} initialRoute={initialRoute}/>;
             // innerView = <BrowseList rowData={state.initialPaths} style={{flex:1}}/>
         }
         else {
@@ -114,10 +136,61 @@ class HomeMenu extends BaseView {
         }
 
 
+        // TODO Abstract
+        // var animatedPlayerStyle = {
+        //         width           : windowDimensions.width,
+        //         height          : windowDimensions.height,
+        //         backgroundColor : 'rgba(0,0,255,.25)',//'transparent',
+        //         position        : 'absolute',
+        //         top             : windowDimensions.height,
+        //         transform       : [
+        //             { translateX : state.pan.x },
+        //             { translateY : state.pan.y }
+        //         ]
+        //     },
+        //     draggableToolbarStyle = {
+        //         height            : 40,
+        //         flexDirection     : 'row',
+        //         justifyContent    : 'space-between',
+        //         backgroundColor   : 'rgba(255, 255, 255, .7)',
+        //         alignItems        : 'center',
+        //         left              : 0,
+        //         right             : 0,
+        //         bottom            : state.tabBarPosition
+        //     },
+
+        //     playerBodyStyle = {
+        //         opacity : state.pan.y.interpolate({
+        //             inputRange : [ 
+        //                 -(windowDimensions.height - 49),
+        //                 0
+        //             ], 
+        //             outputRange: [ 1, 0 ]
+        //         })
+        //     }
 
         return (
             <View style={styles.container}>
                 {innerView}
+                
+                <AnimatedPlayer ref={'modPlayer'}/>
+                {/* TODO: move to separate component */}
+
+                {/*
+                <Animated.View style={animatedPlayerStyle}>
+                
+                    <Animated.View style={draggableToolbarStyle} {...this.panResponder.panHandlers}>
+                        <Text>Drag me!</Text>
+                    </Animated.View>
+                
+                    <Animated.View style={playerBodyStyle}>
+                        <ListPlayer ref="modPlayer" style={{height:windowDimensions.height - 40}}/>                        
+                    </Animated.View>
+        
+                </Animated.View>
+
+
+                */}
             </View>       
         )
     }
@@ -132,6 +205,7 @@ class HomeMenu extends BaseView {
         if (isDir) {
             title = unescape(record.name);
             getDirectories(record.name, (rowData)=> {
+                loadedDirectories = rowData; // for debug purposes
                 var route = {
                     title     : title,
                     component : BrowseList,
@@ -153,6 +227,59 @@ class HomeMenu extends BaseView {
             // debugger;
             this.loadModFile(record, childNavigator, ownerList);                
         }
+
+    }
+
+    // Todo:  Clean this method up. Shit, it's a mess!
+    loadModFile = (record, childNavigator, ownerList) => {
+        // window.main.showSpinner();
+        var fileName = unescape(record.name);
+
+        MCModPlayerInterface.loadFile(
+            window.bundlePath + unescape(record.directory) + fileName,
+            //failure
+            (data) => {
+                // window.main.hideSpinner();
+                alert('Apologies. This file could not be loaded.');
+                // console.log(data);
+            },        
+            //success
+            (modObject) => {
+                this.refs.modPlayer.setState({
+                    modObject  : modObject,
+                    fileRecord : record 
+                });
+
+                this.refs.modPlayer.showForTheFirstTime();
+                // this.showPlayerForTheFirstTime();
+
+                // MCModPlayerInterface.resume(() => {})
+                // var rowData = ownerList.props.rowData,
+                //     rowID = rowData.indexOf(record);
+
+                
+                // MCQueueManager.setQueueIndex(rowID);
+
+                // modObject.fileName = fileName;
+                // modObject.id_md5   = record.id_md5;
+                // modObject.record   = record;
+                // this.props.navigator.push({
+                //     title            : 'Player',
+                //     component        : ListPlayer,
+                //     componentConfig  : {
+                //         ownerList  : ownerList,
+                //         modObject  : modObject,
+                //         patterns   : modObject.patterns,
+                //         rowData    : rowData,
+                //         rowID      : rowID,
+                //         fileRecord : record
+                //     }
+                // });
+
+                // window.main.hideSpinner();
+
+            }
+        );
 
     }
 

@@ -14,13 +14,36 @@ import {
 
 
 var BaseView = require('../../BaseView'),
-    styles        = require('./MusicControlButtonStyles.js');
+    styles   = require('./MusicControlButtonStyles.js');
 
 
 class MusicControlButton extends BaseView {    
-    setInitialState() {
-        this.state = this.btnStates.up;
-    }
+    plottersRegistered = null;
+
+    intervalId = null;
+
+    buttonChars = {
+        play    : '\uE801', 
+        pause   : '\uE802', 
+        prev    : '\uE800', 
+        next    : '\uE804', 
+        like    : '\uE81C',
+        dislike : '\uE81D'
+    };
+
+
+    btnStates = {
+        down : {
+            pressed : true
+        },
+        up : {
+            pressed : false
+        }
+    };
+
+    state = {
+        pressed : false
+    };
   
     render() {
        
@@ -58,53 +81,20 @@ class MusicControlButton extends BaseView {
             </View>
         )
     }
+
+    onButtonPress = () => {
+        var props = this.props;
+        props.onPress && props.onPress(props.btnChar);
+    };
+    
+    onButtonPressIn = () => {
+        this.setState(this.btnStates.down);
+    };
+    
+    onButtonPressOut = () => {
+        this.setState(this.btnStates.up);
+    };
 };
-
-Object.assign(MusicControlButton.prototype, {
-    plottersRegistered : null,
-
-    intervalId : null,
-
-    buttonChars : {
-        play    : '\uE801', 
-        pause   : '\uE802', 
-        prev    : '\uE800', 
-        next    : '\uE804', 
-        like    : '\uE81C',
-        dislike : '\uE81D'
-    },
-
-    props : {
-        onPress   : React.PropTypes.func,
-        btnChar   : React.PropTypes.string,
-        btnStyle  : React.PropTypes.string,
-        isLikeBtn : React.PropTypes.bool
-    },
-
-    btnStates : {
-        down : {
-            pressed : true
-        },
-        up : {
-            pressed : false
-        }
-    },
-
-    bindableMethods :{ 
-        onButtonPress : function() {
-            var props = this.props;
-            props.onPress && props.onPress(props.btnChar);
-        },
-        
-        onButtonPressIn : function() {
-            this.setState(this.btnStates.down);
-        },
-        
-        onButtonPressOut : function() {
-            this.setState(this.btnStates.up);
-        }
-    }
-});
 
 module.exports  = MusicControlButton;
 

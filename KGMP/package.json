@@ -8,6 +8,7 @@
   "dependencies": {
     "react": "15.0.2",
     "react-native": "^0.26.0-rc",
-    "react-native-blurview": "^1.0.1"
+    "react-native-blurview": "^1.0.1",
+    "react-native-slider": "^0.7.0"
   }
 }

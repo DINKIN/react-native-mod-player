@@ -42,23 +42,19 @@ module.exports = StyleSheet.create({
     },
 
     container : {
-        backgroundColor : blackColor,
+        backgroundColor : whiteColor,
         // borderWidth     : .5,
         // borderColor     : blackColor,
-        paddingTop      : 35,
         flexDirection   : 'column',
         flex : 1,
     },
 
     titleBar : {
-        height            : 20,
-        paddingTop        : 3,
-        paddingLeft       : 3,
-        borderTopWidth    : 1,
-        borderBottomWidth : 1,
-        borderColor       : borderColor,
-        flexDirection     : row,
-        justifyContent    : 'center'
+        // height            : 20,
+        padding           : 10,
+        // borderColor       : borderColor,
+        flexDirection     : 'column',
+        alignItems    : 'center'
     },
 
 
@@ -68,10 +64,15 @@ module.exports = StyleSheet.create({
     },
     
     controlsContainer : {
-        height      : 60,
+        height      : 120,
+        paddingVertical : 30,
+        paddingHorizontal : 40,
+        flexDirection : 'row',
         // width       : 375,
-        borderTopWidth : 1,
-        borderColor    : borderColor
+        // borderTopWidth : 1,
+        // borderColor    : borderColor,
+        alignItems     : 'center',
+        justifyContent : 'space-between'
     },
 
     vizContainer : {
@@ -123,9 +124,10 @@ module.exports = StyleSheet.create({
 
     vizSeparator : {
         borderWidth : 1,
-        borderColor : '#FFFFFF',
+        borderColor : blackColor,
         width : 2
     },
+
     playerBarTop : {
         position    : absolute,
         height      : 1,
@@ -145,16 +147,16 @@ module.exports = StyleSheet.create({
     },
 
     songName : {
-        fontFamily : dosFont,
+        // fontFamily : dosFont,
         fontSize   : 16, 
         color      : whiteColor 
     },
 
     fileName : {
-        fontFamily : dosFont,
-        fontSize   : 12, 
-        color      : whiteColor,
-        fontWeight : 'bold'
+        // fontFamily : dosFont,
+        fontSize   : 18, 
+        // color      : whiteColor,
+        // fontWeight : 'bold'
     },
     progressView : {
         borderTopWidth : 1,
@@ -171,7 +173,7 @@ module.exports = StyleSheet.create({
     },
 
     instrumentText : {
-        fontFamily : dosFont,
+        // fontFamily : dosFont,
         fontSize   : 16,
         color      : '#00FF00',
         width      : 30
@@ -179,7 +181,7 @@ module.exports = StyleSheet.create({
 
 
     instrumentsLabel : {
-        fontFamily : dosFont,
+        // fontFamily : dosFont,
         fontSize   : 16,
         color      : '#00FF00',
         width      : 150,
@@ -187,7 +189,7 @@ module.exports = StyleSheet.create({
     },
 
     instrumentName : {
-        fontFamily : dosFont,
+        // fontFamily : dosFont,
         fontSize   : 16,
         color      : '#FFFFFF',
         fontWeight : 'bold' 

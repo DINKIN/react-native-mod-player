@@ -33,7 +33,7 @@ class DirectoryRow extends Component {
         let imgName   = name.replace('/','','g'),
             imgWidth  = 70,
             imgHeight = 40,
-            source = {
+            source    = {
                 uri    : `http://localhost/kgmp_images/${imgName}.png`,
                 width  : imgWidth,
                 height : imgHeight

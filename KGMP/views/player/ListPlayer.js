@@ -3,7 +3,7 @@ import React, {
     PropTypes
 } from "react";
 
-var    AbstractPlayer       = require('./AbstractPlayer');
+var AbstractPlayer = require('./AbstractPlayer');
 
 var {
         MCModPlayerInterface,
