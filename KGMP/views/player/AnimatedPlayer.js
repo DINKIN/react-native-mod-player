@@ -13,10 +13,12 @@ import {
     Animated,
     PanResponder,
     Dimensions,
-    Easing
+    Easing,
 } from "react-native";
 
 import ListPlayer from './ListPlayer';
+
+import PlayController from '../PlayController';
 
 
 const windowDimensions = Dimensions.get('window');
@@ -142,7 +144,7 @@ class AnimatedPlayer extends Component {
                     <Text>Drag me!</Text>
                 </Animated.View>
             
-                <Animated.View style={playerBodyStyle}>
+                <Animated.View style={playerBodyStyle} {...this.panResponder.panHandlers}>
                     <ListPlayer modObject={state.modObject}
                                 fileRecord={state.fileRecord} 
                                 style={{height:windowDimensions.height - 40}}/>                        

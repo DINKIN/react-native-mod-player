@@ -11,17 +11,37 @@ import {
     TextInput
 } from "react-native";
 
+const  Subscribable = require('Subscribable');
+
 
 class BaseView extends Component {
     constructor(opts) {
         super(opts);   
         this.className = this.constructor.name;
 
+        
         this.setInitialState && this.setInitialState();
     }   
 
-    render() {
-        return <View><Text style={{fontSize: 50, color : 'white'}}>{this.className}</Text></View>
+
+    addListenerOn() {
+        Subscribable.Mixin.addListenerOn.apply(this, arguments);
+    }
+
+    addListenersOn(emitter, events) {
+        var eventName;
+
+        for (eventName in events) {
+            this.addListenerOn(emitter, eventName, events[eventName]);
+        }
+    }
+
+    componentWillMount() {
+        Subscribable.Mixin.componentWillMount.apply(this);
+    }
+
+    componentWillUnmount() {
+        Subscribable.Mixin.componentWillUnMount.apply(this);
     }
 
     showSpinner() {

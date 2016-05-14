@@ -10,10 +10,10 @@ import {
     View,
     ScrollView,
     Dimensions
-
 } from "react-native";
 
 
+import PlayController from '../PlayController';
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./accessories/SummaryCard'),
@@ -83,7 +83,7 @@ class AbstractPlayer extends BaseView {
     };
 
 
-   state = {
+    state = {
         prevPat        : -1,
         pattern        : -1,
         songLoaded     : 0,
@@ -91,7 +91,6 @@ class AbstractPlayer extends BaseView {
         numberPatterns : 0,
         leftSide       : 'l',
         rightSide      : 'r',
-        modObject      : null,
         fileRecord     : null
     };
 
@@ -99,18 +98,17 @@ class AbstractPlayer extends BaseView {
         // debugger;
         var state     = this.state,
             props     = this.props,
-            modObject = props.modObject,
-            dictInfo  = props.dictInfo;
+            modObject = state.modObject || props.modObject; // TOdo refactor
 
         if (! modObject) {
-            // console.log('no mod object, returning null')
+            // console.log(this.constructor.name, 'no mod object, returning null')
             // console.log(state)
             return null;
         }
 
         // console.log('render() modObject', modObject);
 
-        this.fileRecord = props.fileRecord;
+        this.fileRecord = state.fileRecord || props.fileRecord;
 
         // debugger;
 
@@ -228,7 +226,7 @@ class AbstractPlayer extends BaseView {
                 }
             };
 
-        console.log(props.modObject, props.fileRecord)
+        // console.log(props.modObject, props.fileRecord)
 
         return (
             <View style={[styles.container, this.props.style]}>
@@ -302,13 +300,15 @@ class AbstractPlayer extends BaseView {
         );
     }
 
+
     componentWillMount() {
         // this.patterns = this.props.patterns;
+        super.componentWillMount();
 
-        this.commandCenterEventHandler = RCTDeviceEventEmitter.addListener(
-            'commandCenterEvent',
-            this.onCommandCenterEvent
-        );
+
+
+
+       
 
     }
 
@@ -322,9 +322,80 @@ class AbstractPlayer extends BaseView {
         //     // this.refs.ltGLV.setPlotterRegistered('l');
         //     this.playTrack();
         // }, 350);
+
+        this.addListenersOn(PlayController.eventEmitter, {
+            play : () => {
+                this.registerPatternUpdateHandler();
+                this.setState(this.state);
+            },
+
+            pause : () => {
+                var state = this.state;
+                state.playingSong = 0;
+                this.setState(state);
+            },
+
+            commandCenterFileLoaded : (eventObj) => {
+                // debugger;
+                // console.log('onCommandCenterEvent ' + eventObj.eventType);
+                // console.log(eventObj);
+                // debugger;
+                var eventType = eventObj.eventType;
+
+                if (eventType == 'fileLoad') {
+                    this.onCommandCenterEventFileLoad(eventObj);
+                }
+                else if(eventType == 'playSleep') {
+                    this.setState({playingSong:1});
+                }
+                else if(eventType == 'pauseSleep') {
+                    this.setState({playingSong:0});
+                }
+                else {
+                    this.onButtonPress(eventObj.eventType);
+                }
+            },
+
+            fileLoaded : (config) => {
+                console.log(this.constructor.name, 'Received fileLoaded', config)
+                var fileRecord = config.fileRecord,
+                    modObject = config.modObject;
+
+                // debugger;
+                this.loading = false;
+
+                // this.refs.progressView.setState({
+                //     numberOfCells   : modObject.patternOrds.length,
+                //     highlightNumber : 0
+                // });
+                
+                this.fileRecord = fileRecord;
+                modObject.id_md5 = fileRecord.id_md5;
+
+                // this.state.modObject = modObject;
+
+                modObject.fileName = modObject.file_name;
+
+                // this.forceUpdate();   
+
+                this.patterns = modObject.patterns;
+                // this.onWkWebViewInit();
+                this.playTrack();
+                this.hideSpinner();
+
+                this.setState({
+                    fileRecord : fileRecord,
+                    modObject : modObject
+                });
+
+            } 
+        })
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
+
+
         MCModPlayerInterface.pause(function() {});
         this.deregisterPatternUpdateHandler();
 
@@ -341,33 +412,53 @@ class AbstractPlayer extends BaseView {
         // this.refs.ltGLV.setPlotterUnRegistered('lU')
         // this.refs.rtGLV.setPlotterUnRegistered('rU');
 
-        if (this.commandCenterEventHandler) {
-            this.commandCenterEventHandler.remove();
-            this.commandCenterEventHandler = null;
-        }
+        // if (this.commandCenterEventHandler) {
+        //     this.commandCenterEventHandler.remove();
+        //     this.commandCenterEventHandler = null;
+        // }
     }
 
     deregisterPatternUpdateHandler() {
-        if (this.patternUpdateHandler) {
-            this.patternUpdateHandler.remove();
-            this.patternUpdateHandler = null;
-        }
+        // if (this.patternUpdateHandler) {
+        //     this.patternUpdateHandler.remove();
+        //     this.patternUpdateHandler = null;
+        // }
     }
 
     registerPatternUpdateHandler() {
-        if (this.patternUpdateHandler) {
-            return;
-        }
-
-
-        // return;
-        // debugger;
-        this.patternUpdateHandler = RCTDeviceEventEmitter.addListener(
-            'rowPatternUpdate',
-            this.onPatternUpdateEvent
-        );
+        // if (this.patternUpdateHandler) {
+        //     return;
+        // }
+        // this.patternUpdateHandler = RCTDeviceEventEmitter.addListener(
+        //     'rowPatternUpdate',
+        //     this.onPatternUpdateEvent
+        // );
     }
  
+
+    previousTrack() {
+        // if (this.loading) {
+        //     return;
+        // }
+
+        // this.loading = true;
+
+        PlayController.previousTrack()
+    }
+    
+    // Todo: clean this up
+    // Todo: read from local list (not have to poll the owner component)
+    nextTrack() {
+        // if (this.loading) {
+        //     return;
+        // }
+
+        // this.loading = true;
+        // this.showSpinner();
+        // debugger;
+        PlayController.nextTrack();
+    }
+
 
     playPause() {
         var state = this.state;
@@ -384,32 +475,10 @@ class AbstractPlayer extends BaseView {
         var props = this.props,
             state = this.state;
    
-        // TODO: Merge logic into one block below
-        if (! state.songLoaded) {
-            // debugger;
-            MCModPlayerInterface.resume(
-                // SUCCESS callback
-                () => {
-                    console.log('resume')
-                    state.songLoaded  = 1;
-                    state.playingSong = 1;
-                    this.registerPatternUpdateHandler();
-                    this.setState(state);
-                }
-            );
-            
-        } 
-        else {
-            state.playingSong = 1;
+        
+        state.playingSong = 1;
 
-            MCModPlayerInterface.resume(
-                () => {
-                    this.registerPatternUpdateHandler();
-                    this.setState(state);
-                }
-            );
-            
-        }
+        PlayController.resume();
       
     }
 
@@ -419,12 +488,8 @@ class AbstractPlayer extends BaseView {
 
         if (state.playingSong) {
             this.deregisterPatternUpdateHandler();     
-            MCModPlayerInterface.pause(() => {
-                state.playingSong = 0;
-                this.setState(state);
+            PlayController.pause();
 
-                callback && callback();
-            });
         }
         else {
             callback && callback();
@@ -433,7 +498,7 @@ class AbstractPlayer extends BaseView {
 
 
     like() {
-        this.showLikeSpinner();
+        // this.showLikeSpinner();
 
         MCQueueManager.updateLikeStatus(1, this.state.modObject.id_md5, (rowData) => {
             setTimeout(() => {
@@ -447,7 +512,8 @@ class AbstractPlayer extends BaseView {
 
     dislike () {
         this.pauseTrack();
-        this.showDislikeSpinner();
+        // this.showDislikeSpinner();
+
         setTimeout(() => {
             MCQueueManager.updateLikeStatus(-1, this.state.modObject.id_md5, (rowData) => {
                 if (rowData) {
@@ -466,85 +532,16 @@ class AbstractPlayer extends BaseView {
         this.patterns = {};
         this.patternsRegistered = false;
 
-        var filePath = window.bundlePath + unescape(rowData.directory) + unescape(rowData.name);
 
         this.deregisterPatternUpdateHandler();
         // debugger;
-        MCModPlayerInterface.pause(() => {
-
-            MCModPlayerInterface.loadFile(
-                filePath,
-                //failure
-                (data) => {
-                    this.hideSpinner();
-
-                    alert('failure in loading file ' + unescape(rowData.name));
-                    // console.log(data);
-                    this.loading = false;
-
-                },        
-                //success
-                (modObject) => {
-                    this.loading = false;
-
-                    this.refs.progressView.setState({
-                        numberOfCells   : modObject.patternOrds.length,
-                        highlightNumber : 0
-                    });
-                    
-                    this.fileRecord = rowData;
-                    modObject.id_md5 = rowData.id_md5;
-
-                    this.state.modObject = modObject;
-                    modObject.fileName = rowData.name;
-
-                    // this.forceUpdate();   
-
-                    this.patterns = modObject.patterns;
-                    // this.onWkWebViewInit();
-                    this.playTrack();
-                    this.hideSpinner();
-
-                    // console.log('Mod Object', modObject)
+        PlayController.loadFile(rowData);
+        // MCModPlayerInterface.pause(() => {
 
 
-                    callback && callback();
-                }
-            );
-        });
+        // });
     }
 
-    onCommandCenterEventFileLoad(eventObj) {
-        var {
-                modObject,
-                file 
-            } = eventObj;
-
-
-        this.showSpinner();
-
-        this.loading = false;
-
-        // alert('here')
-
-        modObject.id_md5 = file.id_md5;
-        modObject.record = file;
-
-        this.state.modObject = modObject;
-        modObject.fileName = file.name;
-
-        this.setState({});
-        this.refs.progressView.setState({
-            numberOfCells   : modObject.patternOrds.length,
-            highlightNumber : 0
-        });
-
-        this.hideSpinner();
-    }
-
-    onClosebuttonPress = () => {
-        window.mainNavigator.pop();
-    }
 
     
     onButtonPress = (buttonType) => {
@@ -552,25 +549,6 @@ class AbstractPlayer extends BaseView {
         this[methodName] && this[methodName]();
     }
 
-    onCommandCenterEvent = (eventObj) => {
-        // debugger;
-        // console.log('onCommandCenterEvent ' + eventObj.eventType);
-        // console.log(eventObj);
-        var eventType = eventObj.eventType;
-
-        if (eventType == 'fileLoad') {
-            this.onCommandCenterEventFileLoad(eventObj);
-        }
-        else if(eventType == 'playSleep') {
-            this.setState({playingSong:1});
-        }
-        else if(eventType == 'pauseSleep') {
-            this.setState({playingSong:0});
-        }
-        else {
-            this.onButtonPress(eventObj.eventType);
-        }
-    }
     
     onPatternUpdateEvent = (position) => {
         return;
@@ -699,9 +677,10 @@ class AbstractPlayer extends BaseView {
     }
 
     onWkWebViewPatternsRegistered =  () => {
+        return;
         console.log('onWkWebViewPatternsRegistered');
         this.patternsRegistered = true;
-        this.onPatternUpdateEvent([this.state.modObject.patternOrds[0], 0,0]); 
+        // this.onPatternUpdateEvent([this.state.modObject.patternOrds[0], 0,0]); 
     }
 }
 

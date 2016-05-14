@@ -17,8 +17,8 @@ module.exports =  StyleSheet.create({
         height   : 34,
         // position : 'absolute',
         top      : top,
-        // borderWidth    : 1,
-        // borderColor    : '#000000',
+        borderWidth    : 1,
+        borderColor    : '#FF0000',
 
     },
 
