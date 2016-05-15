@@ -267,7 +267,7 @@ class AbstractPlayer extends BaseView {
                     </View>
 
                     <View style={styles.controlsContainer}>
-                        <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true} fontStyle={{likeDislikeStyle}}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true} fontStyle={likeDislikeStyle}/>
                         <View style={{flex:1}}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle} fontStyle={{fontSize:30}} style={{marginHorizontal : 20}}/>
