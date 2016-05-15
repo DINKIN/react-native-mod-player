@@ -9,11 +9,19 @@ import {
     Text,
     View,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Image
 } from "react-native";
 
 
 import PlayController from '../PlayController';
+
+const UrlTool = require('../utils/UrlTool'),
+      { 
+          BlurView,
+          VibrancyView
+      } = require('react-native-blur');
+
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     SummaryCard           = require('./accessories/SummaryCard'),
@@ -24,6 +32,8 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     BaseView              = require('../BaseView'),
     ProgressView          = require('./accessories/ProgressView'),
     AnimatedLazyImage     = require('../common/AnimatedLazyImage');
+
+
 
 var {
         MCModPlayerInterface,
@@ -110,7 +120,6 @@ class AbstractPlayer extends BaseView {
 
         this.fileRecord = state.fileRecord || props.fileRecord;
 
-        // debugger;
 
         var buttonChars = this.buttonChars,
             liked       = this.fileRecord.like_value == 1,
@@ -126,10 +135,8 @@ class AbstractPlayer extends BaseView {
             centerBtnStyle = "playButton";
         }
 
-        // debugger;
         var fileName = modObject.file_name ? modObject.file_name : modObject.fileName,
             pattern  = modObject.patterns[modObject.patternOrds[0]],
-            // newTopPosition,
             songName = this.fileRecord.song_name;
 
 
@@ -138,6 +145,9 @@ class AbstractPlayer extends BaseView {
             // console.log('\t', decodeURI(rowData.song_name));
             songName = decodeURI(unescape(songName)).trim();
             songName = `"${songName}"`;   
+        }
+        else {
+            songName = ' ';
         }
 
 
@@ -209,14 +219,13 @@ class AbstractPlayer extends BaseView {
 
 
         let imgName   = modObject.group,
+            imgUri    = UrlTool.getUrlForImage(imgName),
             source    = {
-                uri    : `http://localhost/kgmp_images/${imgName}.png`,
-                width  : mainImageDims.width,
-                height : mainImageDims.height
+                ...mainImageDims,
+                uri    : imgUri
             },
             imgStyle = {
-                width         : mainImageDims.width, 
-                height        : mainImageDims.height,
+                ...mainImageDims,
                 shadowColor   : '#000',
                 shadowOpacity : .5,
                 shadowRadius  : 5,
@@ -224,79 +233,91 @@ class AbstractPlayer extends BaseView {
                     width  : 0,
                     height : 10
                 }
-            };
+            },
+            rootImageSource = {
+                ...window.windowDimensions,
+                uri : imgUri
+            }
 
-        // console.log(props.modObject, props.fileRecord)
+        let likeDislikeStyle = {color:'#888'};
+        var BlurViewType = BlurView;
+
+
+        var panHandlers = props.panResponderScope ? props.panResponderScope.panHandlers : {};
 
         return (
-            <View style={[styles.container, this.props.style]}>
-                
-                <View style={styles.titleBar}>
-                    <Text style={{fontSize:20, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
-                    <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', marginBottom : 5}}>{songName}</Text>
-                    <Text style={{fontSize:12, fontWeight:'300', color:'#BEBEBE', width: 200, marginBottom : 5}} numberOfLines={1}>
-                        {fileName}
-                    </Text>
-                </View>
-                
-                <View style={{justifyContent:'center', paddingHorizontal:25, marginBottom : 20}}>
-                    <AnimatedLazyImage source={source} style={imgStyle}/>
-                </View>
+            <Image style={[styles.container, this.props.style]} source={rootImageSource}>
+                <BlurViewType blurType={"xlight"} style={[styles.container, {paddingTop: 30, backgroundColor :'rgba(255,255,255, .5)'}]}>
+                    <View {...panHandlers}>
+                        <View style={styles.titleBar}>
+                            <Text style={{fontSize:26, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
+                            <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', marginBottom : 5}}>{songName}</Text>
+                            <Text style={{fontSize:12, fontWeight:'300', color:'#BEBEBE', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
+                                {fileName}
+                            </Text>
+                        </View>
+                        
+                        <View style={{justifyContent:'center', paddingHorizontal:25, marginBottom : 20}}>
+                            <AnimatedLazyImage source={source} style={imgStyle}/>
+                        </View>
+                    </View>
 
+                    <View style={{backgroundColor:'#CCC', marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
+                        <Text>Time control here</Text>
+                    </View>
 
-                <View style={{backgroundColor:'#CCC', marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
-                    <Text>Time control here</Text>
-                </View>
+                    <View style={styles.controlsContainer}>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true} fontStyle={{likeDislikeStyle}}/>
+                        <View style={{flex:1}}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle} fontStyle={{fontSize:30}} style={{marginHorizontal : 20}}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
+                        <View style={{flex:1}}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked} fontStyle={likeDislikeStyle}/>
+                    </View>            
+                    {/*
 
-                <View style={styles.controlsContainer}>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
-                    <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
-                </View>            
-                {/*
+                    <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
+                    */}                
+                    <View style={{flex:1, overflow: 'hidden', backgroundColor:'transparent'}}>
 
-                <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
-                */}                
-                <View style={{flex:1, overflow: 'hidden', backgroundColor:'transparent'}}>
+                    </View>
 
-                </View>
+                    {/*
 
-                {/*
+                    <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
+                    <View style={{padding:5}}>
+                        <Text style={styles.instrumentsLabel}>Instruments:</Text>
+                    </View>
+                    <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
+                        {instViews}
+                    </ScrollView>
 
-                <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
-                <View style={{padding:5}}>
-                    <Text style={styles.instrumentsLabel}>Instruments:</Text>
-                </View>
-                <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
-                    {instViews}
-                </ScrollView>
+                    <View style={[styles.bar, {top: windowDimensions.mid}]}/>
+                     */}
 
-                <View style={[styles.bar, {top: windowDimensions.mid}]}/>
-                 */}
+                    {/*
+                    <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
+                    <View style={[styles.rowNumberz, newTopPosition]}>
+                        <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
+                    </View>
+                   
+                    <View style={[styles.patternView, newTopPosition]}>
+                        <PatternView ref={"patternView"} rows={pattern}/>
+                    </View>
+                    <View style={styles.playerBarTop}/>
+                    <View style={styles.playerBarBottom}/>
 
-                {/*
-                <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
-                <View style={[styles.rowNumberz, newTopPosition]}>
-                    <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
-                </View>
-               
-                <View style={[styles.patternView, newTopPosition]}>
-                    <PatternView ref={"patternView"} rows={pattern}/>
-                </View>
-                <View style={styles.playerBarTop}/>
-                <View style={styles.playerBarBottom}/>
+                    <View style={styles.vizContainer}>
+                        <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
+                        <View style={styles.vizSeparator}/>
+                        <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
+                    </View>
+                    */}
 
-                <View style={styles.vizContainer}>
-                    <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
-                    <View style={styles.vizSeparator}/>
-                    <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
-                </View>
-                */}
-
-         
-            </View>
+             
+                </BlurViewType>
+            </Image>
         );
     }
 
@@ -305,10 +326,6 @@ class AbstractPlayer extends BaseView {
         // this.patterns = this.props.patterns;
         super.componentWillMount();
 
-
-
-
-       
 
     }
 
@@ -381,7 +398,6 @@ class AbstractPlayer extends BaseView {
                 this.patterns = modObject.patterns;
                 // this.onWkWebViewInit();
                 this.playTrack();
-                this.hideSpinner();
 
                 this.setState({
                     fileRecord : fileRecord,
@@ -475,11 +491,9 @@ class AbstractPlayer extends BaseView {
         var props = this.props,
             state = this.state;
    
-        
         state.playingSong = 1;
 
         PlayController.resume();
-      
     }
 
    
@@ -498,11 +512,8 @@ class AbstractPlayer extends BaseView {
 
 
     like() {
-        // this.showLikeSpinner();
-
         MCQueueManager.updateLikeStatus(1, this.state.modObject.id_md5, (rowData) => {
             setTimeout(() => {
-                window.main.hideSpinner();
                 this.fileRecord.like_value = 1;
                 this.setState({});
 
@@ -521,7 +532,6 @@ class AbstractPlayer extends BaseView {
                 }
                 else {
                     alert('Apologies, there are no more files in the queue');
-                    window.main.hideSpinner();
                     window.mainNavigator.popToTop();
                 }
             });
@@ -536,10 +546,6 @@ class AbstractPlayer extends BaseView {
         this.deregisterPatternUpdateHandler();
         // debugger;
         PlayController.loadFile(rowData);
-        // MCModPlayerInterface.pause(() => {
-
-
-        // });
     }
 
 

@@ -21,14 +21,12 @@ import {
 } from "react-native";
 
 
-var {
-    Spinner,
-    LikeSpinner,
-    DislikeSpinner
-} = require('./Spinners')
 
 
 var styles = StyleSheet.create({
+    container : { 
+        flex : 1
+    },
     scene    : {
         // flex            : 1,
         paddingTop      : 20,
@@ -96,56 +94,21 @@ class Main extends BaseView  {
         let state = this.state,
             initialRoute = {
                 component : HomeMenu
-            },
-            spinner;
+            };
 
 
-        if (state.spinner) {
-            spinner = React.createElement(Spinner);
-        }
-        else if (state.likeSpinner) {
-            spinner = React.createElement(LikeSpinner);
-        }
-        else if (state.dislikeSpinner) {
-            spinner = React.createElement(DislikeSpinner);
-        }
+      
 
-        window.main = this;
         return (
-            <View style={{flex: 1}}>
-                <Navigator
-                    style={styles.container}
-                    initialRoute={initialRoute}
-                    renderScene={this.renderScene}
-                    configureScene={this.configureScene}
-                />
-                
-                {spinner}
-            </View>
+            <Navigator
+                style={styles.container}
+                initialRoute={initialRoute}
+                renderScene={this.renderScene}
+                configureScene={this.configureScene}
+            />
         );
     }
 
-    showSpinner() {
-        // console.log('showSpinner')
-        this.setState({spinner : true})
-    }
-
-    showLikeSpinner() {
-        this.setState({likeSpinner : true})
-    }
-
-    showDislikeSpinner() {
-        this.setState({dislikeSpinner : true})
-    }
-
-    hideSpinner() {
-        // console.log('hideSpinner')
-        this.setState({
-            spinner        : false,
-            likeSpinner    : false,
-            dislikeSpinner : false
-        });
-    }
 };
 
 Main.prototype.navigator = null;

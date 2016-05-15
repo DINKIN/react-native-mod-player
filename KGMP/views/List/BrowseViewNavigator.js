@@ -131,7 +131,6 @@ class BrowseListNavigator extends React.Component{
                 };
 
                 childNavigator.push(route);
-                // window.main.hideSpinner();
             });
 
         }
@@ -151,7 +150,6 @@ class BrowseListNavigator extends React.Component{
             window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
-                window.main.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
                 console.log(data);
             },        
@@ -178,9 +176,6 @@ class BrowseListNavigator extends React.Component{
                         fileRecord : record
                     }
                 });
-
-                window.main.hideSpinner();
-
             }
         );
 

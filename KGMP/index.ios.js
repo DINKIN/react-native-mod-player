@@ -1,6 +1,3 @@
-
-
-
 import React, {
     Component, 
     PropTypes
@@ -51,6 +48,7 @@ MCFsTool.getBundlePath((bundlepath) => {
 
 const KGMP = React.createClass({
     render : function() {
+        window.isSimulator = this.props.isSimulator;
         return <Main/>;
     }
 });

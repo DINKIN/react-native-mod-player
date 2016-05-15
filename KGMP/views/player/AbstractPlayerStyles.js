@@ -14,8 +14,7 @@ import {
 
 //TODO: more fluid layouting!!!
 
-var dosFont     = 'PerfectDOSVGA437Win',
-    borderColor = '#AEAEAE',
+var borderColor = '#AEAEAE',
     blackColor  = '#000000',
     whiteColor  = '#FFFFFF',
     row         = 'row',
@@ -42,7 +41,8 @@ module.exports = StyleSheet.create({
     },
 
     container : {
-        backgroundColor : whiteColor,
+        backgroundColor : 'transparent',
+        // paddingTop      : 30,
         // borderWidth     : .5,
         // borderColor     : blackColor,
         flexDirection   : 'column',
@@ -64,15 +64,13 @@ module.exports = StyleSheet.create({
     },
     
     controlsContainer : {
-        height      : 120,
-        paddingVertical : 30,
-        paddingHorizontal : 40,
-        flexDirection : 'row',
-        // width       : 375,
-        // borderTopWidth : 1,
-        // borderColor    : borderColor,
-        alignItems     : 'center',
-        justifyContent : 'space-between'
+        marginTop         : 10,
+        height            : 50,
+        paddingVertical   : 30,
+        paddingHorizontal : 10,
+        flexDirection     : 'row',
+        // alignItems        : 'center',
+        // justifyContent    : 'center'
     },
 
     vizContainer : {

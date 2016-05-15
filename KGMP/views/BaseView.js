@@ -18,8 +18,7 @@ class BaseView extends Component {
     constructor(opts) {
         super(opts);   
         this.className = this.constructor.name;
-
-        
+       
         this.setInitialState && this.setInitialState();
     }   
 
@@ -44,23 +43,6 @@ class BaseView extends Component {
         Subscribable.Mixin.componentWillUnMount.apply(this);
     }
 
-    showSpinner() {
-       window.main.showSpinner();
-    }
-
-    showLikeSpinner() {
-        window.main.showLikeSpinner()
-    }
-
-    showDislikeSpinner() {
-        window.main.showDislikeSpinner();
-    }
-
-    hideSpinner() {
-        window.main.hideSpinner();
-    }
-
-    // log()
 }
 
 module.exports = BaseView

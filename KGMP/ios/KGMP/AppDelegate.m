@@ -30,8 +30,11 @@
    * `inet` value under `en0:`) and make sure your computer and iOS device are
    * on the same Wi-Fi network.
    */
-#if TARGET_IPHONE_SIMULATOR
+   
+BOOL isSimulator;
 
+#if TARGET_IPHONE_SIMULATOR
+  isSimulator = YES;
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
   
 #else
@@ -42,13 +45,17 @@
    * running the project on an actual device or running the project on the
    * simulator in the "Release" build configuration.
    */
-
-   jsCodeLocation = [[NSBundle mainBundle] URLForRµesource:@"main" withExtension:@"jsbundle"];
+   isSimulator = NO;
+   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
 #endif
+  NSDictionary *initialProps = @{
+      @"isSimulator" : @(isSimulator)
+  };
+  
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"KGMP"
-                                               initialProperties:nil
+                                               initialProperties:initialProps
                                                    launchOptions:launchOptions];
 
 //  rootView.backgroundColor = [UIColor colorWithRed:32/255.0 green:34/255.0 blue:56/255.0 alpha:1];

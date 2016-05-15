@@ -15,7 +15,8 @@ import {
 
 
 const DirectoryRow = require('./DirectoryRow'),
-      FileRow      = require('./FileRow');
+      FileRow      = require('./FileRow'),
+      ShuffleRow   = require('./ShuffleRow');
 
 var { 
         MCModPlayerInterface
@@ -35,6 +36,9 @@ var BrowseView = React.createClass({
                 }
             });
             
+        rowData.unshift({
+            isShuffleRow : 1
+        });
 
         if (rowData) {
             return {
@@ -85,7 +89,7 @@ var BrowseView = React.createClass({
                 enableEmptySections={false}
                 style={[styles.listView, this.props.style]} 
                 dataSource={this.state.dataSource} 
-                initialListSize={50} 
+                initialListSize={10} 
                 pageSize={50} 
                 scrollRenderAheadDistance={150} 
                 renderRow={this._renderRow}
@@ -94,22 +98,16 @@ var BrowseView = React.createClass({
     },
 
     _renderRow: function(rowData, sectionID, rowID) {
-        
-        // var record      = this.props.rowData[rowID],
-        //     isDir       = !! record.number_files,
-        //     prefix      = null,
-        //     folder      = '\uE805',
-        //     playingIcon = '\uE80D',
-        //     emptyIcon   = '\uE999';
+            
+        if (rowData.isShuffleRow) {
+            return <ShuffleRow onPress={() => this._pressRow(rowID)}/>
+        }
 
-        // if (isDir) {
-        //     prefix = <Text style={styles.rowPrefix}>{folder}</Text> ;
-        // }
-
-        return rowData.number_files ? 
-            <DirectoryRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
+        return rowData.number_files 
+            ? 
+                <DirectoryRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
             :
-            <FileRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
+                <FileRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
 
     },
 
@@ -144,6 +142,7 @@ var BrowseView = React.createClass({
 
 var styles = StyleSheet.create({
     listView : {
+        paddingBottom : 50
         // backgroundColor : '#FFFFFF',
         // borderWidth : 1, borderColor : '#00FF00'
         // height          : window.height - 60

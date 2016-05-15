@@ -63,11 +63,12 @@ var getDirectories = function(path, callback) {
     }
 };
 
-const Icon         = require('react-native-vector-icons/Ionicons'),
-      BaseView     = require('./BaseView'),
-      BrowseList   = require('./List/BrowseList'),
-      FavsViewNav  = require('./List/FavoritesViewNavigator'),
-      RandomPlayer = require('./player/RandomPlayer');
+const Icon           = require('react-native-vector-icons/Ionicons'),
+      BaseView       = require('./BaseView'),
+      BrowseList     = require('./List/BrowseList'),
+      FavsViewNav    = require('./List/FavoritesViewNavigator'),
+      RandomPlayer   = require('./player/RandomPlayer'),
+      PlayController = require('./PlayController');
 
 let windowStyles = {
     white : '#FFFFFF',
@@ -85,20 +86,23 @@ class HomeMenu extends BaseView {
 
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
+
         getDirectories(null, (initialPaths) => {
             this.setState({
                 initialPaths : initialPaths
             });
 
-
+            // Debug purposes. automates the showing of the player
             setTimeout(() => {
-                this.onRowPress(initialPaths[1], this.refs.navigator);
+                this.onRowPress(initialPaths[12], this.refs.navigator);
+
                 setTimeout(() => {
-                    this.onRowPress(loadedDirectories[2], this.refs.navigator);
+                    // debugger;
+                    this.onRowPress(loadedDirectories[7], this.refs.navigator);
 
                     setTimeout(() => {
-                        this.refs.modPlayer.show();
-                    }, 1000);
+                        // this.refs.modPlayer.show();
+                    }, 500);
                 }, 500)
             }, 500)
         });
@@ -112,6 +116,7 @@ class HomeMenu extends BaseView {
             state  = this.state,
             innerView;
 
+
         if (state.initialPaths) {
 
             let initialRoute = {
@@ -122,7 +127,7 @@ class HomeMenu extends BaseView {
                     onRowPress : this.onRowPress,
                     style      : { 
                         paddingTop : 70,
-                        flex : 1
+                        flex       : 1
                     },
 
                 }
@@ -136,71 +141,19 @@ class HomeMenu extends BaseView {
         }
 
 
-        // TODO Abstract
-        // var animatedPlayerStyle = {
-        //         width           : windowDimensions.width,
-        //         height          : windowDimensions.height,
-        //         backgroundColor : 'rgba(0,0,255,.25)',//'transparent',
-        //         position        : 'absolute',
-        //         top             : windowDimensions.height,
-        //         transform       : [
-        //             { translateX : state.pan.x },
-        //             { translateY : state.pan.y }
-        //         ]
-        //     },
-        //     draggableToolbarStyle = {
-        //         height            : 40,
-        //         flexDirection     : 'row',
-        //         justifyContent    : 'space-between',
-        //         backgroundColor   : 'rgba(255, 255, 255, .7)',
-        //         alignItems        : 'center',
-        //         left              : 0,
-        //         right             : 0,
-        //         bottom            : state.tabBarPosition
-        //     },
-
-        //     playerBodyStyle = {
-        //         opacity : state.pan.y.interpolate({
-        //             inputRange : [ 
-        //                 -(windowDimensions.height - 49),
-        //                 0
-        //             ], 
-        //             outputRange: [ 1, 0 ]
-        //         })
-        //     }
-
         return (
             <View style={styles.container}>
                 {innerView}
                 
                 <AnimatedPlayer ref={'modPlayer'}/>
-                {/* TODO: move to separate component */}
-
-                {/*
-                <Animated.View style={animatedPlayerStyle}>
-                
-                    <Animated.View style={draggableToolbarStyle} {...this.panResponder.panHandlers}>
-                        <Text>Drag me!</Text>
-                    </Animated.View>
-                
-                    <Animated.View style={playerBodyStyle}>
-                        <ListPlayer ref="modPlayer" style={{height:windowDimensions.height - 40}}/>                        
-                    </Animated.View>
-        
-                </Animated.View>
-
-
-                */}
             </View>       
         )
     }
 
 
     onRowPress = (record, childNavigator, ownerList) => {
-        // TODO: Setup color for selected item
         var isDir = !! record.number_files,
             title;
-
 
         if (isDir) {
             title = unescape(record.name);
@@ -223,6 +176,9 @@ class HomeMenu extends BaseView {
             });
 
         }
+        else if (record.isShuffleRow) {
+            alert('This feature is not ready ;)')
+        }
         else {
             // debugger;
             this.loadModFile(record, childNavigator, ownerList);                
@@ -231,17 +187,21 @@ class HomeMenu extends BaseView {
     }
 
     // Todo:  Clean this method up. Shit, it's a mess!
-    loadModFile = (record, childNavigator, ownerList) => {
+    loadModFile = (fileRecord) => {
         // window.main.showSpinner();
-        var fileName = unescape(record.name);
+        // var fileName = unescape(fileRecord.name);
 
+
+        PlayController.loadFile(fileRecord, () => {
+            this.refs.modPlayer.showForTheFirstTime();
+        });
+
+        return;
         MCModPlayerInterface.loadFile(
             window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
-                // window.main.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
-                // console.log(data);
             },        
             //success
             (modObject) => {
@@ -250,7 +210,7 @@ class HomeMenu extends BaseView {
                     fileRecord : record 
                 });
 
-                this.refs.modPlayer.showForTheFirstTime();
+                
                 // this.showPlayerForTheFirstTime();
 
                 // MCModPlayerInterface.resume(() => {})
@@ -276,7 +236,6 @@ class HomeMenu extends BaseView {
                 //     }
                 // });
 
-                // window.main.hideSpinner();
 
             }
         );
@@ -297,7 +256,6 @@ class HomeMenu extends BaseView {
                 filePath,
                 //failure
                 (data) => {
-                    this.hideSpinner();
                     alert('Failure loading ' + unescape(rowData.name));
                 },       
 
@@ -322,7 +280,6 @@ class HomeMenu extends BaseView {
                         }
                     });
   
-                    this.hideSpinner();
                 }
             );
 
@@ -347,7 +304,6 @@ class HomeMenu extends BaseView {
                 }
             });
 
-            this.hideSpinner();
         });
     };
     
@@ -373,7 +329,6 @@ class HomeMenu extends BaseView {
                         modObject : modObject
                     }
                 });
-                this.hideSpinner();
             }
         ); 
     };
@@ -400,7 +355,6 @@ class HomeMenu extends BaseView {
                         // modObject : modObject
                     }
                 });
-                // this.hideSpinner();
         //     }
         // );        
     };

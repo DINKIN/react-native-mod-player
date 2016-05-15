@@ -21,6 +21,8 @@ var {
 
 
 class PlayController {
+    isPlaying : false;
+    isLoading : false;
 
     constructor() {
         this.eventEmitter = new EventEmitter();
@@ -39,7 +41,14 @@ class PlayController {
         this.eventEmitter.emit(eventName, eventData);
     }
 
-    loadFile(fileRecord) {
+    toggle() {
+        this[this.isPlaying ? 'pause' : 'resume']();
+    }
+
+    loadFile(fileRecord, callback) {
+        if (this.isLoading) {
+            return;
+        }
 
         var filePath = window.bundlePath + unescape(fileRecord.directory) + unescape(fileRecord.name);
 
@@ -58,48 +67,54 @@ class PlayController {
                     modObject  : modObject,
                     fileRecord : fileRecord
                 });
+
+                callback && callback(); // used for showing the player view for the 1st time
+                this.isPlaying = true;
+                this.isLoading = false;
             }
         );
     }
 
     nextTrack() {
+        if (this.isLoading) {
+            return;
+        }
+        
         console.log(this.constructor.name, 'nextTrack');
-
-        //TODO: Refactor
-        MCModPlayerInterface.pause(() => {
-            this.emit('pause');
-
-            MCQueueManager.getNextFileFromCurrentSet((fileRecord)=> {
-                this.loadFile(fileRecord);
-            });
-        })
+        
+        //TODO: Refactor so that we don't need to pause between tracks (ObjC layer)
+        this.pause();
+            
+        MCQueueManager.getNextFileFromCurrentSet((fileRecord)=> {
+            this.loadFile(fileRecord);
+        });
     }
 
     previousTrack() {
         console.log('previous');
+        if (this.isLoading) {
+            return;
+        }
 
-        MCModPlayerInterface.pause(() => {
-            this.emit('pause');
-
-            MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {
-                this.emit('fileLoaded', fileRecord);
-            });
-
+        this.pause();
+        MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {
+            this.loadFile(fileRecord);
         });
     }
 
     pause() {
         MCModPlayerInterface.pause(() => {
+            this.isPlaying = false;
+
             this.emit('pause', null);
         });
     }
 
     resume() {
-        MCModPlayerInterface.resume(
-            () => {
-                this.emit('play', null);          
-            }
-        );
+        MCModPlayerInterface.resume(() => {
+            this.isPlaying = true;
+            this.emit('play', null);
+        });
     }
 
 }

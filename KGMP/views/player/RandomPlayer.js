@@ -51,7 +51,6 @@ class RandomPlayer extends AbstractPlayer {
         if (this.props.isFavorites) {
             MCQueueManager.getPrevRandomFavorite((rowData) => {
                 if (! rowData) {
-                    window.main.hideSpinner();
 
                     alert('Sorry. No more items in history.');
                     return;

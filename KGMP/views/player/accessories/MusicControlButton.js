@@ -7,14 +7,14 @@ import React, {
 import {
     TouchableWithoutFeedback,
     TouchableHighlight,
+    TouchableOpacity,
     StyleSheet,
     Text,
     View
 } from "react-native";
 
 
-var BaseView = require('../../BaseView'),
-    styles   = require('./MusicControlButtonStyles.js');
+var BaseView = require('../../BaseView');
 
 
 class MusicControlButton extends BaseView {    
@@ -47,11 +47,10 @@ class MusicControlButton extends BaseView {
   
     render() {
        
-        var props           = this.props,
+        var styles          = this.styles,
+            props           = this.props,
             btnChar         = props.btnChar,
             pressedState    = this.state.pressed,
-            btnPressedStyle = pressedState ? styles[btnChar + 'ButtonPressed'] : '',
-            txtPressedStyle = pressedState ? styles.buttonPressedText : {},
             fontStyle       = styles.buttonFont,
             likedStyle;
             // fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
@@ -60,9 +59,10 @@ class MusicControlButton extends BaseView {
             likedStyle = styles.greenColor;
         }
 
+        // TODO: Clean this up!
         return (
-            <View style={[styles.button, styles[props.btnStyle], btnPressedStyle]}>
-                <TouchableWithoutFeedback 
+                <TouchableOpacity 
+                    style={[styles.button, this.props.style]}
                     onPress={this.onButtonPress}
                     onPressIn={this.onButtonPressIn}
                     onPressOut={this.onButtonPressOut}>
@@ -70,15 +70,14 @@ class MusicControlButton extends BaseView {
                             This nesting is setup as such to facilitate centering of the font,
                             while allowing for greater tap area than just the generic text element itself.
                             At the current writing of this application, TouchableWithoutFeedback does not allow
-                            for styling. #sadface
+                            for styling. #sadface (RN 26-rc1)
                         */}
                         <View style={styles.buttonInnerContainer}>
-                            <Text style={[fontStyle, txtPressedStyle, likedStyle]}>
+                            <Text style={[fontStyle, likedStyle, this.props.fontStyle]}>
                                 {this.buttonChars[btnChar]}
                             </Text>
                         </View>
-                </TouchableWithoutFeedback>
-            </View>
+                </TouchableOpacity>
         )
     }
 
@@ -94,6 +93,51 @@ class MusicControlButton extends BaseView {
     onButtonPressOut = () => {
         this.setState(this.btnStates.up);
     };
+
+    styles = StyleSheet.create({
+        button : {
+            width    : 50,
+            height   : 34,
+            // borderWidth : 1,
+            borderColor : '#0000FF',
+            justifyContent : 'center',
+            alignItems     : 'center',
+            // position : 'absolute',
+            // top      : top,
+            // borderWidth    : 1,
+            // borderColor    : '#FF0000',
+
+        },
+
+        buttonInnerContainer : {
+            width          : 49,
+            flexDirection  : 'row',
+            // borderWidth    : 1, borderColor : '#FF0000',
+            justifyContent : 'center',
+            alignItems     : 'center',
+            // borderWidth : 1,
+            // borderColor : '#FF3300',
+        },
+
+        buttonFont : {
+            fontFamily : 'fontello', 
+            fontSize   : 22,
+            fontWeight : '300',
+            color      : '#111'
+        },
+
+
+        likeButtonFont : {
+            fontFamily  : 'fontello', 
+            fontSize    : 22
+        },
+
+        greenColor : {
+            color : '#00FF00',
+            // fontWeight : 'bold'
+        }
+
+    });
 };
 
 module.exports  = MusicControlButton;

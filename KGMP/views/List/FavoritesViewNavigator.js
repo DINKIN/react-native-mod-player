@@ -78,7 +78,6 @@ class FavoritesListNavigator extends BaseView{
                 filePath,
                 //failure
                 (data) => {
-                    this.hideSpinner();
                     alert('Failure loading ' + record.file_name);
                     console.log(data);
                 },        
@@ -104,7 +103,6 @@ class FavoritesListNavigator extends BaseView{
                         }
                     });
   
-                    this.hideSpinner();
                 }
             );
 
@@ -123,7 +121,6 @@ class FavoritesListNavigator extends BaseView{
             window.bundlePath + unescape(record.directory) + fileName,
             //failure
             (data) => {
-                this.hideSpinner();
                 alert('Apologies. This file could not be loaded.');
                 console.log(data);
             },        
@@ -155,7 +152,6 @@ class FavoritesListNavigator extends BaseView{
                     }
                 });
                 
-                this.hideSpinner();
 
                 MCQueueManager.setQueueIndex(index);
 

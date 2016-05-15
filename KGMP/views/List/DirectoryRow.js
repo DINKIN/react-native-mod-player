@@ -14,7 +14,8 @@ import {
 } from "react-native";
 
 
-const AnimatedLazyImage = require('../common/AnimatedLazyImage');
+const AnimatedLazyImage = require('../common/AnimatedLazyImage'),
+      UrlTool           = require('../utils/UrlTool');
       
 class DirectoryRow extends Component {
 
@@ -28,35 +29,26 @@ class DirectoryRow extends Component {
             name    = split[1] ? split[1] : rowData.name,
             tunes   = rowData.number_files ? <Text style={styles.numTunes}>{rowData.number_files} songs</Text> : null;
  
-
-
         let imgName   = name.replace('/','','g'),
-            imgWidth  = 70,
-            imgHeight = 40,
+            imgWidth  = 72,
+            imgHeight = 50,
             source    = {
-                uri    : `http://localhost/kgmp_images/${imgName}.png`,
+                uri    : UrlTool.getUrlForImage(imgName),
                 width  : imgWidth,
                 height : imgHeight
             },
             imgStyle = {
                 width         : imgWidth, 
                 height        : imgHeight,
-                borderRadius  : 5,
-                shadowColor   : '#000',
-                shadowOpacity : 1,
-                shadowRadius  : 5,
-                shadowOffset  : {
-                    width  : 0,
-                    height : 0
-                }
+                borderRadius  : 5
             };
 
-        name = decodeURI(name);
+        name = decodeURI(imgName);
 
        
         // console.log(source.uri)
         return (
-            <TouchableHighlight key={rowID} underlayColor={"#FFFFFF"} onPress={() => {props.onPress(rowID)}}>
+            <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={() => {props.onPress(rowID)}}>
                 <View style={styles.rowContainer}>
                     <AnimatedLazyImage style={imgStyle} source={source}/>
                     <View style={styles.row}>
@@ -78,12 +70,12 @@ class DirectoryRow extends Component {
         },
 
         row : {
-            flex            : 1,
-            flexDirection   : 'column',
+            flex              : 1,
+            flexDirection     : 'column',
             // justifyContent  : 'center',
-            paddingHorizontal       : 15,
-            alignItems : 'flex-start',
-            justifyContent : 'flex-start',
+            paddingHorizontal : 15,
+            alignItems        : 'flex-start',
+            justifyContent    : 'center',
             // backgroundColor : '#F6F6F6',
         },
         

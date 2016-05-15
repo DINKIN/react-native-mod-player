@@ -23,11 +23,10 @@ import {
     PixelRatio
 } from "react-native";
 
-
-
-
-
-
+// const {   
+//           BlurView,
+//           VibrancyView
+//       } = require('react-native-blur');
 
 var defaultSceneConfig;
 if (Platform.OS == 'ios') {
@@ -212,7 +211,8 @@ var Navigation = React.createClass({
 
     render : function() {
         var state         = this.state,
-            NavigationBar = this.props.showNavBar && <Navigator.NavigationBar routeMapper={NavigationBarRouteMapper} style={styles.navBar}/> ;
+            NavigationBar = <Navigator.NavigationBar routeMapper={NavigationBarRouteMapper} style={styles.navBar}/>
+            
         // TODO: Bind navigators together somehow
         // console.log('props', state)
 
@@ -255,7 +255,7 @@ var styles = StyleSheet.create({
         fontWeight : '500'
     },
     navBar: {
-        backgroundColor: 'rgba(250,250,250,.8)',
+        backgroundColor: 'transparent',
         height : 70,
     },
 

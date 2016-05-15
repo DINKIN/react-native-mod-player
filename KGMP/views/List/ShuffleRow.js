@@ -13,39 +13,26 @@ import {
     View,
 } from "react-native";
 
+const Ionicons = require('react-native-vector-icons/Ionicons');
 
-const AnimatedLazyImage = require('../common/AnimatedLazyImage');
       
-class FileRow extends Component {
+class ShuffleRow extends Component {
 
 
     render() {
         let styles   = this.styles,
-            props    = this.props,
-            rowID    = props.rowID,
-            rowData  = props.rowData,
-            name     = rowData.file_name_short,
-            songName = null;
+            props    = this.props;
 
-        if (rowData.song_name) {
-            // console.log(rowData.song_name);
-            // console.log('\t', decodeURI(rowData.song_name));
-            songName = decodeURI(unescape(rowData.song_name)).trim();
-            songName = `"${songName}"`;
-            songName = <Text style={styles.songName}>{songName}</Text>;
-        }
-
-
-        name = decodeURI(name);
-
+        // console.log(JSON.stringify(rowData, undefined, 4));
+       
+        // console.log(source.uri)
         return (
-            <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={() => {props.onPress(rowID)}}>
+            <TouchableHighlight key={'shuffleRow'} underlayColor={"#000"} onPress={() => {props.onPress('shuffleRow')}}>
                 <View style={styles.rowContainer}>
-                    <Text style={{width:20}}>\></Text>
-                    <View style={styles.row}>
-                        <Text style={styles.rowText} numberOfLines={1}>{name}</Text>
-                        {songName}
-                    </View>
+                    <Text style={[styles.row, {color:'#999'}]}>
+                        Shuffle
+                    </Text>
+                    <Ionicons name="ios-shuffle" size={16} color='#999'/>
                 </View>
             </TouchableHighlight>
         );
@@ -58,13 +45,14 @@ class FileRow extends Component {
             backgroundColor : '#FFFFFF',
             borderBottomWidth : 1,
             borderBottomColor : '#EEE',
+            borderTopWidth : 1,
+            borderTopColor : '#EEE',
         },
 
         row : {
             flex            : 1,
             flexDirection   : 'column',
             // justifyContent  : 'center',
-            paddingHorizontal       : 15,
             alignItems : 'flex-start',
             justifyContent : 'flex-start',
             // backgroundColor : '#F6F6F6',
@@ -92,4 +80,4 @@ class FileRow extends Component {
     })
 }
 
-module.exports = FileRow;
+module.exports = ShuffleRow;

@@ -105,9 +105,11 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
                      withErrorCallback:(RCTResponseSenderBlock)errorCallback
                     andSuccessCallback:(RCTResponseSenderBlock)successCallback) {
     
-    queue =[[NSMutableArray alloc] initWithArray:[self getFilesForDirectory:dirName]];
+    queue = [[NSMutableArray alloc] initWithArray:[self getFilesForDirectory:dirName]];
     queueIndex = 0;
 
+
+//    NSLog(@"%@", [queue objectAtIndex:0]);
     browseType = 0;
 //    NSLog(@"%@      browseType = %i\n", self, browseType);
     if (queue == nil) {
@@ -122,10 +124,8 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
 
 RCT_EXPORT_METHOD(getNextFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
     NSDictionary *file = [self getNextFileFromCurrentSet];
-//    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     successCallback(@[file]);
-    
 }
 
 RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
@@ -136,7 +136,7 @@ RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successC
 }
 
 RCT_EXPORT_METHOD(setQueueIndex:(nonnull NSNumber *)index) {
-//    printf("QueueIndex now set to %lld\n", [index longLongValue]);
+    printf("QueueIndex now set to %lld\n", [index longLongValue]);
     queueIndex = [index longLongValue];
 }
 
@@ -207,7 +207,8 @@ RCT_EXPORT_METHOD(getPreviousRandom:(RCTResponseSenderBlock)successCallback) {
 
 RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
                   withMdFiveString:(NSString *)id_md5
-                      andCallback:(RCTResponseSenderBlock)successCallback) {
+                       andCallback:(RCTResponseSenderBlock)successCallback) {
+    
     NSDictionary *file;
     
     NSString *query  = [NSString stringWithFormat:@"UPDATE songs SET like_value = %@ WHERE id_md5 = '%@';", likeValue, id_md5];
@@ -216,7 +217,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
     // If we dislike a song, we just need to replace it in the queue.
     if ((int)[likeValue integerValue] == -1) {
-       unsigned long numFiles = [queue count] - 1;
+        unsigned long numFiles = [queue count] - 1;
  
         [queue removeObjectAtIndex:queueIndex];
         
