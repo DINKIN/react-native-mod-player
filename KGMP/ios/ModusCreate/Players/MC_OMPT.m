@@ -9,8 +9,11 @@
 #import "MC_OMPT.h"
 #define PLAYBACK_FREQ 44100
 
-@implementation MC_OMPT
+@implementation MC_OMPT {
+    
+}
 
+int x = 0;
 
 - (void) unloadFile {
     if (self.mod) {
@@ -29,7 +32,7 @@
     FILE *file = fopen([path cStringUsingEncoding:NSASCIIStringEncoding], "rb");
     
     if (file == NULL) {
-        return false;
+        return NULL;
     }
     
     fseek(file, 0L, SEEK_END);
@@ -78,11 +81,13 @@
 
 
 
-- (int32_t *) fillBufferNew:(short *)buffer withNumFrames:(size_t)numFrames {
+
+- (int32_t *) fillBufferFloat:(float *)buffer withNumFrames:(size_t)numFrames {
 
     openmpt_module * mod = self.mod;
     
-    openmpt_module_read_interleaved_stereo(mod, PLAYBACK_FREQ, numFrames, buffer);
+//    openmpt_module_read_float_mono(mod, PLAYBACK_FREQ, numFrames *2 , buffer);
+    openmpt_module_read_interleaved_float_stereo(mod, PLAYBACK_FREQ , numFrames, buffer);
     
     static int32_t data[4];
     
@@ -90,7 +95,28 @@
     data[1] = openmpt_module_get_current_pattern(mod);
     data[2] = openmpt_module_get_current_row(mod);
     data[3] = openmpt_module_get_pattern_num_rows(mod, data[1]);
+
+    return data;
+}
+
+
+
+
+
+- (int32_t *) fillLeftBuffer:(float *)leftBuffer withRightBuffer:(float *)rightBuffer withNumFrames:(size_t)numFrames {
+
+    openmpt_module * mod = self.mod;
     
+    openmpt_module_read_float_stereo(mod, PLAYBACK_FREQ, numFrames, leftBuffer, rightBuffer);
+    
+    static int32_t data[4];
+    
+    data[0] = openmpt_module_get_current_order(mod);
+    data[1] = openmpt_module_get_current_pattern(mod);
+    data[2] = openmpt_module_get_current_row(mod);
+    data[3] = openmpt_module_get_pattern_num_rows(mod, data[1]);
+//    printf("Order# %i :: Pattern# %i :: Row# %i\n", data[0], data[1], data[2]);
+
     return data;
 }
 
@@ -111,6 +137,7 @@
     int order = [newOrder intValue];
     openmpt_module_set_position_order_row(self.mod, order, 0);
 }
+
 
 - (NSDictionary *) extractInfoFromModFile:(openmpt_module*)myLoadedMpFile withPath:(NSString *)path {
     
@@ -270,7 +297,6 @@
     free(loadedFileData);
 
     return retObj;
-
 }
 
 

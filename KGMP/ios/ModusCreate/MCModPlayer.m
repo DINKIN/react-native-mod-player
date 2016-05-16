@@ -10,7 +10,12 @@
 
 @implementation MCModPlayer {
 
+    int lastPattern,
+        lastRow;
+    
+
 }
+
 
 
 static short int **audioGenerationBuffer,
@@ -44,6 +49,7 @@ struct StatusObject statuses[NUM_BUFFERS];
     dispatch_once(&onceToken, ^{
         sharedMyManager = [[self alloc] init];
     });
+    
     return sharedMyManager;
 }
 
@@ -164,6 +170,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
 }
 
+
 - (BOOL) initAudioSession {
     AVAudioSession *session = [AVAudioSession sharedInstance];
 
@@ -179,9 +186,9 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     
 
-    Float32 duration = (SOUND_BUFFER_SAMPLE_SIZE * 4) * 1.0f/PLAYBACK_FREQ;
-    [session setPreferredIOBufferDuration:duration error:&error];
-    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
+//    Float32 duration = (SOUND_BUFFER_SAMPLE_SIZE * 4) * 1.0f/PLAYBACK_FREQ;
+//    [session setPreferredIOBufferDuration:duration error:&error];
+//    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
 
  
     success = [session setActive:YES error:&error];
@@ -198,8 +205,85 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 }
 
 
+- (NSDictionary *) initializeSound:(NSString *)path {
+    
+    if (self.modPlayer) {
+        [self pause];
+    }
+    else {
+        self.modPlayer = [[MC_OMPT alloc] init];
+    }
+    
 
-- (NSDictionary *) initializeSound:(NSString *)path  {
+
+    
+    self.modInfo = [self.modPlayer loadFile:path];
+    
+    NSArray *pathParts = [path componentsSeparatedByString:@"/"];
+    
+    self.loadedFileName = [pathParts objectAtIndex:[pathParts count] - 1];
+    
+
+    AERenderer *renderer = [AERenderer new];
+    self.output = [[AEAudioUnitOutput alloc] initWithRenderer:renderer];
+    
+    lastPattern = -1;
+    lastRow = -1;
+    
+    renderer.block = ^(const AERenderContext * _Nonnull context) {
+
+        AEBufferStack *bufferStack = context->stack;
+        
+        const AudioBufferList * bufferList = AEBufferStackPushWithChannels(bufferStack, 1, 2);
+
+        if ( !bufferList ) {
+            return;
+        }
+
+        float *leftBuffer  = (float*)bufferList->mBuffers[0].mData,
+              *rightBuffer = (float*)bufferList->mBuffers[1].mData;
+
+        int32_t *currentStep = [self.modPlayer fillLeftBuffer:leftBuffer
+                                              withRightBuffer:rightBuffer
+                                                withNumFrames:context->frames];
+        
+        int currentPattern = currentStep[1],
+            currentRow     = currentStep[2];
+
+        if (lastPattern != currentPattern || lastRow != currentRow) {
+        
+            int32_t playerState[4];
+
+            playerState[0] = currentStep[0];
+            playerState[1] = currentStep[1];
+            playerState[2] = currentStep[2];
+            playerState[3] = currentStep[3];
+
+            [self notifyInterface:playerState];
+        }
+        
+        AERenderContextOutput(context, 1);
+    };
+    
+    
+    AVAudioSession * audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+
+    [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
+    NSError *activationError = nil;
+        
+    BOOL success = [audioSession setActive:YES error:&activationError];
+    if (!success) {
+        /* handle the error condition */
+        NSLog(@"Dafuq?");
+    }
+
+    
+    return self.modInfo;
+}
+
+
+- (NSDictionary *) initializeSoundOld:(NSString *)path  {
     
     if (self.modPlayer) {
     
@@ -235,20 +319,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
     AudioStreamBasicDescription mDataFormat;
     UInt32 err;
-
-  /*
-        (AudioStreamBasicDescription) mDataFormat = {
-          mSampleRate = 44100
-          mFormatID = 1819304813
-          mFormatFlags = 12
-          mBytesPerPacket = 4
-          mFramesPerPacket = 1
-          mBytesPerFrame = 4
-          mChannelsPerFrame = 2
-          mBitsPerChannel = 16
-          mReserved = 1
-        }
-    */
     
     mDataFormat.mFormatID         = kAudioFormatLinearPCM;
     mDataFormat.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
@@ -258,7 +328,9 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     mDataFormat.mBytesPerFrame    = (mDataFormat.mBitsPerChannel >> 3) * mDataFormat.mChannelsPerFrame;
     mDataFormat.mFramesPerPacket  = 1;
     mDataFormat.mBytesPerPacket   = mDataFormat.mBytesPerFrame;
-    
+
+
+
     err = AudioQueueNewOutput(&mDataFormat,
                              audioCallback,
                              CFBridgingRetain(self),
@@ -320,7 +392,7 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
 
     self.isPrimed = true;
     
-    soundThread = [[NSThread alloc] initWithTarget:self selector:@selector(generateAudioThread) object:nil];
+//    soundThread = [[NSThread alloc] initWithTarget:self selector:@selector(generateAudioThread) object:nil];
     
     [soundThread start];
     
@@ -483,24 +555,30 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 
 
 - (void) play {
-    [self updateInfoCenter];
-    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
-    AudioQueueStart(mAudioQueue, NULL);
-    self.isPrimed = false;
+
+    [self.output start:nil];
+    
     self.isPlaying = true;
+    [self updateInfoCenter];
+
+    return;
+//    [self updateInfoCenter];
+//    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
+//    AudioQueueStart(mAudioQueue, NULL);
+//    self.isPrimed = false;
+//    self.isPlaying = true;
 }
 
 - (void) pause {
-    AudioQueuePause(mAudioQueue);
-    AudioQueueFlush(mAudioQueue);
+    [self.output stop];
+
     self.isPlaying = false;
 
 }
 
 - (void) resume {
-    AudioQueueStart(mAudioQueue, NULL);
+    [self.output start:nil];
     self.isPlaying = true;
-
 }
 
 - (void) dealloc {
@@ -525,6 +603,9 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 - (void) setOrder:(NSNumber *) newOrder {
     [self.modPlayer setNewOrder:newOrder];
 }
+
+
+
 
 
 @end

@@ -93,20 +93,20 @@ class HomeMenu extends BaseView {
             });
 
             // Debug purposes. automates the showing of the player
-            setTimeout(() => {
-                this.onRowPress(initialPaths[12], this.refs.navigator);
+            // setTimeout(() => {
+            //     this.onRowPress(initialPaths[12], this.refs.navigator);
 
-                setTimeout(() => {
-                    // debugger;
-                    this.onRowPress(loadedDirectories[8], this.refs.navigator);
-                    PlayController.pause();
+            //     setTimeout(() => {
+            //         // debugger;
+            //         this.onRowPress(loadedDirectories[8], this.refs.navigator);
+            //         // PlayController.pause();
 
-                    setTimeout(() => {
-                        // this.refs.modPlayer.show();
-                        PlayController.pause();
-                    }, 500);
-                }, 500)
-            }, 500)
+            //         setTimeout(() => {
+            //             // this.refs.modPlayer.show();
+            //             // PlayController.pause();
+            //         }, 500);
+            //     }, 500)
+            // }, 500)
         });
 
 

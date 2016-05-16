@@ -37,7 +37,7 @@ class PlayController {
 
     // Abstract method for less typing
     emit(eventName, eventData) {
-        console.log(this.constructor.name, 'Emitting', eventName, eventData)
+        console.log(this.constructor.name, 'Emitting' /*, eventName, eventData*/)
         this.eventEmitter.emit(eventName, eventData);
     }
 

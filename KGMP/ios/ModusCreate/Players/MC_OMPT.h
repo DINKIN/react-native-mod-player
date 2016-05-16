@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AudioToolbox/AudioToolbox.h>
+@import AVFoundation;
+
 #import <libopenmpt.h>
 #import <libopenmpt_stream_callbacks_file.h>
 
@@ -33,6 +34,7 @@
 
 - (int32_t*) fillBuffer:(AudioQueueBuffer *)mBuffer;
 - (int32_t *) fillBufferNew:(short *)buffer withNumFrames:(size_t)numFrames;
+- (int32_t *) fillLeftBuffer:(float *)leftBuffer withRightBuffer:(float *)rightBuffer withNumFrames:(size_t)numFrames;
 
 
 

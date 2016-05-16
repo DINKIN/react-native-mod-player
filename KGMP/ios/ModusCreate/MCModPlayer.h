@@ -11,8 +11,10 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+
 #import <UIKit/UIApplication.h>
 #import <pthread.h>
+#import "TheAmazingAudioEngine.h"
 
 #import "MC_OMPT.h"
 //#import "MCPlotGlView.h"
@@ -75,6 +77,7 @@
 @property float* floatDataRt;
 @property int renderedAudioBuffSize;
 
+@property (nonatomic, strong, readwrite) AEAudioUnitOutput * output;
 
 + (instancetype) sharedManager;
 

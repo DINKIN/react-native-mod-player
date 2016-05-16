@@ -431,7 +431,7 @@ class AbstractPlayer extends BaseView {
             },
 
             fileLoaded : (config) => {
-                console.log(this.constructor.name, 'Received fileLoaded', config)
+                console.log(this.constructor.name, 'Received fileLoaded')
                 var fileRecord = config.fileRecord,
                     modObject = config.modObject;
 
