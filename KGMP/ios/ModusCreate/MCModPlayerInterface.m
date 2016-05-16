@@ -193,7 +193,14 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
 }
 
 
-
+RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
+                  callback:(RCTResponseSenderBlock)callback) {
+    
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    NSLog(@"new Order %@", newOrder);
+    [player setOrder:newOrder];
+    callback(@[]);
+}
 
 #pragma mark Utilities
 

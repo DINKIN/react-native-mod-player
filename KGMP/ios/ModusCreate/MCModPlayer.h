@@ -101,6 +101,7 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 - (void) appHasGoneInBackground;
 - (void) appHasGoneInForeground;
 - (void) setDelegate:(id)aDelegate;
+- (void) setOrder:(NSNumber *)newOrder;
 
 
 

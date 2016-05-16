@@ -99,9 +99,11 @@ class HomeMenu extends BaseView {
                 setTimeout(() => {
                     // debugger;
                     this.onRowPress(loadedDirectories[8], this.refs.navigator);
+                    PlayController.pause();
 
                     setTimeout(() => {
-                        this.refs.modPlayer.show();
+                        // this.refs.modPlayer.show();
+                        PlayController.pause();
                     }, 500);
                 }, 500)
             }, 500)

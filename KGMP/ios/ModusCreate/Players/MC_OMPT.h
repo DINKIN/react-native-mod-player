@@ -46,6 +46,7 @@
 - (int) getCurrentPattern;
 - (int) getCurrentRowNumber;
 - (NSDictionary *) extractInfoFromModFile:(openmpt_module*) myLoadedMpFile withFileName:(NSString *)path;
+- (void) setNewOrder:(NSNumber *)newOrder;
 
 char * getModTypeName(int modTypeInt);
 @end

@@ -72,6 +72,7 @@ class AnimatedPlayer extends BaseView {
                     // console.log('this.show();()')
                     this.show();
                 }
+                // TODO : This has a bug. fix.
                 else {
                     if (deltaY > 0) {
                         this.show();
@@ -152,24 +153,23 @@ class AnimatedPlayer extends BaseView {
                 ]
             },
             draggableToolbarStyle = {
-                height            : 40,
-                flexDirection     : 'row',
-                justifyContent    : 'space-between',
+                height         : 40,
+                flexDirection  : 'row',
+                justifyContent : 'space-between',
                 // backgroundColor   : 'rgba(255, 255, 255, .7)',
-                alignItems        : 'center',
-                left              : 0,
-                right             : 0,
-                bottom            : state.tabBarPosition
+                alignItems     : 'center',
+                left           : 0,
+                right          : 0,
+                bottom         : state.tabBarPosition
             },
-
             playerBodyStyle = {
                 height  : windowDimensions.height * 2,
-            }
+            };
 
         let modObject = state.modObject,
             fileName  = modObject && (modObject.name || modObject.file_name); 
 
-        let targetWidth   = 50,
+        let targetWidth   = 70,
             mainImageDims = {
                 height : Math.floor((464 / 700) * targetWidth),
                 width  : targetWidth
@@ -178,9 +178,9 @@ class AnimatedPlayer extends BaseView {
         let toolbarView;
 
         if (modObject) {
-            let imgName   = modObject.group,
-                btnType   = PlayController.isPlaying ? 'pause' : 'play',
-                source    = {
+            let imgName = modObject.group,
+                btnType = PlayController.isPlaying ? 'pause' : 'play',
+                source  = {
                     uri    : UrlTool.getUrlForImage(imgName),
                     width  : mainImageDims.width,
                     height : mainImageDims.height
@@ -189,28 +189,28 @@ class AnimatedPlayer extends BaseView {
                     width         : mainImageDims.width, 
                     height        : mainImageDims.height,
                     marginRight   : 10,
-                    shadowColor   : '#000',
-                    shadowOpacity : .5,
-                    shadowRadius  : 2,
-                    shadowOffset  : {
-                        width  : 0,
-                        height : 2
-                    }
+                    // shadowColor   : '#000',
+                    // shadowOpacity : .5,
+                    // shadowRadius  : 2,
+                    // shadowOffset  : {
+                    //     width  : 0,
+                    //     height : 2
+                    // }
                 }; 
             
             toolbarView = (
                 <View style={styles.topToolbarContainer}>
                     <AnimatedLazyImage source={source} style={imgStyle}/>
-                    <View style={{flex:1, justifyContent : 'center', alignItems : 'center', height : 28}}>
-                        <Text style={{fontSize:16}}>
+                    <View style={{flex:1, justifyContent : 'center', alignItems : 'center', height : 40}}>
+                        <Text style={{fontSize:20, fontWeight : '300'}}>
                             {imgName}
                         </Text>
-                        <Text style={{fontSize:12, fontWeight : '300', color: '#888'}}>
+                        <Text style={{fontSize:14, fontWeight : '300', color: '#888'}}>
                             {fileName}
                         </Text>
                     </View>
-                    <View style={{width:mainImageDims.width, marginHorizontal : 5, height: 30, paddingTop: 2}}>
-                        <MusicControlButton onPress={this.onPlayPausePress} btnChar={btnType} style={{height: 30}}/>
+                    <View style={{width:mainImageDims.width, height: 48, paddingTop: 2, justifyContent : 'center',  alignItems : 'center'}}>
+                        <MusicControlButton onPress={this.onPlayPausePress} btnChar={btnType} style={{height: 40}}/>
                     </View>
                 </View>
             )           
@@ -238,7 +238,7 @@ class AnimatedPlayer extends BaseView {
 
     styles = StyleSheet.create({
         topToolbarContainer : {
-            height          : 50,
+            height          : 75,
             backgroundColor : '#EFEFEF', 
             flexDirection : 'row',  
             justifyContent : 'center', 

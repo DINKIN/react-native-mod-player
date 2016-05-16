@@ -164,7 +164,6 @@ void audioCallback(void *data, AudioQueueRef mQueue, AudioQueueBufferRef mBuffer
     
 }
 
-
 - (BOOL) initAudioSession {
     AVAudioSession *session = [AVAudioSession sharedInstance];
 
@@ -523,7 +522,9 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 }
 
 
-
+- (void) setOrder:(NSNumber *) newOrder {
+    [self.modPlayer setNewOrder:newOrder];
+}
 
 
 @end

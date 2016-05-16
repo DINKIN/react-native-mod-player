@@ -61,23 +61,23 @@ class MusicControlButton extends BaseView {
 
         // TODO: Clean this up!
         return (
-                <TouchableOpacity 
-                    style={[styles.button, this.props.style]}
-                    onPress={this.onButtonPress}
-                    onPressIn={this.onButtonPressIn}
-                    onPressOut={this.onButtonPressOut}>
-                        {/* 
-                            This nesting is setup as such to facilitate centering of the font,
-                            while allowing for greater tap area than just the generic text element itself.
-                            At the current writing of this application, TouchableWithoutFeedback does not allow
-                            for styling. #sadface (RN 26-rc1)
-                        */}
-                        <View style={styles.buttonInnerContainer}>
-                            <Text style={[fontStyle, likedStyle, this.props.fontStyle]}>
-                                {this.buttonChars[btnChar]}
-                            </Text>
-                        </View>
-                </TouchableOpacity>
+            <TouchableOpacity 
+                style={[styles.button, this.props.style]}
+                onPress={this.onButtonPress}
+                onPressIn={this.onButtonPressIn}
+                onPressOut={this.onButtonPressOut}>
+                    {/* 
+                        This nesting is setup as such to facilitate centering of the font,
+                        while allowing for greater tap area than just the generic text element itself.
+                        At the current writing of this application, TouchableWithoutFeedback does not allow
+                        for styling. #sadface (RN 26-rc1)
+                    */}
+                    <View style={styles.buttonInnerContainer}>
+                        <Text style={[fontStyle, likedStyle, this.props.fontStyle]}>
+                            {this.buttonChars[btnChar]}
+                        </Text>
+                    </View>
+            </TouchableOpacity>
         )
     }
 

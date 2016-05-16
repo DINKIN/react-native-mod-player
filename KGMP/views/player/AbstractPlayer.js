@@ -16,6 +16,7 @@ import {
 
 import PlayController from '../PlayController';
 
+const Slider = require('react-native-slider');
 const UrlTool = require('../utils/UrlTool'),
       { 
           BlurView,
@@ -101,7 +102,9 @@ class AbstractPlayer extends BaseView {
         numberPatterns : 0,
         leftSide       : 'l',
         rightSide      : 'r',
-        fileRecord     : null
+        fileRecord     : null,
+        sliderPosition : 0,
+        currentPattern : -1
     };
 
     render() {
@@ -245,14 +248,32 @@ class AbstractPlayer extends BaseView {
 
         var panHandlers = props.panResponderScope ? props.panResponderScope.panHandlers : {};
 
+
+        var customStyles3 = {
+            track: {
+                height: 2,
+                borderRadius: 0,
+                backgroundColor: '#CCC',
+            },
+            thumb: {
+                width: 3,
+                height: 20,
+                borderRadius: 0,
+                backgroundColor: '#666',
+            }
+        };
+
+        var sliderSteps = modObject.patternOrds.length - 1;
+        // console.log('sliderSteps', sliderSteps)
+
         return (
             <Image style={[styles.container, this.props.style]} source={rootImageSource}>
                 <BlurViewType blurType={"xlight"} style={[styles.container, {paddingTop: 30, backgroundColor :'rgba(255,255,255, .5)'}]}>
                     <View {...panHandlers}>
                         <View style={styles.titleBar}>
-                            <Text style={{fontSize:26, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
-                            <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', marginBottom : 5}}>{songName}</Text>
-                            <Text style={{fontSize:12, fontWeight:'300', color:'#BEBEBE', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
+                            <Text style={{fontSize:30, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
+                            <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}}>{songName}</Text>
+                            <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
                                 {fileName}
                             </Text>
                         </View>
@@ -262,8 +283,20 @@ class AbstractPlayer extends BaseView {
                         </View>
                     </View>
 
-                    <View style={{backgroundColor:'#CCC', marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
-                        <Text>Time control here</Text>
+                    <View style={{marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
+                        <Slider
+                            ref={'slider'}
+                            minimumValue={0}
+                            value={state.sliderPosition}
+                            maximumValue={sliderSteps}
+                            trackStyle={customStyles3.track}
+                            thumbStyle={customStyles3.thumb}
+                            minimumTrackTintColor='#666'
+                            style={{width:mainImageDims.width}}
+                            step={1}
+                            onSlidingStart={this.onSlidingStart}
+                            onSlidingComplete={this.onSliderChangeComplete}
+                          />
                     </View>
 
                     <View style={styles.controlsContainer}>
@@ -321,12 +354,36 @@ class AbstractPlayer extends BaseView {
         );
     }
 
+    onSlidingStart = (value) => {
+        console.log('onSlidingStart')
+        this.deregisterPatternUpdateHandler();
+
+        // this.setState({
+        //     sliderPosition : value,
+        //     order          : value
+        // });
+    }
+
+    onSliderChangeComplete = (value) => { 
+        // console.log('slider change', value);
+        console.log('Release', value)
+
+        PlayController.setOrder(value, () => {
+            this.setState({
+                sliderPosition : value,
+                order          : value
+            });
+
+            // Give time for audio buffer to catch up
+            setTimeout(() => {
+                this.registerPatternUpdateHandler();
+            }, 150); 
+        })
+    }
 
     componentWillMount() {
         // this.patterns = this.props.patterns;
         super.componentWillMount();
-
-
     }
 
 
@@ -378,6 +435,7 @@ class AbstractPlayer extends BaseView {
                 var fileRecord = config.fileRecord,
                     modObject = config.modObject;
 
+                console.log('Pattern orders', modObject.patternOrds);
                 // debugger;
                 this.loading = false;
 
@@ -401,7 +459,9 @@ class AbstractPlayer extends BaseView {
 
                 this.setState({
                     fileRecord : fileRecord,
-                    modObject : modObject
+                    modObject : modObject,
+                    currentPattern : -1,
+                    sliderPosition : 0
                 });
 
             } 
@@ -435,20 +495,20 @@ class AbstractPlayer extends BaseView {
     }
 
     deregisterPatternUpdateHandler() {
-        // if (this.patternUpdateHandler) {
-        //     this.patternUpdateHandler.remove();
-        //     this.patternUpdateHandler = null;
-        // }
+        if (this.patternUpdateHandler) {
+            this.patternUpdateHandler.remove();
+            this.patternUpdateHandler = null;
+        }
     }
 
     registerPatternUpdateHandler() {
-        // if (this.patternUpdateHandler) {
-        //     return;
-        // }
-        // this.patternUpdateHandler = RCTDeviceEventEmitter.addListener(
-        //     'rowPatternUpdate',
-        //     this.onPatternUpdateEvent
-        // );
+        if (this.patternUpdateHandler) {
+            return;
+        }
+        this.patternUpdateHandler = RCTDeviceEventEmitter.addListener(
+            'rowPatternUpdate',
+            this.onPatternUpdateEvent
+        );
     }
  
 
@@ -557,27 +617,37 @@ class AbstractPlayer extends BaseView {
 
     
     onPatternUpdateEvent = (position) => {
-        return;
+        // console.log(position)
         var refs    = this.refs,
             order   = position[0], 
             pattern = position[1],
             row     = position[2];
 
+
+        var state          = this.state,
+            currentPattern = state.currentPattern;
+
+
         // refs.webView.execJsCall(''.concat(updateStart , pattern, comma, row, updateEnd));
 
-        refs.summaryCard.setState({
-            order   : order,
-            pattern : pattern,
-            row     : row
-        });
+        // refs.summaryCard.setState({
+        //     order   : order,
+        //     pattern : pattern,
+        //     row     : row
+        // });
 
         // debugger;
 
-        if (pattern != currentPattern) {
-            refs.progressView.setState({
-                numberOfCells   : this.state.modObject.patternOrds.length,
-                highlightNumber : order
-            });    
+        if (pattern != currentPattern && state.sliderPosition != order) {
+            // refs.progressView.setState({
+            //     numberOfCells   : this.state.modObject.patternOrds.length,
+            //     highlightNumber : order
+            // });
+            console.log('New order', order)
+            this.setState({
+                currentPattern : pattern,
+                sliderPosition : order
+            });
         }
         
 

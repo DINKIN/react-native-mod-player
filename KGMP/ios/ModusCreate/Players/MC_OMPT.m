@@ -107,6 +107,10 @@
     return openmpt_module_get_current_row(self.mod);
 }
 
+- (void) setNewOrder:(NSNumber *)newOrder {
+    int order = [newOrder intValue];
+    openmpt_module_set_position_order_row(self.mod, order, 0);
+}
 
 - (NSDictionary *) extractInfoFromModFile:(openmpt_module*)myLoadedMpFile withPath:(NSString *)path {
     

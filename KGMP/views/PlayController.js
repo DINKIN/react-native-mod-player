@@ -117,6 +117,10 @@ class PlayController {
         });
     }
 
+    setOrder(order, callback) {
+        MCModPlayerInterface.setOrder(order, callback);
+    }
+
 }
 
 module.exports = new PlayController();
