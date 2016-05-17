@@ -18,40 +18,47 @@ RCT_EXPORT_MODULE();
         [self configureCommandCenter];
 //        NSLog(@"MCModPlayerInterface init");
         
-        MCModPlayerInterface *interface = self;
-//        NSString *formatString = @"%i";
-        
-        
-        self.then = CACurrentMediaTime();
-        
-        [[MCModPlayer sharedManager] registerInfoCallback:^(int32_t *playerState) {
-            int ord     = (int)playerState[0],
-                pat     = (int)playerState[1],
-                row     = (int)playerState[2],
-                numRows = (int)playerState[3];
-            
-            if (interface.currentOrder != ord || interface.currentPattern != pat || interface.currentRow != row) {
-
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"rowPatternUpdate" body:@[
-                    
-                    [[NSNumber alloc] initWithInt:ord],
-                    [[NSNumber alloc] initWithInt:pat],
-                    [[NSNumber alloc] initWithInt:row],
-                    [[NSNumber alloc] initWithInt:numRows]
-                    
-                ]];
-                
-                interface.currentRow     = row;
-                interface.currentOrder   = ord;
-                interface.currentPattern = pat;
-            }
-            
-        }];
 
         return self;
     }
 
     return nil;
+}
+
+- (void)setBridge:(RCTBridge *)bridge
+{
+    _bridge = bridge;
+    MCModPlayerInterface *interface = self;
+    //        NSString *formatString = @"%i";
+
+
+    self.then = CACurrentMediaTime();
+
+    [[MCModPlayer sharedManager] registerInfoCallback:^(int32_t *playerState) {
+        int ord     = (int)playerState[0],
+            pat     = (int)playerState[1],
+            row     = (int)playerState[2],
+            numRows = (int)playerState[3];
+        
+        if (interface.currentOrder != ord || interface.currentPattern != pat || interface.currentRow != row) {
+
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"rowPatternUpdate" body:@[
+                
+                [[NSNumber alloc] initWithInt:ord],
+                [[NSNumber alloc] initWithInt:pat],
+                [[NSNumber alloc] initWithInt:row],
+                [[NSNumber alloc] initWithInt:numRows]
+                
+            ]];
+            
+            interface.currentRow     = row;
+            interface.currentOrder   = ord;
+            interface.currentPattern = pat;
+        }
+        
+    }];
+
+
 }
 
 - (NSDictionary *) loadFileViaPathString:(NSString *)path {
@@ -269,7 +276,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     [commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         [player pause];
         
-        NSLog(@"pauseCommand");
+//        NSLog(@"pauseCommand");
         
         if (player.appActive) {
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
@@ -289,10 +296,13 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     }];
 
     [commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        NSLog(@"nextTrackCommand");
+//        NSLog(@"nextTrackCommand");
         
+        if (! _bridge) {
+            return success;
+        }
         
-        MCQueueManager *qMgr = [_bridge.moduleClasses valueForKey:@"MCQueueManager"];
+        MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
         
         NSDictionary *file = [qMgr getNext];
         [player pause];
@@ -301,32 +311,34 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
         NSDictionary *modInfo = [self loadFileViaDictionary:file];
         [player play];
         
+        NSDictionary *eventBody = @{
+            @"eventType"  : @"fileLoad",
+            @"modObject"  : modInfo,
+            @"fileRecord" : file
+        };
+        
         if (player.appActive) {
-            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"fileLoad",
-                @"modObject" : modInfo,
-                @"file"      : file
-            }];
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
         }
         else {
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"fileLoad",
-                    @"modObject" : modInfo,
-                    @"file"      : file
-                }];
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
             }];
         }
         
 
         return success;
     }];
+
     
     [commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
         NSLog(@"previousTrackCommand");
         
-        MCQueueManager *qMgr = [_bridge.moduleClasses valueForKey:@"MCQueueManager"];
+        if (! _bridge) {
+            return success;
+        }
+        MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
 
         NSDictionary *file = [qMgr getPrevious];
         [player pause];
@@ -334,21 +346,19 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
         NSDictionary *modInfo = [self loadFileViaDictionary:file];
         [player play];
         
+        NSDictionary *eventBody = @{
+            @"eventType"  : @"fileLoad",
+            @"modObject"  : modInfo,
+            @"fileRecord" : file
+        };
+        
         if (player.appActive) {
-            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"fileLoad",
-                @"modObject" : modInfo,
-                @"file"      : file
-            }];
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
         }
         else {
             // When the UI becomes active, emit this event
             [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"fileLoad",
-                    @"modObject" : modInfo,
-                    @"file"      : file
-                }];
+                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
             }];
         }
         

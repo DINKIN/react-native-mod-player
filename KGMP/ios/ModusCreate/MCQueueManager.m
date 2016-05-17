@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Modus Create. All rights reserved.
 //
 
-// Inspired heavily by https://github.com/almost/react-native-sqlite
-
 #import "MCQueueManager.h"
 
 
@@ -54,9 +52,9 @@ static dispatch_queue_t MCQueueManagerQueue(void) {
 
 
 
-@synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
+@synthesize bridge = _bridge;
 
 //
 //
@@ -303,7 +301,7 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
 
 - (NSDictionary *) getNext {
-//    NSLog(@"%@      browseType = %i\n", self, browseType);
+    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     // directory listings || Favorites list || random favorites list
     if (browseType == 0 || browseType == 1 || browseType == 3) {

@@ -416,6 +416,7 @@ class AbstractPlayer extends BaseView {
                 // debugger;
                 var eventType = eventObj.eventType;
 
+                debugger;
                 if (eventType == 'fileLoad') {
                     this.onCommandCenterEventFileLoad(eventObj);
                 }
@@ -435,7 +436,7 @@ class AbstractPlayer extends BaseView {
                 var fileRecord = config.fileRecord,
                     modObject = config.modObject;
 
-                console.log('Pattern orders', modObject.patternOrds);
+                // console.log('Pattern orders', modObject.patternOrds);
                 // debugger;
                 this.loading = false;
 

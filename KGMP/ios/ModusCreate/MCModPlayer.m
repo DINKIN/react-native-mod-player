@@ -161,7 +161,7 @@ struct StatusObject statuses[NUM_BUFFERS];
     if (self.modPlayer) {
         [self loadFile:path];
         isLoading = 0;
-
+        isPaused = 0;
         return self.modInfo;
     }
     

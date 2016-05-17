@@ -30,14 +30,23 @@ class PlayController {
         this.commandCenterEventHandler = RCTDeviceEventEmitter.addListener(
             'commandCenterEvent',
             (eventObject) => {
-                this.emit('commandCenterFileLoaded', eventObject)
+                var eventType = eventObject.eventType;
+
+                if (eventType == 'fileLoad') {
+                    this.emit('fileLoaded', {
+                        modObject  : eventObject.modObject,
+                        fileRecord : eventObject.fileRecord
+                    });
+                    return;
+                }
+                this.emit('commandCenterEvent', eventObject)
             }
         );
     }
 
     // Abstract method for less typing
     emit(eventName, eventData) {
-        console.log(this.constructor.name, 'Emitting' /*, eventName, eventData*/)
+        console.log(this.constructor.name, 'Emitting' , eventName/*, eventData*/)
         this.eventEmitter.emit(eventName, eventData);
     }
 
@@ -83,7 +92,7 @@ class PlayController {
         console.log(this.constructor.name, 'nextTrack');
         
         //TODO: Refactor so that we don't need to pause between tracks (ObjC layer)
-        this.pause();
+        // this.pause();
             
         MCQueueManager.getNextFileFromCurrentSet((fileRecord)=> {
             this.loadFile(fileRecord);
@@ -96,7 +105,7 @@ class PlayController {
             return;
         }
 
-        this.pause();
+        // this.pause();
         MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {
             this.loadFile(fileRecord);
         });
