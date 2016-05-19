@@ -146,6 +146,11 @@ var NavigationBarRouteMapper = {
 
 var Navigation = React.createClass({
 
+    getInitialState() {
+        return {
+              
+        };
+    },
     
     componentDidMount : function() {
         // Todo : move to render scene
@@ -184,7 +189,7 @@ var Navigation = React.createClass({
     renderScene : function (route, navigator)  {
         this.navigator = navigator;
         navigator.topNav = this.props.topNav;
-        // console.log('route', route);
+        console.log('route', route);
    
         var baseObj = {
             navigator : navigator
@@ -195,11 +200,6 @@ var Navigation = React.createClass({
         }
 
         if (route.component) {
-            // setTimeout(() => {
-            //     this.setState({
-            //         hideNavBar : route.__navigatorRouteID == 0
-            //     })
-            // }, 100)
             return React.createElement(route.component, baseObj);
         }
     },
@@ -238,7 +238,7 @@ var styles = StyleSheet.create({
         // borderWidth : 2, borderColor : '#FF0000'
     },
     messageText: {
-        fontSize: FontHelper.getAppropriateFontSize(17),
+        fontSize: 17,
         fontWeight: '500',
         padding: 15,
         marginTop: 50,
@@ -251,17 +251,19 @@ var styles = StyleSheet.create({
         borderBottomColor: '#CDCDCD',
     },
     buttonText: {
-        fontSize   : FontHelper.getAppropriateFontSize(18),
+        fontSize   : 18,
         fontWeight : '500'
     },
     navBar: {
         backgroundColor: 'transparent',
-        height : 70,
+        height : 60,
+        // borderBottomWidth : 1,
+        // borderBottomColor : '#AEAEAE'
     },
 
     navBarText: {
         // fontFamily: 'BankGothicBold',
-        fontSize: FontHelper.getAppropriateFontSize(20)
+        fontSize: 20
     },
     navBarTitleText: {
         color: '#000',
@@ -271,7 +273,7 @@ var styles = StyleSheet.create({
 
     navBarSubTitleText: {
         color: '#78909C',
-        fontSize: FontHelper.getAppropriateFontSize(12),
+        fontSize: 12,
         justifyContent : 'center',
     },
 

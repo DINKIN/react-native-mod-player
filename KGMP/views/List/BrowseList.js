@@ -16,38 +16,105 @@ import {
 
 const DirectoryRow = require('./DirectoryRow'),
       FileRow      = require('./FileRow'),
-      ShuffleRow   = require('./ShuffleRow');
+      ShuffleRow   = require('./ShuffleRow'),
+      BaseView     = require('../BaseView');
 
-var { 
-        MCModPlayerInterface
+
+var initialPaths,
+    {
+        MCModPlayerInterface,
+        MCQueueManager
     } = require('NativeModules');
 
+var getDirectories = function(path, callback) {
+    if (path) {
+        MCQueueManager.getFilesForDirectory(
+            path,
+            // failure
+            () => {
+                console.log('An Error Occurred');
+            },
+            // Success
+            (response) =>  {
+                callback(response)               
+            }
+        );
+    }
+    else {
+        MCQueueManager.getDirectories(
+            // failure
+            () => {
+                console.log('An Error Occurred');
+            },
+            // Success`
+            (response) =>  {
+                callback(response)               
+  
+            }
+        );
+    }
+};
+class BrowseView extends BaseView{
 
-var BrowseView = React.createClass({
-        
-    data      : null,
-    fileNames : null,
+    setInitialState() {
+        this.state = {
+            initialPaths : (this.props && this.props.initialPaths) ? this.props.initialPaths : null
+        };
 
-    getInitialState: function() {
-        var rowData    = this.props.rowData,
-            dataSource = new ListView.DataSource({
+    }
+
+
+
+    componentWillMount() {
+        this._pressData = {};
+
+        getDirectories(null, (initialPaths) => {
+            this.setState({
+                initialPaths : initialPaths
+            });
+
+            
+
+            // Debug purposes. automates the showing of the player
+            // setTimeout(() => {
+            //     this.onRowPress(initialPaths[12], this.refs.navigator);
+
+            //     setTimeout(() => {
+            //         // debugger;
+            //         this.onRowPress(loadedDirectories[8], this.refs.navigator);
+            //         // PlayController.pause();
+
+            //         setTimeout(() => {
+            //             this.refs.modPlayer.show();
+            //             PlayController.pause();
+            //         }, 500);
+            //     }, 500);
+            // }, 500);
+        });
+
+
+    }
+
+
+
+    getNewDataSource() {
+        var props        = this.props,
+            state        = this.state,
+            initialPaths = props.initialPaths || state.initialPaths || [],
+            dataSource   = new ListView.DataSource({
                 rowHasChanged : function(r1, r2) {
                     return r1 !== r2;
                 }
             });
+
             
-        rowData.unshift({
+        initialPaths.unshift({
             isShuffleRow : 1
         });
 
-        if (rowData) {
-            return {
-                dataSource : dataSource.cloneWithRows(rowData)
-            };
-        }  
-
-        return {};
-    },
+        return dataSource.cloneWithRows(initialPaths)
+        
+    }
 
     // setRecordIsPlaying: function(rowID, isPlaying) {
     //     // debugger;
@@ -76,28 +143,26 @@ var BrowseView = React.createClass({
     // },
 
     shouldComponentUpdate(nextProps, nextState) {
-        return ! this.props.rowData;
-    },
+        return ! this.state.rowData;
+    }
 
-    componentWillMount: function() {
-        this._pressData = {};
-    },
+    render() {
 
-    render: function() {
+
         return (
             <ListView 
                 enableEmptySections={false}
                 style={[styles.listView, this.props.style]} 
-                dataSource={this.state.dataSource} 
+                dataSource={this.getNewDataSource()} 
                 initialListSize={10} 
                 pageSize={50} 
                 scrollRenderAheadDistance={150} 
                 renderRow={this._renderRow}
             />
         );
-    },
+    }
 
-    _renderRow: function(rowData, sectionID, rowID) {
+    _renderRow(rowData, sectionID, rowID) {
             
         if (rowData.isShuffleRow) {
             return <ShuffleRow onPress={() => this._pressRow(rowID)}/>
@@ -109,10 +174,10 @@ var BrowseView = React.createClass({
             :
                 <FileRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
 
-    },
+    }
 
     
-    removeRecord : function(record) {
+    removeRecord(record) {
         var rowData  = this.props.rowData,
             rowIndex = rowData.indexOf(record);
 
@@ -129,14 +194,14 @@ var BrowseView = React.createClass({
         this.setState({
             dataSource : ds
         });
-    },
+    }
 
-    _pressRow: function(rowID) {
+    _pressRow(rowID) {
         var props = this.props;
 
         props.onRowPress(props.rowData[rowID], props.navigator, this);
     }
-});
+};
 
 
 

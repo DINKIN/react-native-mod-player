@@ -27,7 +27,7 @@ console.disableYellowBox = true;
 // var styles = require('./jsx/Styles'),
 
 
-const Main = require('./views/Main');
+const Main = require('./views/HomeTabView');
 
 const { 
     MCFsTool,
