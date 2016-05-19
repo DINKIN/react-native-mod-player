@@ -416,11 +416,7 @@ class AbstractPlayer extends BaseView {
                 // debugger;
                 var eventType = eventObj.eventType;
 
-                debugger;
-                if (eventType == 'fileLoad') {
-                    this.onCommandCenterEventFileLoad(eventObj);
-                }
-                else if(eventType == 'playSleep') {
+                if(eventType == 'playSleep') {
                     this.setState({playingSong:1});
                 }
                 else if(eventType == 'pauseSleep') {

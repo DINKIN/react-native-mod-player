@@ -121,14 +121,6 @@ struct StatusObject statuses[NUM_BUFFERS];
 #endif
         return NO;
     }
-    
-    
-
-//    Float32 duration = (SOUND_BUFFER_SAMPLE_SIZE * 4) * 1.0f/PLAYBACK_FREQ;
-//    [session setPreferredIOBufferDuration:duration error:&error];
-//    printf("Default Duration %f\n", [session preferredIOBufferDuration]);
-
- 
     success = [session setActive:YES error:&error];
     
     if (! success) {
@@ -138,13 +130,11 @@ struct StatusObject statuses[NUM_BUFFERS];
         return NO;
     }
 
-
     return YES;
 }
 
 
 - (NSDictionary *) loadFile:(NSString *)path {
-
 
     self.modInfo = [self.modPlayer loadFile:path];
      NSArray *pathParts = [path componentsSeparatedByString:@"/"];
@@ -155,7 +145,7 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 - (NSDictionary *) initializeSound:(NSString *)path {
-    
+
     isLoading = 1;
     
     if (self.modPlayer) {
@@ -184,7 +174,6 @@ struct StatusObject statuses[NUM_BUFFERS];
         if ( !bufferList ) {
             return;
         }
-
        
         float *leftBuffer  = (float*)bufferList->mBuffers[0].mData,
               *rightBuffer = (float*)bufferList->mBuffers[1].mData;
@@ -227,6 +216,7 @@ struct StatusObject statuses[NUM_BUFFERS];
     NSError *activationError = nil;
         
     BOOL success = [audioSession setActive:YES error:&activationError];
+    
     if (!success) {
         /* handle the error condition */
         NSLog(@"Dafuq?");
@@ -433,7 +423,6 @@ struct StatusObject statuses[NUM_BUFFERS];
                 soundGeneratorBufferIndex = 0;
             }
             
-//            pthread_mutex_unlock(&audio_mutex);
          }
         
     }
@@ -470,19 +459,28 @@ struct StatusObject statuses[NUM_BUFFERS];
 - (void) updateInfoCenter {
 
     MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
-    
     NSDictionary *modInfo = self.modInfo;
     
-    NSDictionary *nowPlayingInfo = @{
-        MPMediaItemPropertyAlbumArtist      : [modInfo valueForKey:@"artist"],
-        MPMediaItemPropertyGenre            : [modInfo valueForKey:@"type"],
-        MPMediaItemPropertyTitle            : [modInfo valueForKey:@"name"] ?: @"Mod file",
-        MPMediaItemPropertyPlaybackDuration : [modInfo valueForKey:@"length"],
-        MPMediaItemPropertyBeatsPerMinute   : [modInfo valueForKey:@"bpm"],
-        MPMediaItemPropertyAlbumTitle       : self.loadedFileName
-    };
+    if (! modInfo) {
+        return;
+    }
     
+    NSDictionary *nowPlayingInfo = @{
+        MPMediaItemPropertyAlbumArtist       : [modInfo valueForKey:@"artist"],
+        MPMediaItemPropertyGenre             : [modInfo valueForKey:@"type"],
+        MPMediaItemPropertyTitle             : [modInfo valueForKey:@"name"] ?: @"Mod file",
+        MPMediaItemPropertyPlaybackDuration  : [modInfo valueForKey:@"length"],
+        MPMediaItemPropertyBeatsPerMinute    : [modInfo valueForKey:@"bpm"],
+        MPMediaItemPropertyAlbumTitle        : self.loadedFileName,
+        MPNowPlayingInfoPropertyPlaybackRate : isPaused ? @0.0f : @1.0f
+    };
+
+//    NSLog(@"Updated infoCenter\n%@\n", modInfo);
+    
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
     infoCenter.nowPlayingInfo = nowPlayingInfo;
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
 }
 
 /************************************************/
@@ -526,6 +524,8 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 //    [self.output stop];
     isPaused = true;
     self.isPlaying = false;
+    [self updateInfoCenter];
+
 
 }
 

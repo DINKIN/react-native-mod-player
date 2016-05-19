@@ -11,18 +11,31 @@
 @implementation MCModPlayerInterface
 @synthesize bridge = _bridge;
 
+int instanceCount = 0;
+
 RCT_EXPORT_MODULE();
 
 - (instancetype) init {
     if (self = [super init]) {
+        NSLog(@"MCModPlayerInterface init");
+        instanceCount++;
         [self configureCommandCenter];
-//        NSLog(@"MCModPlayerInterface init");
-        
 
         return self;
     }
 
     return nil;
+}
+
+- (void) dealloc {
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+   
+    [commandCenter.playCommand            removeTarget:self action:@selector(commandPlay:)];
+    [commandCenter.pauseCommand           removeTarget:self action:@selector(commandPause:)];
+    [commandCenter.togglePlayPauseCommand removeTarget:self action:@selector(commandTogglePlayPause:)];
+    [commandCenter.nextTrackCommand       removeTarget:self action:@selector(commandNextTrack:)];
+    [commandCenter.previousTrackCommand   removeTarget:self action:@selector(commandPreviousTrack:)];
+    
 }
 
 - (void)setBridge:(RCTBridge *)bridge
@@ -211,18 +224,37 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
 
 #pragma mark Utilities
 
-- (void) configureCommandCenter {
+- (MPRemoteCommandHandlerStatus) commandPlay:(MPRemoteCommandEvent *)event {
     MCModPlayer *player = [MCModPlayer sharedManager];
-    
-    /** Remote control management**/
-    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 
-    int success = MPRemoteCommandHandlerStatusSuccess;
+    NSLog(@"commandCenter :: playCommand");
+    [player resume];
     
-    [commandCenter.togglePlayPauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        [player resume];
+    
+    if (player.appActive) {
+
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+            @"eventType" : @"play"
+        }];
+    }
+    else {
+        // When the UI becomes active, emit this event
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+                @"eventType" : @"playSleep"
+            }];
+        }];
+    }
+    
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus) commandTogglePlayPause:(MPRemoteCommandEvent *)event {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+
+    NSLog(@"commandCenter :: togglePlayPause");
+    [player resume];
         
-        NSLog(@"playPause");
         
         if (player.appActive) {
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
@@ -246,125 +278,135 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
             }];
             
         }
-        
-        return success;
-    }];
     
-    [commandCenter.playCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        [player resume];
-        
-        NSLog(@"playCommand");
-        
-        if (player.appActive) {
+    return MPRemoteCommandHandlerStatusSuccess;
+}
 
+- (MPRemoteCommandHandlerStatus) commandPause:(MPRemoteCommandEvent *)event {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    
+    
+    NSLog(@"commandCenter :: pauseCommand");
+    [player pause];
+    
+    if (player.appActive) {
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
+            @"eventType" : @"pause"
+        }];
+    }
+    else {
+        // When the UI becomes active, emit this event
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"play"
+                @"eventType" : @"pauseSleep"
             }];
-        }
-        else {
-            // When the UI becomes active, emit this event
-            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"playSleep"
-                }];
-            }];
-        }
-        
-        return success;
-    }];
+        }];
+    }
+
     
-    [commandCenter.pauseCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        [player pause];
-        
-//        NSLog(@"pauseCommand");
-        
-        if (player.appActive) {
-            [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                @"eventType" : @"pause"
-            }];
-        }
-        else {
-            // When the UI becomes active, emit this event
-            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
-                    @"eventType" : @"pauseSleep"
-                }];
-            }];
-        }
+    return MPRemoteCommandHandlerStatusSuccess;
+}
 
-        return success;
-    }];
 
-    [commandCenter.nextTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-//        NSLog(@"nextTrackCommand");
+
+- (MPRemoteCommandHandlerStatus) commandNextTrack:(MPRemoteCommandEvent *)event {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    
+    NSLog(@"nextTrackCommand");
         
-        if (! _bridge) {
-            return success;
-        }
-        
-        MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
-        
-        NSDictionary *file = [qMgr getNext];
-        [player pause];
-        
-        
-        NSDictionary *modInfo = [self loadFileViaDictionary:file];
-        [player play];
-        
-        NSDictionary *eventBody = @{
-            @"eventType"  : @"fileLoad",
-            @"modObject"  : modInfo,
-            @"fileRecord" : file
-        };
-        
-        if (player.appActive) {
+    MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
+    
+    NSDictionary *file = [qMgr getNext];
+    [player pause];
+    
+    
+    NSDictionary *modInfo = [self loadFileViaDictionary:file];
+    [player play];
+    
+    NSDictionary *eventBody = @{
+        @"eventType"  : @"fileLoad",
+        @"modObject"  : modInfo,
+        @"fileRecord" : file
+    };
+    
+    if (player.appActive) {
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
+    }
+    else {
+        // When the UI becomes active, emit this event
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
-        }
-        else {
-            // When the UI becomes active, emit this event
-            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
-            }];
-        }
-        
-
-        return success;
-    }];
-
+        }];
+    }
     
-    [commandCenter.previousTrackCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        NSLog(@"previousTrackCommand");
-        
-        if (! _bridge) {
-            return success;
-        }
-        MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
 
-        NSDictionary *file = [qMgr getPrevious];
-        [player pause];
-        
-        NSDictionary *modInfo = [self loadFileViaDictionary:file];
-        [player play];
-        
-        NSDictionary *eventBody = @{
-            @"eventType"  : @"fileLoad",
-            @"modObject"  : modInfo,
-            @"fileRecord" : file
-        };
-        
-        if (player.appActive) {
+
+
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (MPRemoteCommandHandlerStatus) commandPreviousTrack:(MPRemoteCommandEvent *)event {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+
+    NSLog(@"previousTrackCommand");
+
+    MCQueueManager *qMgr = [_bridge moduleForName:@"MCQueueManager"];
+
+    NSDictionary *file = [qMgr getPrevious];
+    [player pause];
+    
+    NSDictionary *modInfo = [self loadFileViaDictionary:file];
+    [player play];
+    
+    NSDictionary *eventBody = @{
+        @"eventType"  : @"fileLoad",
+        @"modObject"  : modInfo,
+        @"fileRecord" : file
+    };
+    
+    if (player.appActive) {
+        [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
+    }
+    else {
+        // When the UI becomes active, emit this event
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
-        }
-        else {
-            // When the UI becomes active, emit this event
-            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
-                [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
-            }];
-        }
-        
-        return success;
-    }];
+        }];
+    }
     
+    
+    return MPRemoteCommandHandlerStatusSuccess;
+}
+
+- (void) configureCommandCenter {
+    NSLog(@"------> configureCommandCenter()");
+    
+    /** Remote control management**/
+    MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
+   
+    [commandCenter.playCommand            addTarget:self action:@selector(commandPlay:)];
+    [commandCenter.pauseCommand           addTarget:self action:@selector(commandPause:)];
+    [commandCenter.togglePlayPauseCommand addTarget:self action:@selector(commandTogglePlayPause:)];
+    [commandCenter.nextTrackCommand       addTarget:self action:@selector(commandNextTrack:)];
+    [commandCenter.previousTrackCommand   addTarget:self action:@selector(commandPreviousTrack:)];
+
+    
+
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+
+    /* Handle audio route changes */
+    [notificationCenter addObserver:self
+                           selector:@selector(audioRouteChanged:)
+                               name:AVAudioSessionRouteChangeNotification
+                             object:nil];
+    
+    
+    [notificationCenter addObserver:self
+                        selector:@selector(audioInterruption:)
+                        name:AVAudioSessionInterruptionNotification
+                        object:nil];
+
+
     
 //    [commandCenter.likeCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
 //        NSLog(@"like!");
@@ -379,11 +421,11 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
 //        return YES;
 //    }];
     
-    [commandCenter.ratingCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
-        NSLog(@"Rating!");
-        
-        return YES;
-    }];
+//    [commandCenter.ratingCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
+//        NSLog(@"Rating!");
+//        
+//        return YES;
+//    }];
     
 //    [commandCenter.seekBackwardCommand addTargetWithHandler:^MPRemoteCommandHandlerStatus(MPRemoteCommandEvent *event) {
 //        //TODO: Handle reverse seek.  Is this called continuously?
@@ -405,21 +447,6 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
 //        
 //        return MPRemoteCommandHandlerStatusSuccess;
 //    }];
-
-
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-
-    /* Handle audio route changes */
-    [notificationCenter addObserver:self
-                           selector:@selector(audioRouteChanged:)
-                               name:AVAudioSessionRouteChangeNotification
-                             object:nil];
-    
-    
-    [notificationCenter addObserver:self
-                        selector:@selector(audioInterruption:)
-                        name:AVAudioSessionInterruptionNotification
-                        object:nil];
 
 
 }

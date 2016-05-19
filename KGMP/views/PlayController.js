@@ -37,9 +37,19 @@ class PlayController {
                         modObject  : eventObject.modObject,
                         fileRecord : eventObject.fileRecord
                     });
-                    return;
                 }
-                this.emit('commandCenterEvent', eventObject)
+                else if (eventType == 'play' || eventType == 'playSleep') {
+                    this.emitPlay();
+                }
+                else if (eventType == 'pause' || eventType == 'pauseSleep') {
+                    this.emitPause();
+                }
+
+
+
+                // debugger;
+
+                // this.emit('commandCenterEvent', eventObject)
             }
         );
     }
@@ -111,19 +121,22 @@ class PlayController {
         });
     }
 
-    pause() {
-        MCModPlayerInterface.pause(() => {
-            this.isPlaying = false;
+    emitPause = () => {
+        this.isPlaying = false;
+        this.emit('pause', null);
+    }
 
-            this.emit('pause', null);
-        });
+    emitPlay = () => {
+        this.isPlaying = true;
+        this.emit('play', null);
+    }
+
+    pause() {
+        MCModPlayerInterface.pause(this.emitPause);
     }
 
     resume() {
-        MCModPlayerInterface.resume(() => {
-            this.isPlaying = true;
-            this.emit('play', null);
-        });
+        MCModPlayerInterface.resume(this.emitPlay);
     }
 
     setOrder(order, callback) {
