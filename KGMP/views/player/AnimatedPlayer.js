@@ -26,15 +26,27 @@ const UrlTool          = require('../utils/UrlTool'),
       windowDimensions = Dimensions.get('window');
 
 class AnimatedPlayer extends BaseView {
-    state = {
-        modObject    : null,
-        fileRecord   : null,
-        opacity      : new Animated.Value(0),
-        pan          : new Animated.ValueXY(),
-    };
+    hasShown = false;
+    isHidden = true;
+
+    setInitialState() {
+
+        this.state = {
+            modObject    : null,
+            fileRecord   : null,
+            // opacity      : new Animated.Value(0),
+            pan          : new Animated.ValueXY(),
+            playerTop    : windowDimensions.height - 60
+        };
+    }
 
     componentWillMount() {
         super.componentWillMount();
+
+        // this.configurePanResponder();
+    }
+
+    configurePanResponder() {
 
         this.panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture     : () => true, //Tell iOS that we are allowing the movement
@@ -52,7 +64,7 @@ class AnimatedPlayer extends BaseView {
                 pan.setValue({
                     x: 0, 
                     y: 0
-                }); //Initial value
+                });
             },
 
             onPanResponderMove: Animated.event([ // Creates a function to handle the movement and set offsets
@@ -63,19 +75,20 @@ class AnimatedPlayer extends BaseView {
             onPanResponderRelease: (e, gestureState) => {
                 this.state.pan.flattenOffset();
                 let deltaY = gestureState.dy;
-                console.log('gestureState.dy',gestureState.dy)
+                // console.log('gestureState.dy',gestureState.dy)
+
                 if (deltaY >= 150) {
                     this.hide();
                     // console.log('this.hide()')
                 } 
                 else if (deltaY <= -100) {
                     // console.log('this.show();()')
-                    this.show();
+                    this.show(true);
                 }
                 // TODO : This has a bug. fix.
                 else {
                     if (deltaY > 0) {
-                        this.show();
+                        this.show(true);
                     }
                     else {
                         this.hide();
@@ -102,30 +115,54 @@ class AnimatedPlayer extends BaseView {
 
             play : () => {
                 this.forceUpdate();
+                this.show();
             }
         });     
     }
 
-    showForTheFirstTime() {
-        Animated.timing(this.state.pan.y, {
-            duration : 150,
-            toValue  : -40, //windowDimensions.height - 40
-            easing   : Easing.inOut(Easing.quad)
-        }).start();
+    restingPosition = -35;
+
+
+    show(force){
+        console.log(this.className, 'show()', force)
+        if (! this.hasShown && ! force) {
+
+            Animated.timing(this.state.pan.y, {
+                duration : 150,
+                toValue  : -37, //windowDimensions.height - 40
+                easing   : Easing.inOut(Easing.quad)
+            })
+            .start(() => {
+                console.log('Animation is done')
+                this.setState({
+                    pan       : this.props.pan,
+                    playerTop : windowDimensions.height - 63
+                });
+
+                this.configurePanResponder();
+                this.forceUpdate();
+            });
+
+            this.hasShown = true;   
+        }
+        else if (this.isHidden && force) {
+            Animated.timing(this.state.pan.y, {
+                duration : 150,
+                toValue  : -(windowDimensions.height - 20),
+                easing   : Easing.inOut(Easing.quad)
+            }).start();
+
+            isHidden = false;
+        }
+
     }
 
-    show(){
-        Animated.timing(this.state.pan.y, {
-            duration : 150,
-            toValue  : -(windowDimensions.height + 40),
-            easing   : Easing.inOut(Easing.quad)
-        }).start();
-    }
 
     hide(){
+        this.isHidden = true;
         Animated.timing(this.state.pan.y, {
             duration : 150,
-            toValue  : -40,
+            toValue  : this.restingPosition,
             easing   : Easing.inOut(Easing.quad)
         }).start();
     }
@@ -141,12 +178,13 @@ class AnimatedPlayer extends BaseView {
             props  = this.props;
 
         var animatedPlayerStyle = {
+                // borderWidth : 1, borderColor : '#FF0000',
                 width           : windowDimensions.width,
                 height          : windowDimensions.height,
                 backgroundColor : 'transparent',
                 // backgroundColor : 'rgba(255,255,255,.9)',//'transparent',
                 position        : 'absolute',
-                top             : windowDimensions.height,
+                top             : state.playerTop,
                 transform       : [
                     { translateX : state.pan.x },
                     { translateY : state.pan.y }
@@ -160,22 +198,30 @@ class AnimatedPlayer extends BaseView {
                 alignItems     : 'center',
                 left           : 0,
                 right          : 0,
-                bottom         : state.tabBarPosition
+                // bottom         : state.tabBarPosition
             },
             playerBodyStyle = {
                 height  : windowDimensions.height * 2,
+                // opacity : state.pan.y.interpolate({
+                //     inputRange : [ 
+                //         -(windowDimensions.height - 49),
+                //         0
+                //     ], 
+                //     outputRange: [ 1, 0 ]
+                // })
             };
 
         let modObject = state.modObject,
             fileName  = modObject && (modObject.name || modObject.file_name); 
 
-        let targetWidth   = 70,
+        let targetWidth   = 60,
             mainImageDims = {
                 height : Math.floor((464 / 700) * targetWidth),
                 width  : targetWidth
             };
 
         let toolbarView;
+
 
         if (modObject) {
             let imgName = modObject.group,
@@ -202,10 +248,10 @@ class AnimatedPlayer extends BaseView {
                 <View style={styles.topToolbarContainer}>
                     <AnimatedLazyImage source={source} style={imgStyle}/>
                     <View style={{flex:1, justifyContent : 'center', alignItems : 'center', height : 40}}>
-                        <Text style={{fontSize:20, fontWeight : '300'}}>
+                        <Text style={{fontSize:18, fontWeight : '300'}} numberOfLines={1}>
                             {imgName}
                         </Text>
-                        <Text style={{fontSize:14, fontWeight : '300', color: '#888'}}>
+                        <Text style={{fontSize:15, fontWeight : '300', color: '#888'}} numberOfLines={1}>
                             {fileName}
                         </Text>
                     </View>
@@ -217,11 +263,12 @@ class AnimatedPlayer extends BaseView {
         }
 
 
+        var panHandlers = this.panResponder && this.panResponder.panHandlers;
 
         return (
             <Animated.View style={animatedPlayerStyle}>
             
-                <Animated.View style={draggableToolbarStyle} {...this.panResponder.panHandlers}>
+                <Animated.View style={draggableToolbarStyle} {...panHandlers}>
                     {toolbarView}
                 </Animated.View>
             
@@ -238,14 +285,14 @@ class AnimatedPlayer extends BaseView {
 
     styles = StyleSheet.create({
         topToolbarContainer : {
-            height          : 75,
+            height          : 65,
             backgroundColor : '#EFEFEF', 
             flexDirection : 'row',  
             justifyContent : 'center', 
             borderTopWidth: 1, 
-            borderTopColor : '#AEAEAE', 
-            borderBottomWidth : 5, 
-            borderBottomColor : '#AEAEAE',
+            borderTopColor : '#EFEFEF', 
+            // borderBottomWidth : 5, 
+            // borderBottomColor : '#AEAEAE',
             padding : 5, 
             flex:1
         }

@@ -62,7 +62,7 @@ var NavigationBarRouteMapper = {
 
         var stack = navState.routeStack,
             previousRoute = stack[index - 1],
-            marginTop = (Platform.OS === 'ios') ? 7 : 15;
+            marginTop = (Platform.OS === 'ios') ? 2 : 15;
         
         if (navState.routeStack.length < 2) {
             return;
@@ -127,13 +127,13 @@ var NavigationBarRouteMapper = {
             );
         }
         else {
-            marginTop = { marginTop : (Platform.OS === 'ios') ? 15 : 10 }
+            marginTop = { marginTop : (Platform.OS === 'ios') ? 5 : 10 }
         }
 
         return (
-            <View style={{alignItems : 'center', flexDirection : 'column'}}>
+            <View style={{alignItems : 'flex-start', flexDirection : 'column'}}>
                 <Text style={[styles.navBarText, styles.navBarTitleText, marginTop, fontSize]}>
-                    {route.title}
+                    {route.title.replace('/','','g')}
                 </Text>
 
                 {subtitle}

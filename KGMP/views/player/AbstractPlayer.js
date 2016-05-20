@@ -123,7 +123,6 @@ class AbstractPlayer extends BaseView {
 
         this.fileRecord = state.fileRecord || props.fileRecord;
 
-
         var buttonChars = this.buttonChars,
             liked       = this.fileRecord.like_value == 1,
             centerBtnChar,
@@ -268,13 +267,13 @@ class AbstractPlayer extends BaseView {
 
         return (
             <Image style={[styles.container, this.props.style]} source={rootImageSource}>
-                <BlurViewType blurType={"xlight"} style={[styles.container, {paddingTop: 30, backgroundColor :'rgba(255,255,255, .5)'}]}>
+                <BlurViewType blurType={"light"} style={[styles.container, {paddingTop: 30, backgroundColor :'rgba(255,255,255, .8)'}]}>
                     <View {...panHandlers}>
                         <View style={styles.titleBar}>
                             <Text style={{fontSize:30, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
-                            <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}}>{songName}</Text>
+                            <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}} numberOfLines={1}>{fileName}</Text>
                             <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
-                                {fileName}
+                                {songName}
                             </Text>
                         </View>
                         

@@ -48,7 +48,7 @@ class DirectoryRow extends Component {
        
         // console.log(source.uri)
         return (
-            <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={() => {props.onPress(rowID)}}>
+            <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={this.onPress}>
                 <View style={styles.rowContainer}>
                     <AnimatedLazyImage style={imgStyle} source={source}/>
                     <View style={styles.row}>
@@ -58,6 +58,11 @@ class DirectoryRow extends Component {
                 </View>
             </TouchableHighlight>
         );
+    }
+
+    onPress = () => {
+        var props = this.props;
+        props.onPress(props.rowID);
     }
 
     styles = StyleSheet.create({

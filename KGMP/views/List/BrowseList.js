@@ -57,8 +57,10 @@ var getDirectories = function(path, callback) {
 class BrowseView extends BaseView{
 
     setInitialState() {
+        const props = this.props;
+
         this.state = {
-            initialPaths : (this.props && this.props.initialPaths) ? this.props.initialPaths : null
+            initialPaths : (props && props.initialPaths) ? props.initialPaths : null
         };
 
     }
@@ -66,14 +68,20 @@ class BrowseView extends BaseView{
 
 
     componentWillMount() {
+        super.componentWillMount();
+        var props = this.props;
+
+        if (props.initialPaths) {
+            return;
+        }
+
         this._pressData = {};
 
-        getDirectories(null, (initialPaths) => {
+        getDirectories(null, (directories) => {
             this.setState({
-                initialPaths : initialPaths
+                initialPaths : directories
             });
 
-            
 
             // Debug purposes. automates the showing of the player
             // setTimeout(() => {
@@ -143,12 +151,10 @@ class BrowseView extends BaseView{
     // },
 
     shouldComponentUpdate(nextProps, nextState) {
-        return ! this.state.rowData;
+        return ! (this.state.initialPaths || this.props.initialPaths);
     }
 
     render() {
-
-
         return (
             <ListView 
                 enableEmptySections={false}
@@ -162,17 +168,25 @@ class BrowseView extends BaseView{
         );
     }
 
-    _renderRow(rowData, sectionID, rowID) {
-            
+    onRowPress = (rowID) => {
+        var props = this.props,
+            state = this.state;
+
+        props.onRowPress(state.initialPaths[rowID], props.navigator, this);
+    };
+
+
+    _renderRow = (rowData, sectionID, rowID) => {
+                    
         if (rowData.isShuffleRow) {
-            return <ShuffleRow onPress={() => this._pressRow(rowID)}/>
+            return <ShuffleRow onPress={this.onRowPress}/>
         }
 
         return rowData.number_files 
             ? 
-                <DirectoryRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
+                <DirectoryRow rowData={rowData} rowID={rowID} onPress={this.onRowPress}/>
             :
-                <FileRow rowData={rowData} rowID={rowID} onPress={() => this._pressRow(rowID)}/>
+                <FileRow rowData={rowData} rowID={rowID} onPress={this.onRowPress}/>
 
     }
 
@@ -196,11 +210,6 @@ class BrowseView extends BaseView{
         });
     }
 
-    _pressRow(rowID) {
-        var props = this.props;
-
-        props.onRowPress(props.rowData[rowID], props.navigator, this);
-    }
 };
 
 

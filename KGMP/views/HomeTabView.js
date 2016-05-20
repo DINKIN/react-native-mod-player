@@ -115,6 +115,8 @@ class DummyView extends React.Component {
 }
 
 class HomeTabView extends React.Component {
+    tabs = null;
+
     state = {
         selectedTab  : INITIAL_TAB,
         modObject    : null,
@@ -124,11 +126,13 @@ class HomeTabView extends React.Component {
     styles = StyleSheet.create({
         tabBar : {
             height          : 65,
+            // opacity         : .8,
             width           : windowDimensions.width,
-            backgroundColor : '#FFFFFF'
+            backgroundColor : '#DFDFDF',
+            position : 'absolute'
         },
         tabSelected : {
-            backgroundColor : '#220000'
+            backgroundColor : 'transparent'
         },
         title : {
             paddingBottom: 5,
@@ -146,79 +150,101 @@ class HomeTabView extends React.Component {
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
 
-        getDirectories(null, (initialPaths) => {
-            debugger;
-            // this.refs.browselist.setState({
-            //     rowData : initialPaths
-            // });
+        this.tabs = [
+            // This sh*t is starting to get Sencha-like real quick!
+            {
+                title           : 'Browse',
+                icon            : 'ios-folder-outline',
+                child           : BrowseList,
+                componentConfig : {
+                    bgColor    : '#002200',
+                    text       : 'Home',
+                    onRowPress : this.onRowPress,
+                    style      : {
+                        paddingTop : 60,
+                    }
+                }
+            },
+            {
+                title           : 'Playlists',
+                icon            : 'ios-list-outline',
+                child           : DummyView,
+                componentConfig : {
+                    bgColor : '#220000',
+                    text    : 'Playlists'
+                }
+            },
+            {
+                title           : 'Search',
+                icon            : 'ios-search',
+                child           : DummyView,
+                componentConfig : {
+                    bgColor : '#220022',
+                    text    : 'Search'
+                }
+            },
+            {
+                title : 'Settings',
+                icon            : 'ios-settings',
+                child           : DummyView,
+                componentConfig : {
+                    bgColor : '#000022',
+                    text    : 'Settings'
+                }
+            }
+        ];
+    }
 
-            
+    onRowPress = (record, childNavigator, ownerList) => {
+        var isDir = !! record.number_files,
+            title;
 
-            // Debug purposes. automates the showing of the player
-            // setTimeout(() => {
-            //     this.onRowPress(initialPaths[12], this.refs.navigator);
 
-            //     setTimeout(() => {
-            //         // debugger;
-            //         this.onRowPress(loadedDirectories[8], this.refs.navigator);
-            //         // PlayController.pause();
 
-            //         setTimeout(() => {
-            //             this.refs.modPlayer.show();
-            //             PlayController.pause();
-            //         }, 500);
-            //     }, 500);
-            // }, 500);
-        });
+        if (isDir) {
+            title = unescape(record.name);
+            getDirectories(record.name, (records)=> {
+                loadedDirectories = initialPaths; // for debug purposes
 
+
+                var route = {
+                    title     : title,
+                    component : BrowseList,
+                    componentConfig : {
+                        initialPaths : records,
+                        onRowPress   : this.onRowPress,
+                        style        : { 
+                            paddingTop : 60,
+                            flex       : 1
+                        },
+                    }
+                };
+
+                childNavigator.push(route);
+            });
+
+        }
+        else if (record.isShuffleRow) {
+            alert('This feature is not ready ;)')
+        }
+        else {
+            // debugger;
+            this.loadModFile(record, childNavigator, ownerList);                
+        }
 
     }
 
+    loadModFile = (fileRecord) => {
+        // window.main.showSpinner();
+        // var fileName = unescape(fileRecord.name);
 
 
-    tabs = [
-        // This sh*t is starting to get Sencha-like real quick!
-        {
-            title           : 'Home',
-            icon            : 'ios-home-outline',
-            child           : BrowseList,
-            componentConfig : {
-                bgColor : '#002200',
-                ref     : 'browselist',
-                text    : 'Home',
-                style   : {
-                    paddingTop : 60
-                }
-            }
-        },
-        {
-            title           : 'Playlists',
-            icon            : 'ios-list-outline',
-            child           : DummyView,
-            componentConfig : {
-                bgColor : '#220000',
-                text    : 'Playlists'
-            }
-        },
-        {
-            title           : 'Search',
-            icon            : 'ios-search',
-            child           : DummyView,
-            componentConfig : {
-                bgColor : '#220022',
-                text    : 'Search'
-            }
-        },
-        {
-            title : 'Settings',
-            icon            : 'ios-settings',
-            child           : DummyView,
-            componentConfig : {
-                bgColor : '#000022',
-                text    : 'Settings'
-            }
-        }
-    ];
+        PlayController.loadFile(fileRecord, () => {
+            PlayController.pause();
+            // this.refs.modPlayer.showForTheFirstTime();
+        });
+    }
+
 
     setTabState(tabNo) {
         let state = this.state;
@@ -271,18 +297,18 @@ class HomeTabView extends React.Component {
         );
     }
 
+
+
     render() {
-        var styles                = this.styles,
-            WrapperComponent      = BlurView,
-            wrapperComponentProps = {blurType:'dark'};
+        var styles = this.styles,
+            tabs   = this.tabs;
 
         window.home = this;
-        
-        
+
+
         return (
             <TabNavigator tabBarStyle={styles.tabBar}
-                          tabBarWrapperComponent={WrapperComponent}
-                          tabBarWrapperComponentProps={wrapperComponentProps}
+                          animatedPlayerView={AnimatedPlayer}
                           sceneStyle={{paddingBottom:0}}>
 
                 {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}

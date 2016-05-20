@@ -40,7 +40,7 @@ class BaseView extends Component {
     }
 
     componentWillUnmount() {
-        Subscribable.Mixin.componentWillUnMount.apply(this);
+        Subscribable.Mixin.componentWillUnmount.apply(this);
     }
 
 }
