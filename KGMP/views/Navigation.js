@@ -189,7 +189,7 @@ var Navigation = React.createClass({
     renderScene : function (route, navigator)  {
         this.navigator = navigator;
         navigator.topNav = this.props.topNav;
-        console.log('route', route);
+        // console.log('route', route);
    
         var baseObj = {
             navigator : navigator

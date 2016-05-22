@@ -34,7 +34,7 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     ProgressView          = require('./accessories/ProgressView'),
     AnimatedLazyImage     = require('../common/AnimatedLazyImage');
 
-
+var MCAudioPlotGlView = require('./MCAudioPlotGlView');
 
 var {
         MCModPlayerInterface,
@@ -281,7 +281,11 @@ class AbstractPlayer extends BaseView {
                             <AnimatedLazyImage source={source} style={imgStyle}/>
                         </View>
                     </View>
-
+                    <View style={styles.vizContainer}>
+                        <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
+                        <View style={styles.vizSeparator}/>
+                        <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
+                    </View>
                     <View style={{marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
                         <Slider
                             ref={'slider'}
@@ -639,7 +643,7 @@ class AbstractPlayer extends BaseView {
             //     numberOfCells   : this.state.modObject.patternOrds.length,
             //     highlightNumber : order
             // });
-            console.log('New order', order)
+            // console.log('New order', order)
             this.setState({
                 currentPattern : pattern,
                 sliderPosition : order

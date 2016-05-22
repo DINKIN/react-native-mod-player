@@ -38,9 +38,6 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
     
 //    return;
     view.registered = json;
-    
-    
-//    NSLog(@"view points to %@", NSClassFromString(view));
 //
 //    NSLog(@"%@ %@",  NSStringFromClass([self class]),  NSStringFromSelector(_cmd));
     if ([json isEqualToString:@"l"]) {
@@ -51,10 +48,6 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
         self.rtView = view;
     }
     
-    
-//    NSLog(@"%@ ltView %p", json, self.ltView);
-//    NSLog(@"%@ rtView %p", json, self.rtView);
-  
     
     if ([json isEqualToString:@" "]) {
         if (updateThread) {
@@ -96,9 +89,10 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
 
 
 -(void) threadLoop:(MCPlotGlView *)view {
+//return;
     NSLog(@"----- STARTING GLPlot THREAD LOOP ----- ");
 //    return;
-    float timeInterval = .0005;
+    float timeInterval = .00005;
   
     while ([[NSThread currentThread] isCancelled] == NO) {
     
@@ -122,18 +116,16 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
                   // Mute channels as necessary
                   if(muteLeftChannel)
                     sampleBuffer[2*sampleIdx] = 0;
-                  if(muteRightChannel)
+                               if(muteRightChannel)
                     sampleBuffer[2*sampleIdx + 1] = 0;
                 }
               }
             
             
             */
-            
 
-
-            [self.ltView update:bufferLeft  withSize:numFrames / 2];
-            [self.rtView update:bufferRight withSize:numFrames / 2];
+            [self.ltView update:bufferLeft  withSize:numFrames];
+            [self.rtView update:bufferRight withSize:numFrames];
 
                
             pthread_mutex_unlock(&glMutex);
@@ -145,12 +137,31 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
 }
 
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames {
-    pthread_mutex_lock(&glMutex);
-    bufferLeft  = leftBuffer;
-    bufferRight = rightBuffer;
-    numFrames   = nFrames;
+//    pthread_mutex_lock(&glMutex);
+//    bufferLeft  = leftBuffer;
+//    bufferRight = rightBuffer;
+//    numFrames   = nFrames;
+//
+//    pthread_mutex_unlock(&glMutex);
 
-    pthread_mutex_unlock(&glMutex);
+    if (self.ltView && self.rtView) {
+//        int totalFrames = numFrames / 2;
+        
+//        float *ltBuffer = malloc(sizeof(float) * nFrames),
+//              *rtBuffer = malloc(sizeof(float) * nFrames);
+        
+//        memcpy(ltBuffer, leftBuffer, totalFrames);
+//        memcpy(rtBuffer, rightBuffer, totalFrames);
+        
+//    dispatch_async(dispatch_get_main_queue(), ^{
+
+        [self.ltView update:leftBuffer  withSize:nFrames];
+        [self.rtView update:rightBuffer withSize:nFrames];
+//    });
+//        free(ltBuffer);
+//        free(rtBuffer);
+
+    }
 }
 
 

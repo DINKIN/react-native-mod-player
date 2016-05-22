@@ -22,6 +22,8 @@ import BaseView           from '../BaseView';
 import AnimatedLazyImage  from '../common/AnimatedLazyImage';
 import MusicControlButton from './accessories/MusicControlButton';
 
+
+
 const UrlTool          = require('../utils/UrlTool'),
       windowDimensions = Dimensions.get('window');
 
@@ -116,6 +118,8 @@ class AnimatedPlayer extends BaseView {
             play : () => {
                 this.forceUpdate();
                 this.show();
+
+                setTimeout(() => { this.show(true) }, 1000)
             }
         });     
     }

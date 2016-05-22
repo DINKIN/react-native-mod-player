@@ -17,7 +17,7 @@
 #import "TheAmazingAudioEngine.h"
 
 #import "MC_OMPT.h"
-//#import "MCPlotGlView.h"
+#import "MCPlotGlView.h"
 
 
 #define PLAYBACK_FREQ 44100
@@ -57,8 +57,8 @@
 
 @property size_t numberOfFrames;
 
-//@property MCPlotGlView *ltPlotter;
-//@property MCPlotGlView *rtPlotter;
+@property MCPlotGlView *ltPlotter;
+@property MCPlotGlView *rtPlotter;
 
 
 //@property xmp_context xmpContext;

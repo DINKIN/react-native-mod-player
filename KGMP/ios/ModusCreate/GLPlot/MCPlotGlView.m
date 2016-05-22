@@ -38,23 +38,32 @@
             
             NSLog(@"%@ created an EZAudioPlotGL %@ %p",  NSStringFromClass([self class]), self.registered, plotter);
 
+            plotter.pointCount = 50;
             self.plotter = plotter;
             [self addSubview:self.plotter];
             [self layoutSubviews];
         });
-//
     }
   
-  
+
     if (self.plotter) {
+        __weak typeof (self) weakSelf = self;
+
+//        NSDate *date = [NSDate date];
+
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
 //            NSLog(@"%@ update  plotter = %p", self.registered, _plotter);
+//            double timePassed_ms = [date timeIntervalSinceNow] * -1000.0;
+//            printf("%f\n", timePassed_ms);
 
-            [self.plotter updateBuffer:data withBufferSize:size];
+            [weakSelf.plotter updateBuffer:data withBufferSize:size];
         });
     
     }
 }
+
+
 //- (void) layoutSubviews {
 //    [super layoutSubviews];
 //

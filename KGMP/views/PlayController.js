@@ -69,6 +69,9 @@ class PlayController {
             return;
         }
 
+        // console.log("loadFile");
+        // console.log(JSON.stringify(fileRecord, undefined, 4));
+
         var filePath = window.bundlePath + unescape(fileRecord.directory) + unescape(fileRecord.name);
 
         // debugger;

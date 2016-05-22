@@ -31,6 +31,11 @@
 		713A28A91CA9621F000D9060 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28A81CA96213000D9060 /* liblibopenmpt.a */; };
 		713A28AB1CA96225000D9060 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */; };
 		7150E3361CE7F84300158C40 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7150E3341CE7F6BD00158C40 /* libRNBlur.a */; };
+		71C9BE9F1CF1ED3E007F8A69 /* EZAudioiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; };
+		71C9BED21CF1FDFD007F8A69 /* MCPlotGlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */; };
+		71C9BED31CF1FDFD007F8A69 /* MCPlotGlViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */; };
+		71C9BED41CF2050F007F8A69 /* EZAudioiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; };
+		71C9BED51CF2050F007F8A69 /* EZAudioiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		71D1183E1CAAFFEF008D0DA2 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118361CAAFFEF008D0DA2 /* Entypo.ttf */; };
 		71D1183F1CAAFFEF008D0DA2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */; };
 		71D118401CAAFFEF008D0DA2 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */; };
@@ -115,6 +120,27 @@
 			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
 			remoteInfo = RNBlur;
 		};
+		71C9BE8B1CF1ED37007F8A69 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 469F4CF31B749F7800666A46;
+			remoteInfo = EZAudioiOS;
+		};
+		71C9BE8D1CF1ED37007F8A69 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8A5A4B9C1BBBDCB200A8A048;
+			remoteInfo = EZAudioOSX;
+		};
+		71C9BED61CF2050F007F8A69 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 469F4CF21B749F7800666A46;
+			remoteInfo = EZAudioiOS;
+		};
 		71DC53391CEA3F62000CC5F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 71DC53261CEA3F62000CC5F8 /* TheAmazingAudioEngine.xcodeproj */;
@@ -159,6 +185,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		71C9BED81CF2050F007F8A69 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				71C9BED51CF2050F007F8A69 /* EZAudioiOS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
@@ -192,6 +232,11 @@
 		713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = ../external_libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
+		71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EZAudio.xcodeproj; path = ../external_libraries/libEzAudio/EZAudio/EZAudio.xcodeproj; sourceTree = "<group>"; };
+		71C9BECE1CF1FDFD007F8A69 /* MCPlotGlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCPlotGlView.h; path = ModusCreate/GLPlot/MCPlotGlView.h; sourceTree = "<group>"; };
+		71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCPlotGlView.m; path = ModusCreate/GLPlot/MCPlotGlView.m; sourceTree = "<group>"; };
+		71C9BED01CF1FDFD007F8A69 /* MCPlotGlViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCPlotGlViewManager.h; path = ModusCreate/GLPlot/MCPlotGlViewManager.h; sourceTree = "<group>"; };
+		71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCPlotGlViewManager.m; path = ModusCreate/GLPlot/MCPlotGlViewManager.m; sourceTree = "<group>"; };
 		71D118361CAAFFEF008D0DA2 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -223,8 +268,10 @@
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
+				71C9BED41CF2050F007F8A69 /* EZAudioiOS.framework in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				7150E3361CE7F84300158C40 /* libRNBlur.a in Frameworks */,
+				71C9BE9F1CF1ED3E007F8A69 /* EZAudioiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +379,7 @@
 		713A28901CA961DD000D9060 /* Modus Create */ = {
 			isa = PBXGroup;
 			children = (
+				71C9BEA01CF1EEAF007F8A69 /* AudioPlot */,
 				713A289D1CA961F3000D9060 /* Players */,
 				713A28911CA961F1000D9060 /* MCFsTool.h */,
 				713A28921CA961F1000D9060 /* MCFsTool.m */,
@@ -357,6 +405,7 @@
 		713A28A11CA96206000D9060 /* external_libraries */ = {
 			isa = PBXGroup;
 			children = (
+				71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */,
 				71DC53261CEA3F62000CC5F8 /* TheAmazingAudioEngine.xcodeproj */,
 				7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */,
 				713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */,
@@ -379,6 +428,26 @@
 				7150E3341CE7F6BD00158C40 /* libRNBlur.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		71C9BE871CF1ED37007F8A69 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */,
+				71C9BE8E1CF1ED37007F8A69 /* EZAudioOSX.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		71C9BEA01CF1EEAF007F8A69 /* AudioPlot */ = {
+			isa = PBXGroup;
+			children = (
+				71C9BECE1CF1FDFD007F8A69 /* MCPlotGlView.h */,
+				71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */,
+				71C9BED01CF1FDFD007F8A69 /* MCPlotGlViewManager.h */,
+				71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */,
+			);
+			name = AudioPlot;
 			sourceTree = "<group>";
 		};
 		71D1182A1CAAFFE5008D0DA2 /* vector-icons */ = {
@@ -473,10 +542,12 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				71C9BED81CF2050F007F8A69 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				71C9BED71CF2050F007F8A69 /* PBXTargetDependency */,
 			);
 			name = KGMP;
 			productName = "Hello World";
@@ -517,6 +588,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 71C9BE871CF1ED37007F8A69 /* Products */;
+					ProjectRef = 71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */;
+				},
 				{
 					ProductGroup = 713A28A31CA96212000D9060 /* Products */;
 					ProjectRef = 713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */;
@@ -648,6 +723,20 @@
 			remoteRef = 7150E3331CE7F6BD00158C40 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EZAudioiOS.framework;
+			remoteRef = 71C9BE8B1CF1ED37007F8A69 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		71C9BE8E1CF1ED37007F8A69 /* EZAudioOSX.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = EZAudioOSX.framework;
+			remoteRef = 71C9BE8D1CF1ED37007F8A69 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		71DC533A1CEA3F62000CC5F8 /* libTheAmazingAudioEngine.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -739,16 +828,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				713A289B1CA961F1000D9060 /* MCModPlayerInterface.m in Sources */,
+				71C9BED31CF1FDFD007F8A69 /* MCPlotGlViewManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				713A289A1CA961F1000D9060 /* MCModPlayer.m in Sources */,
 				713A289C1CA961F1000D9060 /* MCQueueManager.m in Sources */,
 				713A28A01CA96201000D9060 /* MC_OMPT.m in Sources */,
 				713A28991CA961F1000D9060 /* MCFsTool.m in Sources */,
+				71C9BED21CF1FDFD007F8A69 /* MCPlotGlView.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		71C9BED71CF2050F007F8A69 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = EZAudioiOS;
+			targetProxy = 71C9BED61CF2050F007F8A69 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
@@ -769,6 +868,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
+				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -790,6 +890,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

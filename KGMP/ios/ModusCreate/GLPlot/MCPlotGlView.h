@@ -10,12 +10,14 @@
 #import "EZAudioPlotGL.h"
 #import "EZAudioPlot.h"
 
+
 @interface MCPlotGlView : UIView {
     BOOL isRendering;
 }
 
 
 @property NSString *registered;
+//@property EZAudioPlotGL *plotter;
 @property EZAudioPlot *plotter;
 
 @property (nonatomic, strong) dispatch_queue_t myQueue;

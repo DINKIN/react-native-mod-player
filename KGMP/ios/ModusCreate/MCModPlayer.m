@@ -6,7 +6,7 @@
 //
 
 #import "MCModPlayer.h"
-//#import "MCPlotGlViewManager.h"
+#import "MCPlotGlViewManager.h"
 
 @implementation MCModPlayer {
 
@@ -164,16 +164,25 @@ struct StatusObject statuses[NUM_BUFFERS];
     
     lastPattern = -1;
     lastRow = -1;
-    
-    renderer.block = ^(const AERenderContext * _Nonnull context) {
+//    __block NSDate *date = [NSDate date];
+//    printf("%f\n", timePassed_ms);
+//    dispatch_async(dispatch_get_main_queue(), ^{
 
+
+    renderer.block = ^(const AERenderContext * _Nonnull context) {
         AEBufferStack *bufferStack = context->stack;
+                
         
         const AudioBufferList * bufferList = AEBufferStackPushWithChannels(bufferStack, 1, 2);
 
         if ( !bufferList ) {
             return;
         }
+        
+//        double timePassed_ms = [date timeIntervalSinceNow];
+//        
+//        printf("%f\n", timePassed_ms * -1000.0);
+//        date = [NSDate date];
        
         float *leftBuffer  = (float*)bufferList->mBuffers[0].mData,
               *rightBuffer = (float*)bufferList->mBuffers[1].mData;
@@ -189,12 +198,18 @@ struct StatusObject statuses[NUM_BUFFERS];
         int32_t *currentStep = [self.modPlayer fillLeftBuffer:leftBuffer
                                               withRightBuffer:rightBuffer
                                                 withNumFrames:context->frames];
-        
+    
+    
+        int nFrames = context->frames;
+
+        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:nFrames];
+    
         int currentPattern = currentStep[1],
             currentRow     = currentStep[2];
 
         if (lastPattern != currentPattern || lastRow != currentRow) {
-        
+            __weak typeof (self) weakSelf = self;
+
             int32_t playerState[4];
 
             playerState[0] = currentStep[0];
@@ -202,7 +217,7 @@ struct StatusObject statuses[NUM_BUFFERS];
             playerState[2] = currentStep[2];
             playerState[3] = currentStep[3];
 
-            [self notifyInterface:playerState];
+            [weakSelf notifyInterface:playerState];
         }
         
         AERenderContextOutput(context, 1);
@@ -229,8 +244,8 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 
-- (NSDictionary *) initializeSoundOld:(NSString *)path  {
-//    
+//- (NSDictionary *) initializeSoundOld:(NSString *)path  {
+//
 //    if (self.modPlayer) {
 //    
 //        [self pause];
@@ -345,8 +360,8 @@ struct StatusObject statuses[NUM_BUFFERS];
 //    soundGeneratorBufferIndex = 0;
 //    soundPlayerBufferIndex = 0;
 //    
-    return @{};
-}
+//    return @{};
+//}
 
 // Create a thread to generate audio. Helps with skipping when the phone is hibernating, app is pushed to
 // background or foreground.
@@ -506,7 +521,6 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 
 
 - (void) play {
-
     [self.output start:nil];
     isPaused = false;
     self.isPlaying = true;
