@@ -12,6 +12,36 @@
 
 @implementation MCPlotGlView
 
+
+
+//
+//- (instancetype) initWithFrame:(CGRect)frame {
+//    self = [super initWithFrame:frame];
+//    
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//
+//        EZAudioPlot *plotter = [[EZAudioPlot alloc] initWithFrame:self.bounds];
+////            EZAudioPlotGL *plotter = [[EZAudioPlotGL alloc] initWithFrame:self.bounds];
+//
+//        plotter.backgroundColor = [UIColor colorWithRed:.1 green:.1 blue:.1 alpha:1];
+//        plotter.color = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
+//        
+//        plotter.plotType = EZPlotTypeBuffer;
+//        isRendering = false;
+//        
+//        NSLog(@"%@ created an EZAudioPlotGL %@ %p",  NSStringFromClass([self class]), self.registered, plotter);
+//        NSLog(@"Bounds %@", self.bounds);
+//        plotter.pointCount = 50;
+//        self.plotter = plotter;
+//        [self addSubview:self.plotter];
+//        [self layoutSubviews];
+//    });
+//    
+//    
+//    return self;
+//}
+
+
 // Called via manager
 - (void) update:(float[])data withSize:(int)size {
 //    NSLog(@"Update %p %@", self, self.registered);
@@ -27,6 +57,11 @@
         isRendering = true;
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (CGSizeEqualToSize(self.bounds.size, CGSizeZero)) {
+                isRendering = false;
+                // Do nothing if layout hasn't happened yet
+                return;
+            }
             EZAudioPlot *plotter = [[EZAudioPlot alloc] initWithFrame:self.bounds];
 //            EZAudioPlotGL *plotter = [[EZAudioPlotGL alloc] initWithFrame:self.bounds];
 
@@ -37,7 +72,7 @@
             isRendering = false;
             
             NSLog(@"%@ created an EZAudioPlotGL %@ %p",  NSStringFromClass([self class]), self.registered, plotter);
-
+            NSLog(@"Bounds %@", self.bounds);
             plotter.pointCount = 50;
             self.plotter = plotter;
             [self addSubview:self.plotter];

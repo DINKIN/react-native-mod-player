@@ -191,34 +191,36 @@ struct StatusObject statuses[NUM_BUFFERS];
         if (isLoading || isPaused) {
             memset(leftBuffer,  0, bufferList->mBuffers[0].mDataByteSize);
             memset(rightBuffer, 0, bufferList->mBuffers[0].mDataByteSize);
-            AERenderContextOutput(context, 1);
-            return;
+//            AERenderContextOutput(context, 1);
+//            return;
         }
+        else {
+            
+            int32_t *currentStep = [self.modPlayer fillLeftBuffer:leftBuffer
+                                                  withRightBuffer:rightBuffer
+                                                    withNumFrames:context->frames];
+                
+            
+            int currentPattern = currentStep[1],
+                currentRow     = currentStep[2];
 
-        int32_t *currentStep = [self.modPlayer fillLeftBuffer:leftBuffer
-                                              withRightBuffer:rightBuffer
-                                                withNumFrames:context->frames];
-    
-    
-        int nFrames = context->frames;
+            if (lastPattern != currentPattern || lastRow != currentRow) {
+                __weak typeof (self) weakSelf = self;
 
-        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:nFrames];
-    
-        int currentPattern = currentStep[1],
-            currentRow     = currentStep[2];
+                int32_t playerState[4];
 
-        if (lastPattern != currentPattern || lastRow != currentRow) {
-            __weak typeof (self) weakSelf = self;
+                playerState[0] = currentStep[0];
+                playerState[1] = currentStep[1];
+                playerState[2] = currentStep[2];
+                playerState[3] = currentStep[3];
 
-            int32_t playerState[4];
+                [weakSelf notifyInterface:playerState];
+            }
 
-            playerState[0] = currentStep[0];
-            playerState[1] = currentStep[1];
-            playerState[2] = currentStep[2];
-            playerState[3] = currentStep[3];
-
-            [weakSelf notifyInterface:playerState];
         }
+    
+        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
+    
         
         AERenderContextOutput(context, 1);
     };
@@ -227,7 +229,15 @@ struct StatusObject statuses[NUM_BUFFERS];
     AVAudioSession * audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
 
+
+
+#if TARGET_OS_IPHONE
+    
+#else
+    NSLog(@"setPreferredIOBufferDuration()");
     [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
+#endif
+
     NSError *activationError = nil;
         
     BOOL success = [audioSession setActive:YES error:&activationError];

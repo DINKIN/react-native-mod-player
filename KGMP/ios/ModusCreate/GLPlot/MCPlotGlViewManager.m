@@ -89,7 +89,7 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
 
 
 -(void) threadLoop:(MCPlotGlView *)view {
-//return;
+return;
     NSLog(@"----- STARTING GLPlot THREAD LOOP ----- ");
 //    return;
     float timeInterval = .00005;
