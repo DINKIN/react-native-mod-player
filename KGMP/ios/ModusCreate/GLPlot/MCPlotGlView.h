@@ -23,6 +23,5 @@
 @property (nonatomic, strong) dispatch_queue_t myQueue;
 
 - (void) update:(float[])data withSize:(int)size;
-- (void) renderPlotter;
 
 @end

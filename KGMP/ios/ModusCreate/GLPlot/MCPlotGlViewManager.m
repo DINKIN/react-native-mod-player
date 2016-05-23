@@ -33,12 +33,9 @@ RCT_EXPORT_MODULE()
 RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
     MCModPlayer *player = [MCModPlayer sharedManager];
     
-    
-//    NSLog(@"%@ view %p self = %p, %p", json, view, self, self);
-    
-//    return;
+    //    NSLog(@"%@ view %p self = %p, %p", json, view, self, self);
     view.registered = json;
-//
+
 //    NSLog(@"%@ %@",  NSStringFromClass([self class]),  NSStringFromSelector(_cmd));
     if ([json isEqualToString:@"l"]) {
         self.ltView = view;
@@ -76,109 +73,17 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
    
     
     [[MCModPlayer sharedManager] setDelegate:self];
-    
-     if (! updateThread) {
-//        NSLog(@"------ creating update thread");
-        updateThread = [[NSThread alloc] initWithTarget:self selector:@selector(threadLoop:) object:nil];
-        [updateThread start];
-    }
-    
 }
 
 
 
-
--(void) threadLoop:(MCPlotGlView *)view {
-return;
-    NSLog(@"----- STARTING GLPlot THREAD LOOP ----- ");
-//    return;
-    float timeInterval = .00005;
-  
-    while ([[NSThread currentThread] isCancelled] == NO) {
-    
-        [NSThread sleepForTimeInterval:timeInterval];
-        if (self.ltView && self.rtView && numFrames) {
-            pthread_mutex_lock(&glMutex);
-
-
-            /*
-             for(size_t i = 0; i < ioData->mNumberBuffers; ++i) {
-                AudioBuffer buffer = ioData->mBuffers[i];
-                for(size_t sampleIdx = 0; sampleIdx < inNumberFrames; ++sampleIdx) {
-                  // Calculate current LFO amplitude based on phase, frequency, and sample index.
-                  Float32 lfoAmp = cosf(2 * M_PI * lfoFreq * ((framesProcessed / kGraphSampleRate) + (sampleIdx / (Float32)inNumberFrames)));
-                  SInt16 *sampleBuffer = buffer.mData;
-                  
-                  // Modulate left and right samples with LFO wave
-                  sampleBuffer[2 * sampleIdx] = (SInt16)(lfoAmp * sampleBuffer[2 * sampleIdx]);
-                  sampleBuffer[2 * sampleIdx + 1] = (SInt16)(lfoAmp * sampleBuffer[2 * sampleIdx + 1]);
-
-                  // Mute channels as necessary
-                  if(muteLeftChannel)
-                    sampleBuffer[2*sampleIdx] = 0;
-                               if(muteRightChannel)
-                    sampleBuffer[2*sampleIdx + 1] = 0;
-                }
-              }
-            
-            
-            */
-
-            [self.ltView update:bufferLeft  withSize:numFrames];
-            [self.rtView update:bufferRight withSize:numFrames];
-
-               
-            pthread_mutex_unlock(&glMutex);
-          
-          }
-      
-    }
-    
-}
 
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames {
-//    pthread_mutex_lock(&glMutex);
-//    bufferLeft  = leftBuffer;
-//    bufferRight = rightBuffer;
-//    numFrames   = nFrames;
-//
-//    pthread_mutex_unlock(&glMutex);
 
     if (self.ltView && self.rtView) {
-//        int totalFrames = numFrames / 2;
-        
-//        float *ltBuffer = malloc(sizeof(float) * nFrames),
-//              *rtBuffer = malloc(sizeof(float) * nFrames);
-        
-//        memcpy(ltBuffer, leftBuffer, totalFrames);
-//        memcpy(rtBuffer, rightBuffer, totalFrames);
-        
-//    dispatch_async(dispatch_get_main_queue(), ^{
-
         [self.ltView update:leftBuffer  withSize:nFrames];
         [self.rtView update:rightBuffer withSize:nFrames];
-//    });
-//        free(ltBuffer);
-//        free(rtBuffer);
-
     }
-}
-
-
--(void) updateBuffers:(SInt16*)inBuffer withSize:(int)nFrames {
-
-    pthread_mutex_lock(&glMutex);
-//    if (! bufferData) {
-////        bufferData = malloc(nFrames * sizeof(SInt16));
-//
-//        bufferData = malloc(nFrames * (2 * sizeof(int16_t)));
-//    }
-
-//    memcpy(bufferData, inBuffer, nFrames);
-    numFrames = nFrames;
-  
-    pthread_mutex_unlock(&glMutex);
-
 }
 
 @end

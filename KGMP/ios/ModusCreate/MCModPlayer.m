@@ -19,19 +19,9 @@
 
 
 
-static short int **audioGenerationBuffer,
-                 **audioVizBuffer;
-
-
-static float **vizGenerationBufferL,
-             **vizGenerationBufferR;
-
-static int32_t *statusInfo;
-static volatile int soundGeneratorBufferIndex, soundPlayerBufferIndex;
 static volatile int *soundGeneratorFlag;
 
 int bufferSize;
-pthread_mutex_t audio_mutex;
 
 struct StatusObject {
     int32_t order;
@@ -59,9 +49,6 @@ struct StatusObject statuses[NUM_BUFFERS];
     self.appActive = true;
     
     if (self = [super init]) {
-        pthread_mutex_init(&audio_mutex, NULL);
-        
-        
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
         [notificationCenter addObserver:self
@@ -109,30 +96,6 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 
-- (BOOL) initAudioSession {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-
-    NSError *error = nil;
-    BOOL success = [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    
-    if (! success) {
-#if DEBUG
-        NSLog(@"%@", [error localizedFailureReason]);
-#endif
-        return NO;
-    }
-    success = [session setActive:YES error:&error];
-    
-    if (! success) {
-#if DEBUG
-        NSLog(@"%@", [error localizedFailureReason]);
-#endif
-        return NO;
-    }
-
-    return YES;
-}
-
 
 - (NSDictionary *) loadFile:(NSString *)path {
 
@@ -164,10 +127,9 @@ struct StatusObject statuses[NUM_BUFFERS];
     
     lastPattern = -1;
     lastRow = -1;
+
 //    __block NSDate *date = [NSDate date];
 //    printf("%f\n", timePassed_ms);
-//    dispatch_async(dispatch_get_main_queue(), ^{
-
 
     renderer.block = ^(const AERenderContext * _Nonnull context) {
         AEBufferStack *bufferStack = context->stack;
@@ -191,8 +153,6 @@ struct StatusObject statuses[NUM_BUFFERS];
         if (isLoading || isPaused) {
             memset(leftBuffer,  0, bufferList->mBuffers[0].mDataByteSize);
             memset(rightBuffer, 0, bufferList->mBuffers[0].mDataByteSize);
-//            AERenderContextOutput(context, 1);
-//            return;
         }
         else {
             
@@ -251,208 +211,6 @@ struct StatusObject statuses[NUM_BUFFERS];
 
     
     return self.modInfo;
-}
-
-
-//- (NSDictionary *) initializeSoundOld:(NSString *)path  {
-//
-//    if (self.modPlayer) {
-//    
-//        [self pause];
-//
-//        AudioQueueStop(mAudioQueue, YES);
-//        AudioQueueReset(mAudioQueue);
-//        AudioQueueDispose(mAudioQueue, YES);
-//    }
-//    else {
-//        BOOL success = [self initAudioSession];
-//        if (! success) {
-//            return nil;
-//        }
-//
-//
-//        self.modPlayer = [[MC_OMPT alloc] init];
-//    }
-//    
-//    if (soundThread) {
-//        [soundThread cancel];
-//        // Give the current sound thread time to finish work.
-//        [NSThread sleepForTimeInterval:.025];
-//        
-//        soundThread = nil;
-//    }
-//    
-//    self.modInfo = [self.modPlayer loadFile:path];
-//    
-//    NSArray *pathParts = [path componentsSeparatedByString:@"/"];
-//    
-//    self.loadedFileName = [pathParts objectAtIndex:[pathParts count] - 1];
-//    
-//    AudioStreamBasicDescription mDataFormat;
-//    UInt32 err;
-//    
-//    mDataFormat.mFormatID         = kAudioFormatLinearPCM;
-//    mDataFormat.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-//    mDataFormat.mSampleRate       = PLAYBACK_FREQ;
-//    mDataFormat.mBitsPerChannel   = 16;
-//    mDataFormat.mChannelsPerFrame = 2;
-//    mDataFormat.mBytesPerFrame    = (mDataFormat.mBitsPerChannel >> 3) * mDataFormat.mChannelsPerFrame;
-//    mDataFormat.mFramesPerPacket  = 1;
-//    mDataFormat.mBytesPerPacket   = mDataFormat.mBytesPerFrame;
-//
-//
-//
-//    err = AudioQueueNewOutput(&mDataFormat,
-//                             audioCallback,
-//                             CFBridgingRetain(self),
-//                             CFRunLoopGetMain(),
-//                             kCFRunLoopCommonModes,
-//                             0,
-//                             &mAudioQueue);
-//    
-//    bufferSize = SOUND_BUFFER_SAMPLE_SIZE / 2;
-////    printf("bufferSize == %i\n", bufferSize);
-//
-//    free(audioGenerationBuffer);
-////    free(audioVizBuffer);
-//    free(vizGenerationBufferL);
-//    free(vizGenerationBufferR);
-//    free(mBuffers);
-//
-//    /* Allocate Audio generation buffer */
-//    audioGenerationBuffer = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
-////    audioVizBuffer        = (short int**)malloc(NUM_BUFFERS * sizeof(unsigned short int *));
-//    
-//    vizGenerationBufferL  = (float **)malloc((NUM_BUFFERS) * sizeof(float *));
-//    vizGenerationBufferR  = (float **)malloc((NUM_BUFFERS) * sizeof(float *));
-//    
-//    
-//    /* Allocate Audio Queue buffers */
-//    mBuffers = (AudioQueueBufferRef*) malloc(sizeof(AudioQueueBufferRef) * NUM_BUFFERS);
-//    
-//    soundGeneratorFlag = (int *)malloc(NUM_BUFFERS * sizeof(int));
-//    
-//    
-//    numFrames = bufferSize / (2 * sizeof(int16_t));
-//    self.numberOfFrames = numFrames;
-//    
-//    // Allocate buffers
-//    for (int i = 0; i < NUM_BUFFERS; i++) {
-//        /* Allocate buffers for AudioQueue */
-//        AudioQueueBufferRef mBuffer;
-//		AudioQueueAllocateBuffer(mAudioQueue, bufferSize, &mBuffer);
-//		mBuffers[i] = mBuffer;
-//        mBuffer->mAudioDataByteSize = bufferSize;
-//
-//        memset(mBuffer->mAudioData, 0, bufferSize);
-//        
-//        AudioQueueEnqueueBuffer(mAudioQueue, mBuffer, 0, NULL);
-//        
-//        
-//        /* Allocate buffers for sound generation */
-//        audioGenerationBuffer[i] = (short int*)malloc(bufferSize);
-////        audioVizBuffer[i]        = (short int*)malloc(bufferSize);
-//        
-//        vizGenerationBufferL[i]  = (float*)malloc(bufferSize);
-//        vizGenerationBufferR[i]  = (float*)malloc(bufferSize);
-//        
-//        
-//        /* set each value for the sound generator flag */
-//        soundGeneratorFlag[i] = 0;
-//    }
-//
-//    self.isPrimed = true;
-//    
-////    soundThread = [[NSThread alloc] initWithTarget:self selector:@selector(generateAudioThread) object:nil];
-//    
-//    [soundThread start];
-//    
-//    soundGeneratorBufferIndex = 0;
-//    soundPlayerBufferIndex = 0;
-//    
-//    return @{};
-//}
-
-// Create a thread to generate audio. Helps with skipping when the phone is hibernating, app is pushed to
-// background or foreground.
-- (void) generateAudioThread {
-
-    
-    NSThread *currentThread = [NSThread currentThread];
-    
-    [currentThread setThreadPriority:0.9f];
-    [currentThread setName:@"Audio Gen"];
-    
-    float timeInterval = .001;
-    
-    MCModPlayer *player = self;
-//    printf("\n\nNew Thread \t\t%p\n", currentThread);
-    
-   float splitter = 32768.0f;
-    
-    while(1) {
-   
-         [NSThread sleepForTimeInterval:timeInterval];
-   
-        if ([currentThread isCancelled]) {
-//            printf("Exit thread \t\t%p\n", currentThread);
-            [NSThread exit];
-        }
-   
-        if (soundGeneratorFlag[soundGeneratorBufferIndex] == 0) {
-//            pthread_mutex_lock(&audio_mutex);
-          
-            // Mutex lock start
-            int32_t *playerState = [player.modPlayer fillBufferNew:audioGenerationBuffer[soundGeneratorBufferIndex] withNumFrames:numFrames];
-            
-//            memcpy(audioVizBuffer[soundGeneratorBufferIndex], audioGenerationBuffer[soundGeneratorBufferIndex], numFrames);
-
-            struct StatusObject status;
-            
-            {
-                status.order   = playerState[0];
-                status.pattern = playerState[1];
-                status.row     = playerState[2];
-                status.numRows = playerState[3];
-            }
-            statuses[soundGeneratorBufferIndex] = status;
-            
-            
-            SInt16 *frames = audioGenerationBuffer[soundGeneratorBufferIndex];
-            
-            soundGeneratorFlag[soundGeneratorBufferIndex] = 1;
-
-           
-            float *floatDataLt = vizGenerationBufferL[soundGeneratorBufferIndex],
-                  *floatDataRt = vizGenerationBufferR[soundGeneratorBufferIndex];
-            
-            
-            for (int channelNum = 0; channelNum < 2; channelNum++) {
-                for (int x = 0; x < numFrames; x++) {
-
-                    float value = (frames[x + channelNum] / splitter) ;
-                    
-                    if (channelNum == 0) {
-                        floatDataLt[x] = value;
-                    }
-                    else {
-                        floatDataRt[x] = value;
-                    }
-                }
-             }
-            
-            
-            soundGeneratorBufferIndex++;
-        
-            if (soundGeneratorBufferIndex == NUM_BUFFERS) {
-                soundGeneratorBufferIndex = 0;
-            }
-            
-         }
-        
-    }
-
-
 }
 
 
@@ -560,12 +318,6 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
     [self updateInfoCenter];
 
 }
-
-- (void) dealloc {
-    pthread_mutex_unlock(&audio_mutex);
-    pthread_mutex_destroy(&audio_mutex);
-}
-
 
 
 - (id) getDelegate {

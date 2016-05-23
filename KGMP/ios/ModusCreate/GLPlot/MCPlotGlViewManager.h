@@ -27,7 +27,6 @@
 @property MCPlotGlView *ltView;
 @property MCPlotGlView *rtView;
 
--(void) updateBuffers:(SInt16*)inBuffer withSize:(int)numFrames;
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames;
 
 @end
