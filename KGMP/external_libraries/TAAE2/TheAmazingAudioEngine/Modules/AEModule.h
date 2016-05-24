@@ -28,12 +28,31 @@
 extern "C" {
 #endif
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 #import "AEBufferStack.h"
 #import "AERenderer.h"
 
 @class AEModule;
 
+/*!
+ * Invoke processing for a module
+ *
+ * @param module The module subclass
+ * @param context The rendering context
+ */
+void AEModuleProcess(__unsafe_unretained AEModule * _Nonnull module, const AERenderContext * _Nonnull context);
+
+/*!
+ * Determine whether module is active
+ *
+ *  If NO is returned by this method, processing may be skipped for this
+ *  module, as it is idle.
+ *
+ * @param module The module subclass
+ * @returns Whether the module is active
+ */
+BOOL AEModuleIsActive(__unsafe_unretained AEModule * _Nonnull module);
+    
 /*!
  * Processing function
  *
@@ -75,25 +94,6 @@ typedef BOOL (*AEModuleIsActiveFunc)(__unsafe_unretained AEModule * _Nonnull sel
  * @param renderer The renderer.
  */
 - (instancetype _Nullable)initWithRenderer:(AERenderer * _Nullable)renderer;
-
-/*!
- * Invoke processing for a module
- *
- * @param module The module subclass
- * @param context The rendering context
- */
-void AEModuleProcess(__unsafe_unretained AEModule * _Nonnull module, const AERenderContext * _Nonnull context);
-
-/*!
- * Determine whether module is active
- *
- *  If NO is returned by this method, processing may be skipped for this
- *  module, as it is idle.
- *
- * @param module The module subclass
- * @returns Whether the module is active
- */
-BOOL AEModuleIsActive(__unsafe_unretained AEModule * _Nonnull module);
 
 /*!
  * Notifies the module that the renderer's sample rate has changed

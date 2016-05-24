@@ -28,7 +28,7 @@
 extern "C" {
 #endif
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 #import "AETime.h"
 
 //! Argument to method call, for use with AEMessageQueuePerformSelectorOnMainThread
@@ -96,6 +96,9 @@ extern AEArgument AEArgumentNone;
 #define AEArgumentData(buffer, size) \
     (AEArgument) { NO, buffer, size }
 
+//! Block
+typedef void (^AEMessageQueueBlock)();
+
 /*!
  * Message Queue
  *
@@ -104,8 +107,7 @@ extern AEArgument AEArgumentNone;
  *  an easy lock-free synchronization method, which is important when working with audio.
  *
  *  To use it, create an instance and then begin calling AEMessageQueuePoll from your render loop,
- *  in order to poll for incoming messages on the render thread. Then call startPolling on the
- *  main thread to begin polling for incoming messages on the main thread.
+ *  in order to poll for incoming messages on the render thread.
  *
  *  Then, use AEMessageQueuePerformSelectorOnMainThread from the audio thread, or
  *  performBlockOnAudioThread: or performBlockOnAudioThread:completionBlock: from the main thread.
@@ -126,20 +128,6 @@ extern AEArgument AEArgumentNone;
 - (instancetype _Nullable)initWithBufferCapacity:(size_t)bufferCapacity;
 
 /*!
- * Begin polling for messages from the audio thread
- *
- *  Call this to begin listening for messages from the audio thread.
- *
- * @return YES if polling started successfully, NO if there was a buffer allocation problem
- */
-- (BOOL)startPolling;
-
-/*!
- * Stop polling for messages
- */
-- (void)endPolling;
-
-/*!
  * Send a message to the realtime thread from the main thread
  *
  *  Important: Do not interact with any Objective-C objects inside your block, or hold locks, allocate
@@ -148,7 +136,7 @@ extern AEArgument AEArgumentNone;
  *
  * @param block A block to be performed on the realtime thread.
  */
-- (void)performBlockOnAudioThread:(void (^ _Nonnull)())block;
+- (void)performBlockOnAudioThread:(AEMessageQueueBlock _Nonnull)block;
 
 /*!
  * Send a message to the realtime thread, with a completion block
@@ -165,7 +153,8 @@ extern AEArgument AEArgumentNone;
  * @param block  A block to be performed on the realtime thread.
  * @param completionBlock A block to be performed on the main thread after the handler has been run, or nil.
  */
-- (void)performBlockOnAudioThread:(void (^ _Nonnull)())block completionBlock:(void (^ _Nullable)())completionBlock;
+- (void)performBlockOnAudioThread:(AEMessageQueueBlock _Nonnull)block
+                  completionBlock:(AEMessageQueueBlock _Nullable)completionBlock;
 
 /*!
  * Perform a selector on the main thread asynchronously
