@@ -276,11 +276,12 @@ class HomeTabView extends React.Component {
     }
 
     buildTab(tabConfig, tabNo) {
-        var state      = this.state,
-            styles     = this.styles,
-            isSelected = (state.selectedTab === tabNo),
-            key        = 'tab_' + tabNo,
-            navRef     = key,
+        var state        = this.state,
+            styles       = this.styles,
+            isSelected   = (state.selectedTab === tabNo),
+            key          = 'tab_' + tabNo,
+            renderIconFn = () =>  <Icon name={icon} style={styles.icon}/>,
+            navRef       = key,
             {
                 title,
                 icon,
@@ -288,7 +289,7 @@ class HomeTabView extends React.Component {
             } = tabConfig;
 
         var initialRoute = {
-            component : child,
+            component       : child,
             componentConfig : tabConfig.componentConfig || {}
         }
 
@@ -297,7 +298,7 @@ class HomeTabView extends React.Component {
                      tabStyle={isSelected && styles.tabSelected}
                      title={title}
                      titleStyle={styles.title}
-                     renderIcon={() =>  <Icon name={icon} style={styles.icon}/>}
+                     renderIcon={renderIconFn}
                      key={key}
                      onPress={() => this.setTabState(tabNo)}>
 
@@ -326,28 +327,23 @@ class HomeTabView extends React.Component {
     }
 
     addToStack(route) {
-        var currentTabRef = ('tab_' + this.state.selectedTab);
-        // debugger;
-        currentTabRef = this.refs[currentTabRef];
+        var currentTabRef = this.refs['tab_' + this.state.selectedTab];
 
         // If we don't have a sub navigator... push to the top-level navigator
         if (! currentTabRef.subNav) {
             // console.log('New navigator')
             var newRoute = {
-                component : Navigation,
-                foo       : 'bar',
+                component       : Navigation,
+                foo             : 'bar',
+                sceneConfig     : route.sceneConfig,
                 componentConfig : {
-                    topNav       : currentTabRef,
-                    initialRoute : route,
-                    showNavBar   : true,
-                    ref          : (comp) => {
-                        // console.log('here')
+                    topNav        : currentTabRef,
+                    initialRoute  : route,
+                    showNavBar    : true,
+                    ref           : (comp) => {
                         currentTabRef.subNav = comp;
-                        // debugger;
-                        // console.log('currentTabRef.refs', currentTabRef.refs);
                     }
-                },
-                sceneConfig : route.sceneConfig
+                }                
             };
 
             currentTabRef.push(newRoute);

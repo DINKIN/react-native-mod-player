@@ -28,9 +28,10 @@
 		713A289B1CA961F1000D9060 /* MCModPlayerInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 713A28961CA961F1000D9060 /* MCModPlayerInterface.m */; };
 		713A289C1CA961F1000D9060 /* MCQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 713A28981CA961F1000D9060 /* MCQueueManager.m */; };
 		713A28A01CA96201000D9060 /* MC_OMPT.m in Sources */ = {isa = PBXBuildFile; fileRef = 713A289F1CA96201000D9060 /* MC_OMPT.m */; };
-		713A28A91CA9621F000D9060 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28A81CA96213000D9060 /* liblibopenmpt.a */; };
 		713A28AB1CA96225000D9060 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */; };
 		7150E3361CE7F84300158C40 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7150E3341CE7F6BD00158C40 /* libRNBlur.a */; };
+		7195F6D51CF4CDEE00A1E02A /* liblibOpenMPT.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7195F6D41CF4CDE600A1E02A /* liblibOpenMPT.0.2.a */; };
+		7195F6D81CF4DB0100A1E02A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7195F6D71CF4DB0100A1E02A /* libz.tbd */; };
 		71C9BE9F1CF1ED3E007F8A69 /* EZAudioiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; };
 		71C9BED21CF1FDFD007F8A69 /* MCPlotGlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */; };
 		71C9BED31CF1FDFD007F8A69 /* MCPlotGlViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */; };
@@ -106,19 +107,19 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
-		713A28A71CA96213000D9060 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CC33B2891AB8197E009608E8;
-			remoteInfo = libopenmpt;
-		};
 		7150E3331CE7F6BD00158C40 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
 			remoteInfo = RNBlur;
+		};
+		7195F6D31CF4CDE600A1E02A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7195F6CF1CF4CDE600A1E02A /* libOpenMPT.0.2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 71448D0C1CF48B5800FE7AAA;
+			remoteInfo = libOpenMPT.0.2;
 		};
 		71C9BE8B1CF1ED37007F8A69 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -229,9 +230,10 @@
 		713A28981CA961F1000D9060 /* MCQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCQueueManager.m; path = ModusCreate/MCQueueManager.m; sourceTree = "<group>"; };
 		713A289E1CA96201000D9060 /* MC_OMPT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MC_OMPT.h; path = ModusCreate/Players/MC_OMPT.h; sourceTree = "<group>"; };
 		713A289F1CA96201000D9060 /* MC_OMPT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MC_OMPT.m; path = ModusCreate/Players/MC_OMPT.m; sourceTree = "<group>"; };
-		713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = ../external_libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
+		7195F6CF1CF4CDE600A1E02A /* libOpenMPT.0.2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libOpenMPT.0.2.xcodeproj; path = ../external_libraries/libOpenMPT.0.2/libOpenMPT.0.2.xcodeproj; sourceTree = "<group>"; };
+		7195F6D71CF4DB0100A1E02A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EZAudio.xcodeproj; path = ../external_libraries/libEzAudio/EZAudio/EZAudio.xcodeproj; sourceTree = "<group>"; };
 		71C9BECE1CF1FDFD007F8A69 /* MCPlotGlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCPlotGlView.h; path = ModusCreate/GLPlot/MCPlotGlView.h; sourceTree = "<group>"; };
 		71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCPlotGlView.m; path = ModusCreate/GLPlot/MCPlotGlView.m; sourceTree = "<group>"; };
@@ -256,9 +258,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7195F6D81CF4DB0100A1E02A /* libz.tbd in Frameworks */,
+				7195F6D51CF4CDEE00A1E02A /* liblibOpenMPT.0.2.a in Frameworks */,
 				71DC53431CEA4004000CC5F8 /* libTheAmazingAudioEngine.a in Frameworks */,
 				713A28AB1CA96225000D9060 /* libsqlite3.0.tbd in Frameworks */,
-				713A28A91CA9621F000D9060 /* liblibopenmpt.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -405,27 +408,27 @@
 		713A28A11CA96206000D9060 /* external_libraries */ = {
 			isa = PBXGroup;
 			children = (
+				7195F6CF1CF4CDE600A1E02A /* libOpenMPT.0.2.xcodeproj */,
 				71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */,
 				71DC53261CEA3F62000CC5F8 /* TheAmazingAudioEngine.xcodeproj */,
 				7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */,
 				713A28AA1CA96225000D9060 /* libsqlite3.0.tbd */,
-				713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */,
 			);
 			name = external_libraries;
-			sourceTree = "<group>";
-		};
-		713A28A31CA96212000D9060 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				713A28A81CA96213000D9060 /* liblibopenmpt.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		7150E3301CE7F6BD00158C40 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				7150E3341CE7F6BD00158C40 /* libRNBlur.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7195F6D01CF4CDE600A1E02A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7195F6D41CF4CDE600A1E02A /* liblibOpenMPT.0.2.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -512,6 +515,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				7195F6D71CF4DB0100A1E02A /* libz.tbd */,
 				713A28A11CA96206000D9060 /* external_libraries */,
 				713A28901CA961DD000D9060 /* Modus Create */,
 				713A28881CA96133000D9060 /* Resources */,
@@ -593,8 +597,8 @@
 					ProjectRef = 71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */;
 				},
 				{
-					ProductGroup = 713A28A31CA96212000D9060 /* Products */;
-					ProjectRef = 713A28A21CA96212000D9060 /* libopenmpt.xcodeproj */;
+					ProductGroup = 7195F6D01CF4CDE600A1E02A /* Products */;
+					ProjectRef = 7195F6CF1CF4CDE600A1E02A /* libOpenMPT.0.2.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -709,18 +713,18 @@
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		713A28A81CA96213000D9060 /* liblibopenmpt.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = liblibopenmpt.a;
-			remoteRef = 713A28A71CA96213000D9060 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		7150E3341CE7F6BD00158C40 /* libRNBlur.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNBlur.a;
 			remoteRef = 7150E3331CE7F6BD00158C40 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7195F6D41CF4CDE600A1E02A /* liblibOpenMPT.0.2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = liblibOpenMPT.0.2.a;
+			remoteRef = 7195F6D31CF4CDE600A1E02A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */ = {
