@@ -248,7 +248,7 @@ class AbstractPlayer extends BaseView {
                                            lineColor={'#AAA'} 
                                            />
                     </TouchableOpacity>
-                    <View style={{marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
+                    <View style={{marginTop: 5, paddingVertical:15, alignItems:'center'}}>
                         <Slider
                             ref={'slider'}
                             minimumValue={0}
@@ -257,7 +257,7 @@ class AbstractPlayer extends BaseView {
                             trackStyle={customStyles3.track}
                             thumbStyle={customStyles3.thumb}
                             minimumTrackTintColor='#666'
-                            style={{width:mainImageDims.width}}
+                            style={{width:mainImageDims.width - 20}}
                             step={1}
                             onSlidingStart={this.onSlidingStart}
                             onSlidingComplete={this.onSliderChangeComplete}
