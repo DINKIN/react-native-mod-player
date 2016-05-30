@@ -414,11 +414,8 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 }
 
 
-
-
 /* ******************************************************************************************************** */
 #pragma mark SQLite3_methods
-
 
 - (sqlite3 *) openDb {
     

@@ -13,12 +13,9 @@
 #import "RCTUtils.h"
 
 
-
 @implementation MCPlotGlViewManager {
 
 }
-
-pthread_mutex_t glMutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 RCT_EXPORT_MODULE()
@@ -26,9 +23,22 @@ RCT_EXPORT_MODULE()
 - (UIView *)view {
 //    NSLog(@"%@ %@",  NSStringFromClass([self class]),  NSStringFromSelector(_cmd));
     MCPlotGlView *view = [MCPlotGlView new];
-//    view.delegate = self;
     return view;
 }
+//
+RCT_EXPORT_VIEW_PROPERTY(plotterType, NSString);
+RCT_EXPORT_VIEW_PROPERTY(shouldMirror, BOOL);
+RCT_EXPORT_VIEW_PROPERTY(shouldFill, BOOL);
+
+RCT_CUSTOM_VIEW_PROPERTY(lineColor, NSString, MCPlotGlView) {
+    [view setNewLineColor:[RCTConvert UIColor:json]];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(backgroundColor, NSString, MCPlotGlView) {
+    [view setNewBackgroundColor:[RCTConvert UIColor:json]];
+}
+
+
 
 RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
     MCModPlayer *player = [MCModPlayer sharedManager];
@@ -77,7 +87,7 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
 
 
 
-
+// Used by the delegate
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames {
 
     if (self.ltView && self.rtView) {

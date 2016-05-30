@@ -149,10 +149,11 @@ struct StatusObject statuses[NUM_BUFFERS];
         float *leftBuffer  = (float*)bufferList->mBuffers[0].mData,
               *rightBuffer = (float*)bufferList->mBuffers[1].mData;
         
+        UInt32 byteSize = bufferList->mBuffers[0].mDataByteSize;
         
         if (isLoading || isPaused) {
-            memset(leftBuffer,  0, bufferList->mBuffers[0].mDataByteSize);
-            memset(rightBuffer, 0, bufferList->mBuffers[0].mDataByteSize);
+            memset(leftBuffer,  0, byteSize);
+            memset(rightBuffer, 0, byteSize);
         }
         else {
             

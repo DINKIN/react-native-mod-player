@@ -886,6 +886,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.ModusCreate.KGMP-2";
 				PRODUCT_NAME = KGMP;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -908,6 +909,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.ModusCreate.KGMP-2";
 				PRODUCT_NAME = KGMP;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -10,7 +10,9 @@ import {
     View,
     ScrollView,
     Dimensions,
-    Image
+    Image,
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from "react-native";
 
 
@@ -31,7 +33,6 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseView              = require('../BaseView'),
-    ProgressView          = require('./accessories/ProgressView'),
     AnimatedLazyImage     = require('../common/AnimatedLazyImage');
 
 var MCAudioPlotGlView = require('./MCAudioPlotGlView');
@@ -57,23 +58,14 @@ class AbstractPlayer extends BaseView {
 
     data     = null;  // Used to paint out the view (song title, num tracks, etc)
     plotters = null;  // References to the child plotter instances (LibEzPlotGlView)
-
     dirInfo   = null;
     rowID     = null;
-
     patternsRegistered = null; // used to check if patterns are registered by wkwebview
-
     commandCenterEventHandler = null; 
     patternUpdateHandler      = null;
-        
     patterns           = null; // used to store pattern data.
-    gettingPatternData = false;
-
     loading = false; // used to control floods of loading from the UI
-    
-
     prevPat = null;
-    
     
     // Event handler function keys 
     audioControlMethodMap = {
@@ -85,14 +77,13 @@ class AbstractPlayer extends BaseView {
         dislike   : 'dislike',
         playPause : 'playPause',
         seekBack  : () => {},
-        seekFwd   : () => {} 
+        seekFwd   : () => {}
     };
 
     wkWebViewEventMatrix = {
         init   : 'onWkWebViewInit',
         patReg : 'onWkWebViewPatternsRegistered'
     };
-
 
     state = {
         prevPat        : -1,
@@ -104,7 +95,10 @@ class AbstractPlayer extends BaseView {
         rightSide      : 'r',
         fileRecord     : null,
         sliderPosition : 0,
-        currentPattern : -1
+        currentPattern : -1,
+        plotterMirror  : 0,
+        plotterFill    : 0,
+        plotterType    : 'buffer'
     };
 
     render() {
@@ -114,12 +108,8 @@ class AbstractPlayer extends BaseView {
             modObject = state.modObject || props.modObject; // TOdo refactor
 
         if (! modObject) {
-            // console.log(this.constructor.name, 'no mod object, returning null')
-            // console.log(state)
-            return null;
+            return <View />;
         }
-
-        // console.log('render() modObject', modObject);
 
         this.fileRecord = state.fileRecord || props.fileRecord;
 
@@ -143,8 +133,6 @@ class AbstractPlayer extends BaseView {
 
 
         if (songName) {
-            // console.log(rowData.song_name);
-            // console.log('\t', decodeURI(rowData.song_name));
             songName = decodeURI(unescape(songName)).trim();
             songName = `"${songName}"`;   
         }
@@ -170,47 +158,6 @@ class AbstractPlayer extends BaseView {
             }
         }
         */
-
-        // var instViews   = [],
-        //     // instruments = modObject.instruments,
-        //     len         = instruments.length,
-        //     rowStyle    = styles.instrumentRow,
-        //     greenText   = styles.instrumentText,
-        //     whiteText   = styles.instrumentName,
-        //     rowStr      = 'row_',
-        //     colonStr    = ':',
-        //     sixteen     = 16,
-        //     zeroStr     = '0',
-        //     rowInHex;
-
-        // instViews.length = len;
-
-        // if (len > 0) {
-        //     for (var i=0; i < len; i++) {
-
-        //         rowInHex = i.toString(sixteen).toUpperCase();
-
-        //         if (i < sixteen) {
-        //             rowInHex = zeroStr + rowInHex;
-        //         }
-
-        //         instViews[i] = (
-        //             <View style={rowStyle} key={rowStr + rowInHex}>
-        //                 <Text style={greenText}>{rowInHex + colonStr}</Text> 
-        //                 <Text style={whiteText}>{instruments[i]}</Text>
-        //             </View>
-        //         );
-
-        //     }
-        // }
-
-        // else {
-        //     instViews[0] = (
-        //         <View style={rowStyle} key="wtf">
-        //             <Text style={whiteText}>{"Not available for this song."}</Text>
-        //         </View>
-        //     );
-        // }
 
         let targetWidth = windowDimensions.width - 50,
             mainImageDims = {
@@ -263,7 +210,6 @@ class AbstractPlayer extends BaseView {
         };
 
         var sliderSteps = modObject.patternOrds.length - 1;
-        // console.log('sliderSteps', sliderSteps)
 
         return (
             <Image style={[styles.container, this.props.style]} source={rootImageSource}>
@@ -281,11 +227,27 @@ class AbstractPlayer extends BaseView {
                             <AnimatedLazyImage source={source} style={imgStyle}/>
                         </View>
                     </View>
-                    <View style={styles.vizContainer}>
-                        <MCAudioPlotGlView ref="ltGLV" side={state.leftSide} style={styles.vizItem}/>
+                    <TouchableOpacity activeOpacity={.75} style={styles.vizContainer} onPress={this.onPlotterPress}>
+                        <MCAudioPlotGlView ref="ltGLV" 
+                                           plotterType={state.plotterType} 
+                                           side={state.leftSide} 
+                                           style={styles.vizItem}
+                                           shouldFill={state.plotterFill}
+                                           shouldMirror={state.plotterMirror} 
+                                           lineColor={'#AAA'} 
+                                           />
+                        
                         <View style={styles.vizSeparator}/>
-                        <MCAudioPlotGlView ref="rtGLV" side={state.rightSide} style={styles.vizItem}/>
-                    </View>
+                        
+                        <MCAudioPlotGlView ref="rtGLV" 
+                                           plotterType={state.plotterType} 
+                                           side={state.rightSide}
+                                           style={styles.vizItem} 
+                                           shouldFill={state.plotterFill}
+                                           shouldMirror={state.plotterMirror}  
+                                           lineColor={'#AAA'} 
+                                           />
+                    </TouchableOpacity>
                     <View style={{marginTop: 10, paddingVertical:20,  alignItems:'center'}}>
                         <Slider
                             ref={'slider'}
@@ -320,19 +282,6 @@ class AbstractPlayer extends BaseView {
                     </View>
 
                     {/*
-
-                    <ProgressView numberOfCells={modObject.patternOrds.length} highlightNumber={0} ref={"progressView"} style={styles.progressView}/>
-                    <View style={{padding:5}}>
-                        <Text style={styles.instrumentsLabel}>Instruments:</Text>
-                    </View>
-                    <ScrollView style={{flex:1, padding: 5}} automaticallyAdjustContentInsets={false}>
-                        {instViews}
-                    </ScrollView>
-
-                    <View style={[styles.bar, {top: windowDimensions.mid}]}/>
-                     */}
-
-                    {/*
                     <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
                     <View style={[styles.rowNumberz, newTopPosition]}>
                         <RowNumberView ref={"rowNumberView"} rows={pattern.length}/>
@@ -357,20 +306,34 @@ class AbstractPlayer extends BaseView {
         );
     }
 
-    onSlidingStart = (value) => {
-        console.log('onSlidingStart')
-        this.deregisterPatternUpdateHandler();
+    onPlotterPress = () => {
+        var plotterType = this.state.plotterType;
+        var newState;
+        // console.log(this.state)
+        // debugger;
+        if (plotterType == 'buffer') {
+            newState = {
+                plotterType   : 'rolling',
+                plotterFill   : 1,
+                plotterMirror : 1
+            };
+        }
+        else {
+            newState = {
+                plotterType   : 'buffer',
+                plotterFill   : 0,
+                plotterMirror : 0
+            };
+        }
 
-        // this.setState({
-        //     sliderPosition : value,
-        //     order          : value
-        // });
+        this.setState(newState);
+    }
+
+    onSlidingStart = (value) => {
+        this.deregisterPatternUpdateHandler();
     }
 
     onSliderChangeComplete = (value) => { 
-        // console.log('slider change', value);
-        console.log('Release', value)
-
         PlayController.setOrder(value, () => {
             this.setState({
                 sliderPosition : value,
@@ -385,7 +348,6 @@ class AbstractPlayer extends BaseView {
     }
 
     componentWillMount() {
-        // this.patterns = this.props.patterns;
         super.componentWillMount();
     }
 
@@ -439,20 +401,10 @@ class AbstractPlayer extends BaseView {
                 // debugger;
                 this.loading = false;
 
-                // this.refs.progressView.setState({
-                //     numberOfCells   : modObject.patternOrds.length,
-                //     highlightNumber : 0
-                // });
                 
                 this.fileRecord = fileRecord;
                 modObject.id_md5 = fileRecord.id_md5;
-
-                // this.state.modObject = modObject;
-
                 modObject.fileName = modObject.file_name;
-
-                // this.forceUpdate();   
-
                 this.patterns = modObject.patterns;
                 // this.onWkWebViewInit();
                 this.playTrack();
@@ -483,15 +435,8 @@ class AbstractPlayer extends BaseView {
             rightSide      : 'rU'
         })
 
-        // this.refs.ltGLV.side = 'lU';
-        // this.refs.ltGLV.side = 'rU';
-        // this.refs.ltGLV.setPlotterUnRegistered('lU')
-        // this.refs.rtGLV.setPlotterUnRegistered('rU');
-
-        // if (this.commandCenterEventHandler) {
-        //     this.commandCenterEventHandler.remove();
-        //     this.commandCenterEventHandler = null;
-        // }
+        this.refs.ltGLV.setPlotterUnRegistered('lU');
+        this.refs.rtGLV.setPlotterUnRegistered('rU');
     }
 
     deregisterPatternUpdateHandler() {
@@ -513,25 +458,10 @@ class AbstractPlayer extends BaseView {
  
 
     previousTrack() {
-        // if (this.loading) {
-        //     return;
-        // }
-
-        // this.loading = true;
-
         PlayController.previousTrack()
     }
     
-    // Todo: clean this up
-    // Todo: read from local list (not have to poll the owner component)
     nextTrack() {
-        // if (this.loading) {
-        //     return;
-        // }
-
-        // this.loading = true;
-        // this.showSpinner();
-        // debugger;
         PlayController.nextTrack();
     }
 
@@ -639,11 +569,6 @@ class AbstractPlayer extends BaseView {
         // debugger;
 
         if (pattern != currentPattern && state.sliderPosition != order) {
-            // refs.progressView.setState({
-            //     numberOfCells   : this.state.modObject.patternOrds.length,
-            //     highlightNumber : order
-            // });
-            // console.log('New order', order)
             this.setState({
                 currentPattern : pattern,
                 sliderPosition : order

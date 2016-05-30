@@ -13,7 +13,7 @@ var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
 var StyleSheetPropType = require('StyleSheetPropType');
 
 var requireNativeComponent = require('requireNativeComponent');
-
+var processColor = require('processColor');
 
 var View = React.createClass({
     mixins: [NativeMethodsMixin],
@@ -25,12 +25,30 @@ var View = React.createClass({
 
 
     propTypes : {
-        registered : React.PropTypes.bool,
-        side       : React.PropTypes.string
+        registered   : React.PropTypes.bool,
+        side         : React.PropTypes.string,
+        lineColor    : React.PropTypes.string,
+        plotterType  : React.PropTypes.string,
+        shouldFill   : React.PropTypes.bool,
+        shouldMirror : React.PropTypes.bool,
+    },
+
+    getDefaultProps() {
+        return {
+            plotterType     : 'buffer',
+            lineColor       : '#000',
+            backgroundColor : 'transparent',
+            shouldFill      : true,
+            sholdFill       : false
+        }
     },
 
     render: function() {
-        return <MCPlotGlView {...this.props}/>;
+        var props = Object.assign({}, this.props);
+        console.log('MY PROPS')
+        props.lineColor = processColor(props.lineColor);
+        props.backgroundColor = processColor(props.backgroundColor); 
+        return <MCPlotGlView {...props}/>;
     },
 
     setPlotterRegistered : function(channel) {  
@@ -45,7 +63,7 @@ var View = React.createClass({
 });
 
 var MCPlotGlView = requireNativeComponent('MCPlotGlView', View, {
-    nativeOnly: {onChange: true, onPress: true}
+    // nativeOnly: {onChange: true, onPress: true}
 });
 
-module.exports = MCPlotGlView;
+module.exports = View;

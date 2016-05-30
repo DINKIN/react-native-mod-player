@@ -7,21 +7,28 @@
 //
 
 #import "RCTView.h"
-#import "EZAudioPlotGL.h"
+#import "RCTComponent.h"
+
+//#import "EZAudioPlotGL.h"
 #import "EZAudioPlot.h"
 
 
-@interface MCPlotGlView : UIView {
+@interface MCPlotGlView : RCTView {
     BOOL isRendering;
 }
 
 
-@property NSString *registered;
+@property(nullable, nonatomic,strong) NSString *registered;
 //@property EZAudioPlotGL *plotter;
-@property EZAudioPlot *plotter;
+@property(nullable, nonatomic, strong) EZAudioPlot *plotter;
+@property(nullable, nonatomic, strong) NSString *plotterType;
+@property(nullable, nonatomic) BOOL *shouldMirror;
+@property(nullable, nonatomic) BOOL *shouldFill;
 
-@property (nonatomic, strong) dispatch_queue_t myQueue;
+@property(nullable, nonatomic,strong) dispatch_queue_t myQueue;
 
 - (void) update:(float[])data withSize:(int)size;
+- (void) setNewLineColor:(UIColor * _Nullable)color;
+- (void) setNewBackgroundColor:(UIColor * _Nullable)color;
 
 @end

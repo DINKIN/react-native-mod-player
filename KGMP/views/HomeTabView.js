@@ -150,17 +150,20 @@ class HomeTabView extends React.Component {
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
 
-        // setTimeout(() => {
-        //     PlayController.loadFile({
-        //         "id_md5": "1fb8e04104d3637a106162905b0d2105",
-        //         "song_name": "Coffeefuck",
-        //         "like_value": 0,
-        //         "in_queue": 0,
-        //         "directory": "BLiZZARD/",
-        //         "file_name_short": "1Click%20DVD%20Copy%204.2.9.2%20kg.xm",
-        //         "name": "BLiZZARD%20-%201Click%20DVD%20Copy%204.2.9.2%20kg.xm"
-        //     })
-        // }, 1000)
+        setTimeout(() => {
+            return;
+            var song = {
+                "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
+                "song_name": "",
+                "like_value": 0,
+                "in_queue": 0,
+                "directory": "CLASS/",
+                "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
+                "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
+            };
+            PlayController.loadFile(song)
+            // setTimeout(() => { PlayController.pause() }, 500)
+        }, 1000)
 
         this.tabs = [
             // This sh*t is starting to get Sencha-like real quick!
