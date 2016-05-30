@@ -74,8 +74,9 @@ module.exports = StyleSheet.create({
     },
 
     vizContainer : {
-        height         : 50,
+        height         : 40,
         flexDirection  : row,
+        paddingHorizontal : 30,
         // marginTop      : 5,
         justifyContent : 'space-around',
         // borderWidth    : 1,
@@ -92,7 +93,7 @@ module.exports = StyleSheet.create({
     vizSeparator : {
         // borderWidth : .5,
         // borderColor : '#CCC',
-        width : 1
+        width : 20
     },
 
     timeText : {

@@ -40,6 +40,7 @@
         EZAudioPlot *plotter = [[EZAudioPlot alloc] initWithFrame:frame];
 
         plotter.plotType = EZPlotTypeBuffer;
+        plotter.rollingHistoryLength=128;
         
         NSLog(@"%p %@ created an EZAudioPlotGL %@ %p",  self, NSStringFromClass([self class]), self.registered, plotter);
         self.plotter = plotter;
