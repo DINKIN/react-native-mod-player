@@ -85,6 +85,12 @@ RCT_EXPORT_MODULE();
 /*********************************************************************************************************/
 #pragma mark RCT_METHODS_for_directories
 
+RCT_EXPORT_METHOD(setBrowseType:(nonnull NSNumber *) newBrowseType) {
+    
+    NSLog(@"New Browse Type %@", newBrowseType);
+    browseType = [newBrowseType shortValue];
+}
+
 RCT_EXPORT_METHOD(getDirectories:(RCTResponseSenderBlock)errorCallback
                         callback:(RCTResponseSenderBlock)successCallback) {
     
@@ -108,7 +114,7 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
 
 
 //    NSLog(@"%@", [queue objectAtIndex:0]);
-    browseType = 0;
+//    browseType = 0;
 //    NSLog(@"%@      browseType = %i\n", self, browseType);
     if (queue == nil) {
         errorCallback(@[]);
@@ -121,13 +127,13 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
 
 
 RCT_EXPORT_METHOD(getNextFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
-    NSDictionary *file = [self getNextFileFromCurrentSet];
+    NSDictionary *file = [self getNext];
 
     successCallback(@[file]);
 }
 
 RCT_EXPORT_METHOD(getPreviousFileFromCurrentSet:(RCTResponseSenderBlock)successCallback) {
-    NSDictionary *file = [self getPreviousFileFromCurrentSet];
+    NSDictionary *file = [self getPrevious];
 //    NSLog(@"%@      browseType = %i\n", self, browseType);
 
     successCallback(@[file]);

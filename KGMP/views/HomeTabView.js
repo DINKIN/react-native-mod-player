@@ -240,8 +240,16 @@ class HomeTabView extends React.Component {
 
             }
             else {
-                // debugger;
-                this.loadModFile(fileRecord, childNavigator, ownerList);                
+                PlayController.setBrowseType(0);
+                
+                PlayController.loadFile(
+                    fileRecord,
+                    () => {
+                        // PlayController.pause();
+                        // this.refs.modPlayer.showForTheFirstTime();
+                    }
+                );
+
             }
         }
         // Shuffle Row button
@@ -249,26 +257,19 @@ class HomeTabView extends React.Component {
 
             var parentDir = rowData.parentDir ? rowData.parentDir.name : null;
             console.log(parentDir)
-            console.log(rowData);
+            // console.log(rowData);
 
-            MCQueueManager.getNextRandomAndClearQueue(
-                parentDir,
-                (fileData) => {
-                    console.log('new file', fileData);
-
-                    this.loadModFile(fileData);
-                }
-            );
+            PlayController.loadRandom(parentDir);
         }
 
     }
 
-    loadModFile = (fileRecord) => {
-        PlayController.loadFile(fileRecord, () => {
-            PlayController.pause();
-            // this.refs.modPlayer.showForTheFirstTime();
-        });
-    }
+    // loadModFile = (fileRecord) => {
+    //     PlayController.loadFile(fileRecord, () => {
+    //         // PlayController.pause();
+    //         // this.refs.modPlayer.showForTheFirstTime();
+    //     });
+    // }
 
 
     setTabState(tabNo) {

@@ -54,6 +54,10 @@ class PlayController {
         );
     }
 
+    setBrowseType(browseType) {
+        MCQueueManager.setBrowseType(this.browseType = 0);
+    }
+
     // Abstract method for less typing
     emit(eventName, eventData) {
         console.log(this.constructor.name, 'Emitting' , eventName/*, eventData*/)
@@ -93,11 +97,20 @@ class PlayController {
                 callback && callback(); // used for showing the player view for the 1st time
                 this.isPlaying = true;
                 this.isLoading = false;
+            }
+        );
+    }
 
 
-                // setTimeout(() => {
-                //     this.pause()
-                // }, 150);
+    loadRandom(path) {
+        MCQueueManager.setBrowseType(2);
+        
+        MCQueueManager.getNextRandomAndClearQueue(
+            path,
+            (fileRecord) => {
+                console.log('new file', fileRecord);
+
+                this.loadFile(fileRecord);
             }
         );
     }
@@ -108,24 +121,26 @@ class PlayController {
         }
         
         console.log(this.constructor.name, 'nextTrack');
-        
-        //TODO: Refactor so that we don't need to pause between tracks (ObjC layer)
-        // this.pause();
-            
         MCQueueManager.getNextFileFromCurrentSet((fileRecord)=> {
             this.loadFile(fileRecord);
         });
     }
 
     previousTrack() {
-        console.log('previous');
         if (this.isLoading) {
             return;
         }
 
-        // this.pause();
+        console.log('previous');
         MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {
-            this.loadFile(fileRecord);
+            
+            this.loadFile(
+                fileRecord,
+                () => {
+                    this.pause();
+                }
+            );
+       
         });
     }
 
