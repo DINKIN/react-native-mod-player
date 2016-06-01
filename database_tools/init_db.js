@@ -16,7 +16,7 @@ var modFiles = JSON.parse(fs.readFileSync('mod_files.in.json').toString());;
 fs.writeFileSync(sqlFile, '');
 
 
-var rootCmd = '%s "../KGMP/KEYGENMUSiC MusicPack/%s/%s"',
+var rootCmd = '%s "../KEYGENMUSiC MusicPack/%s/%s"',
     cmd,
     md5; 
 
