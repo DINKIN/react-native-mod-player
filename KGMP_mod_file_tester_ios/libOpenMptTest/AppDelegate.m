@@ -8,7 +8,9 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate ()
+@interface AppDelegate () {
+    UITextView *text;
+}
 
 @end
 
@@ -22,8 +24,26 @@
     
 //    NSString *filePath = [self getFilePath];
 //    [player initSound:filePath withTrackNumber:0];
-    
 
+    text = [UITextView new];
+    
+    text.text = @"Some Text";
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    
+    
+    UIViewController *rootViewController = [UIViewController new];
+    self.window.rootViewController = rootViewController;
+
+   [self testAllFiles];
+            
+        
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    [self.window addSubview:text];
+
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -202,11 +222,6 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 //    NSLog(@"here");
 
-    
-
-        [self testAllFiles];
-            
-        
     
 
 

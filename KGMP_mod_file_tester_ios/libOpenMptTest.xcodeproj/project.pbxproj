@@ -8,35 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		716EAB751ADEEEB20033FCC2 /* OpenMptPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 716EAB741ADEEEB20033FCC2 /* OpenMptPlayer.m */; };
-		716EABA21ADFFAA30033FCC2 /* liblibopenmpt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 716EAB711ADEEE930033FCC2 /* liblibopenmpt.a */; };
 		71751CCE1ADE885E00B5FB15 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 71751CCD1ADE885E00B5FB15 /* main.mm */; };
 		71751CD11ADE885E00B5FB15 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71751CD01ADE885E00B5FB15 /* AppDelegate.m */; };
 		71751CD41ADE885E00B5FB15 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 71751CD31ADE885E00B5FB15 /* ViewController.m */; };
 		71751CD71ADE885E00B5FB15 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71751CD51ADE885E00B5FB15 /* Main.storyboard */; };
 		71751CD91ADE885E00B5FB15 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71751CD81ADE885E00B5FB15 /* Images.xcassets */; };
 		71751CDC1ADE885E00B5FB15 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 71751CDA1ADE885E00B5FB15 /* LaunchScreen.xib */; };
-		717DC7911B72493F0007D446 /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 717DC7901B72493F0007D446 /* KEYGENMUSiC MusicPack */; };
+		717E2F6C1CF5F1AC00F0A17E /* liblibOpenMPT.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 717E2F6B1CF5F1A400F0A17E /* liblibOpenMPT.0.2.a */; };
+		717E2F6E1CF5F1B500F0A17E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 717E2F6D1CF5F1B500F0A17E /* libz.tbd */; };
+		717E2F711CF5F2BB00F0A17E /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 717E2F701CF5F2BB00F0A17E /* KEYGENMUSiC MusicPack */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		716EAB701ADEEE930033FCC2 /* PBXContainerItemProxy */ = {
+		717E2F6A1CF5F1A400F0A17E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 716EAB6C1ADEEE920033FCC2 /* libopenmpt.xcodeproj */;
+			containerPortal = 717E2F661CF5F1A400F0A17E /* libOpenMPT.0.2.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = CC33B2891AB8197E009608E8;
-			remoteInfo = libopenmpt;
-		};
-		716EABA31ADFFAB40033FCC2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 716EAB6C1ADEEE920033FCC2 /* libopenmpt.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CC33B2881AB8197E009608E8;
-			remoteInfo = libopenmpt;
+			remoteGlobalIDString = 71448D0C1CF48B5800FE7AAA;
+			remoteInfo = libOpenMPT.0.2;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		716EAB6C1ADEEE920033FCC2 /* libopenmpt.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libopenmpt.xcodeproj; path = libraries/libOpenMPT/libopenmpt/libopenmpt.xcodeproj; sourceTree = "<group>"; };
 		716EAB731ADEEEB20033FCC2 /* OpenMptPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenMptPlayer.h; path = OpenMptPlayer/OpenMptPlayer.h; sourceTree = "<group>"; };
 		716EAB741ADEEEB20033FCC2 /* OpenMptPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenMptPlayer.m; path = OpenMptPlayer/OpenMptPlayer.m; sourceTree = "<group>"; };
 		71751CC81ADE885E00B5FB15 /* libOpenMptTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = libOpenMptTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,7 +44,9 @@
 		71751CDB1ADE885E00B5FB15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		71751CE61ADE885E00B5FB15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71751CE71ADE885E00B5FB15 /* libOpenMptTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libOpenMptTestTests.m; sourceTree = "<group>"; };
-		717DC7901B72493F0007D446 /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "KEYGENMUSiC MusicPack"; path = "../KGMP/KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
+		717E2F661CF5F1A400F0A17E /* libOpenMPT.0.2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libOpenMPT.0.2.xcodeproj; path = ../KGMP/external_libraries/libOpenMPT.0.2/libOpenMPT.0.2.xcodeproj; sourceTree = "<group>"; };
+		717E2F6D1CF5F1B500F0A17E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		717E2F701CF5F2BB00F0A17E /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "KEYGENMUSiC MusicPack"; path = "../KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,25 +54,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				716EABA21ADFFAA30033FCC2 /* liblibopenmpt.a in Frameworks */,
+				717E2F6E1CF5F1B500F0A17E /* libz.tbd in Frameworks */,
+				717E2F6C1CF5F1AC00F0A17E /* liblibOpenMPT.0.2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		716EAB6D1ADEEE920033FCC2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				716EAB711ADEEE930033FCC2 /* liblibopenmpt.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		71751CBF1ADE885E00B5FB15 = {
 			isa = PBXGroup;
 			children = (
-				717DC7901B72493F0007D446 /* KEYGENMUSiC MusicPack */,
+				717E2F701CF5F2BB00F0A17E /* KEYGENMUSiC MusicPack */,
+				717E2F6D1CF5F1B500F0A17E /* libz.tbd */,
 				71751CCA1ADE885E00B5FB15 /* libOpenMptTest */,
 				71751CE41ADE885E00B5FB15 /* libOpenMptTestTests */,
 				71751CC91ADE885E00B5FB15 /* Products */,
@@ -138,7 +127,7 @@
 		71751CF11ADE974900B5FB15 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				716EAB6C1ADEEE920033FCC2 /* libopenmpt.xcodeproj */,
+				717E2F661CF5F1A400F0A17E /* libOpenMPT.0.2.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -150,6 +139,14 @@
 				716EAB741ADEEEB20033FCC2 /* OpenMptPlayer.m */,
 			);
 			name = OpenMptPlayer;
+			sourceTree = "<group>";
+		};
+		717E2F671CF5F1A400F0A17E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				717E2F6B1CF5F1A400F0A17E /* liblibOpenMPT.0.2.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,7 +163,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				716EABA41ADFFAB40033FCC2 /* PBXTargetDependency */,
 			);
 			name = libOpenMptTest;
 			productName = libOpenMptTest;
@@ -200,8 +196,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 716EAB6D1ADEEE920033FCC2 /* Products */;
-					ProjectRef = 716EAB6C1ADEEE920033FCC2 /* libopenmpt.xcodeproj */;
+					ProductGroup = 717E2F671CF5F1A400F0A17E /* Products */;
+					ProjectRef = 717E2F661CF5F1A400F0A17E /* libOpenMPT.0.2.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -212,11 +208,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		716EAB711ADEEE930033FCC2 /* liblibopenmpt.a */ = {
+		717E2F6B1CF5F1A400F0A17E /* liblibOpenMPT.0.2.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = liblibopenmpt.a;
-			remoteRef = 716EAB701ADEEE930033FCC2 /* PBXContainerItemProxy */;
+			path = liblibOpenMPT.0.2.a;
+			remoteRef = 717E2F6A1CF5F1A400F0A17E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -227,7 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				71751CD71ADE885E00B5FB15 /* Main.storyboard in Resources */,
-				717DC7911B72493F0007D446 /* KEYGENMUSiC MusicPack in Resources */,
+				717E2F711CF5F2BB00F0A17E /* KEYGENMUSiC MusicPack in Resources */,
 				71751CDC1ADE885E00B5FB15 /* LaunchScreen.xib in Resources */,
 				71751CD91ADE885E00B5FB15 /* Images.xcassets in Resources */,
 			);
@@ -248,14 +244,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		716EABA41ADFFAB40033FCC2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libopenmpt;
-			targetProxy = 716EABA31ADFFAB40033FCC2 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		71751CD51ADE885E00B5FB15 /* Main.storyboard */ = {
