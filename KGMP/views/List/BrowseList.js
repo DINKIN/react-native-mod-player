@@ -82,7 +82,6 @@ class BrowseView extends BaseView{
                 initialPaths : directories
             });
 
-
             // Debug purposes. automates the showing of the player
             // setTimeout(() => {
             //     this.onRowPress(initialPaths[12], this.refs.navigator);
@@ -100,10 +99,7 @@ class BrowseView extends BaseView{
             // }, 500);
         });
 
-
     }
-
-
 
     getNewDataSource() {
         var props        = this.props,
@@ -115,9 +111,10 @@ class BrowseView extends BaseView{
                 }
             });
 
-            
+        
         initialPaths.unshift({
-            isShuffleRow : 1
+            isShuffleRow : 1,
+            parentDir    : props.parentDir
         });
 
         return dataSource.cloneWithRows(initialPaths)
@@ -168,18 +165,18 @@ class BrowseView extends BaseView{
         );
     }
 
-    onRowPress = (rowID) => {
+    onRowPress = (rowData, rowID) => {
         var props = this.props,
             state = this.state;
 
-        props.onRowPress(state.initialPaths[rowID], props.navigator, this);
+        props.onRowPress(state.initialPaths[rowID], rowData, rowID, props.navigator, this);
     };
 
 
     _renderRow = (rowData, sectionID, rowID) => {
                     
         if (rowData.isShuffleRow) {
-            return <ShuffleRow onPress={this.onRowPress}/>
+            return <ShuffleRow onPress={this.onRowPress} rowData={rowData} rowID={'shuffleRow'}/>
         }
 
         return rowData.number_files 

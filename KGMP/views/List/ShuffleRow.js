@@ -20,14 +20,11 @@ class ShuffleRow extends Component {
 
 
     render() {
-        let styles   = this.styles,
-            props    = this.props;
+        let styles = this.styles,
+            props  = this.props;
 
-        // console.log(JSON.stringify(rowData, undefined, 4));
-       
-        // console.log(source.uri)
         return (
-            <TouchableHighlight key={'shuffleRow'} underlayColor={"#000"} onPress={() => {props.onPress('shuffleRow')}}>
+            <TouchableHighlight key={'shuffleRow'} underlayColor={"#000"} onPress={this.onPress}>
                 <View style={styles.rowContainer}>
                     <Text style={[styles.row, {color:'#999'}]}>
                         Shuffle
@@ -38,11 +35,18 @@ class ShuffleRow extends Component {
         );
     }
 
+    onPress = () => {
+        var props = this.props;
+
+        props.onPress(props.rowData, props.rowID)
+    }
+
+
     styles = StyleSheet.create({
         rowContainer : {
-            flexDirection:'row', 
-            padding : 14,
-            backgroundColor : '#FFFFFF',
+            flexDirection     :'row', 
+            padding           : 14,
+            backgroundColor   : '#FFFFFF',
             borderBottomWidth : 1,
             borderBottomColor : '#EEE',
             borderTopWidth : 1,

@@ -45,9 +45,9 @@ var View = React.createClass({
 
     render: function() {
         var props = Object.assign({}, this.props);
-        console.log('MY PROPS')
         props.lineColor = processColor(props.lineColor);
         props.backgroundColor = processColor(props.backgroundColor); 
+
         return <MCPlotGlView {...props}/>;
     },
 

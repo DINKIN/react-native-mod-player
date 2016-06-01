@@ -48,6 +48,7 @@ static dispatch_queue_t MCQueueManagerQueue(void) {
         3 = random favorites
     */
     short browseType;
+    NSString *currentRandomDirectory;
 }
 
 
@@ -56,8 +57,7 @@ static dispatch_queue_t MCQueueManagerQueue(void) {
 RCT_EXPORT_MODULE();
 @synthesize bridge = _bridge;
 
-//
-//
+
 //+ (id)sharedManager {
 //    static MCQueueManager *sharedMyManager = nil;
 //    static dispatch_once_t onceToken;
@@ -172,13 +172,14 @@ RCT_EXPORT_METHOD(getFavoritesRandomized:(RCTResponseSenderBlock)successCallback
 /*********************************************************************************************************/
 #pragma mark RCT_METHODS_for_random
 
-RCT_EXPORT_METHOD(getNextRandomAndClearQueue:(RCTResponseSenderBlock)successCallback) {
+RCT_EXPORT_METHOD(getNextRandomAndClearQueue:(NSString *)path withCallback:(RCTResponseSenderBlock)callback) {
+    currentRandomDirectory = path;
+    
     [queue removeAllObjects];
     browseType = 2;
     
     NSString *query = @"UPDATE songs SET in_queue = 0;";
     [self execQuery:query];
-    
     
     NSDictionary *file = [self getRandomFile];
     
@@ -186,7 +187,7 @@ RCT_EXPORT_METHOD(getNextRandomAndClearQueue:(RCTResponseSenderBlock)successCall
     queueIndex = [queue indexOfObject:file];
 
 //    printf("Loading queued index %lu\n", queueIndex);
-    successCallback(@[file]);
+    callback(@[file]);
 }
 
 RCT_EXPORT_METHOD(getNextRandom:(RCTResponseSenderBlock)successCallback) {
@@ -285,7 +286,16 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
 
 
 - (NSDictionary *) getRandomFile {
-    NSMutableArray *rows = [self execQuery:@"SELECT * FROM songs where like_value IS NOT '-1' AND in_queue IS NOT 1  ORDER BY RANDOM() LIMIT 1;"];
+    NSString *sql;
+    
+    if (currentRandomDirectory) {
+        sql = [NSString stringWithFormat:@"SELECT * FROM songs where like_value IS NOT '-1' AND directory like '%@' AND in_queue IS NOT 1  ORDER BY RANDOM() LIMIT 1", currentRandomDirectory];
+    }
+    else {
+        sql = @"SELECT * FROM songs where like_value IS NOT '-1' AND in_queue IS NOT 1  ORDER BY RANDOM() LIMIT 1;";
+    }
+    
+    NSMutableArray *rows = [self execQuery:sql];
     
     NSDictionary *file = [rows objectAtIndex:0];
  
@@ -296,7 +306,6 @@ RCT_EXPORT_METHOD(updateLikeStatus:(nonnull NSNumber *)likeValue
     });
     
     return file;
-
 }
 
 

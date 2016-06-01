@@ -93,6 +93,11 @@ class PlayController {
                 callback && callback(); // used for showing the player view for the 1st time
                 this.isPlaying = true;
                 this.isLoading = false;
+
+
+                // setTimeout(() => {
+                //     this.pause()
+                // }, 150);
             }
         );
     }

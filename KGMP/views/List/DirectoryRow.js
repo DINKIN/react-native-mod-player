@@ -62,7 +62,8 @@ class DirectoryRow extends Component {
 
     onPress = () => {
         var props = this.props;
-        props.onPress(props.rowID);
+
+        props.onPress(props.rowData, props.rowID)
     }
 
     styles = StyleSheet.create({

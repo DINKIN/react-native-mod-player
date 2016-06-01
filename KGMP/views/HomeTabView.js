@@ -29,7 +29,6 @@ const Icon             = require('react-native-vector-icons/Ionicons'),
       BaseView         = require('./BaseView'),
       BrowseList       = require('./List/BrowseList'),
       FavsViewNav      = require('./List/FavoritesViewNavigator'),
-      RandomPlayer     = require('./player/RandomPlayer'),
       PlayController   = require('./PlayController'),
       TabNavigator     = require('react-native-tab-navigator').default,
       NavItem          = TabNavigator.Item,
@@ -126,10 +125,9 @@ class HomeTabView extends React.Component {
     styles = StyleSheet.create({
         tabBar : {
             height          : 65,
-            // opacity         : .8,
             width           : windowDimensions.width,
             backgroundColor : '#DFDFDF',
-            position : 'absolute'
+            position        : 'absolute'
         },
         tabSelected : {
             backgroundColor : 'transparent'
@@ -210,49 +208,64 @@ class HomeTabView extends React.Component {
         ];
     }
 
-    onRowPress = (record, childNavigator, ownerList) => {
-        var isDir = !! record.number_files,
-            title;
+    onRowPress = (fileRecord, rowData, rowID, childNavigator, ownerList) => {
+
+        // For files and directories
+        if (fileRecord) {
+            var isDir = !! fileRecord.number_files,
+                title;
+
+            if (isDir) {
+                title = unescape(fileRecord.name);
+                getDirectories(fileRecord.name, (records)=> {
+                    loadedDirectories = initialPaths; // for debug purposes
 
 
+                    var route = {
+                        title           : title,
+                        component       : BrowseList,
+                        componentConfig : {
+                            initialPaths : records,
+                            onRowPress   : this.onRowPress,
+                            parentDir    : fileRecord,
+                            style        : { 
+                                paddingTop : 60,
+                                flex       : 1
+                            },
+                        }
+                    };
 
-        if (isDir) {
-            title = unescape(record.name);
-            getDirectories(record.name, (records)=> {
-                loadedDirectories = initialPaths; // for debug purposes
+                    childNavigator.push(route);
+                });
 
-
-                var route = {
-                    title     : title,
-                    component : BrowseList,
-                    componentConfig : {
-                        initialPaths : records,
-                        onRowPress   : this.onRowPress,
-                        style        : { 
-                            paddingTop : 60,
-                            flex       : 1
-                        },
-                    }
-                };
-
-                childNavigator.push(route);
-            });
-
+            }
+            else {
+                // debugger;
+                this.loadModFile(fileRecord, childNavigator, ownerList);                
+            }
         }
-        else if (record.isShuffleRow) {
-            alert('This feature is not ready ;)')
-        }
+        // Shuffle Row button
         else {
-            // debugger;
-            this.loadModFile(record, childNavigator, ownerList);                
+
+            var parentDir = rowData.parentDir ? rowData.parentDir.name : null;
+            console.log(parentDir)
+            console.log(rowData);
+
+            MCQueueManager.getNextRandomAndClearQueue(
+                parentDir,
+                (fileData) => {
+                    console.log('new file', fileData);
+
+                    this.loadModFile(fileData);
+                }
+            );
         }
 
     }
 
     loadModFile = (fileRecord) => {
-
         PlayController.loadFile(fileRecord, () => {
-            // PlayController.pause();
+            PlayController.pause();
             // this.refs.modPlayer.showForTheFirstTime();
         });
     }

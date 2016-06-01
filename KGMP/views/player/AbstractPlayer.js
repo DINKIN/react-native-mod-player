@@ -96,8 +96,8 @@ class AbstractPlayer extends BaseView {
         fileRecord     : null,
         sliderPosition : 0,
         currentPattern : -1,
-        plotterMirror  : 0,
-        plotterFill    : 0,
+        plotterMirror  : false,
+        plotterFill    : false,
         plotterType    : 'buffer'
     };
 
@@ -314,15 +314,15 @@ class AbstractPlayer extends BaseView {
         if (plotterType == 'buffer') {
             newState = {
                 plotterType   : 'rolling',
-                plotterFill   : 1,
-                plotterMirror : 1
+                plotterFill   : true,
+                plotterMirror : true
             };
         }
         else {
             newState = {
                 plotterType   : 'buffer',
-                plotterFill   : 0,
-                plotterMirror : 0
+                plotterFill   : false,
+                plotterMirror : false
             };
         }
 
@@ -395,7 +395,7 @@ class AbstractPlayer extends BaseView {
             fileLoaded : (config) => {
                 console.log(this.constructor.name, 'Received fileLoaded')
                 var fileRecord = config.fileRecord,
-                    modObject = config.modObject;
+                    modObject  = config.modObject;
 
                 // console.log('Pattern orders', modObject.patternOrds);
                 // debugger;
