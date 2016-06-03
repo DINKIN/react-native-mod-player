@@ -28,7 +28,7 @@ import ListPlayer from './player/ListPlayer';
 const Icon             = require('react-native-vector-icons/Ionicons'),
       BaseView         = require('./BaseView'),
       BrowseList       = require('./List/BrowseList'),
-      FavsViewNav      = require('./List/FavoritesViewNavigator'),
+      // FavsViewNav      = require('./List/FavoritesViewNavigator'),
       PlayController   = require('./PlayController'),
       TabNavigator     = require('react-native-tab-navigator').default,
       NavItem          = TabNavigator.Item,
@@ -208,10 +208,20 @@ class HomeTabView extends React.Component {
         ];
     }
 
-    onRowPress = (fileRecord, rowData, rowID, childNavigator, ownerList) => {
+    onRowPress = (fileRecord, rowID, childNavigator, ownerList) => {
 
+
+        // Shuffle row
+        if (fileRecord.isShuffleRow) {
+
+            var parentDir = fileRecord.parentDir ? fileRecord.parentDir.name : null;
+            console.log(parentDir)
+            // console.log(rowData);
+
+            PlayController.loadRandom(parentDir);
+        }
         // For files and directories
-        if (fileRecord) {
+        else {
             var isDir = !! fileRecord.number_files,
                 title;
 
@@ -219,7 +229,6 @@ class HomeTabView extends React.Component {
                 title = unescape(fileRecord.name);
                 getDirectories(fileRecord.name, (records)=> {
                     loadedDirectories = initialPaths; // for debug purposes
-
 
                     var route = {
                         title           : title,
@@ -241,7 +250,7 @@ class HomeTabView extends React.Component {
             }
             else {
                 PlayController.setBrowseType(0);
-                
+                // debugger;
                 PlayController.loadFile(
                     fileRecord,
                     () => {
@@ -252,15 +261,7 @@ class HomeTabView extends React.Component {
 
             }
         }
-        // Shuffle Row button
-        else {
-
-            var parentDir = rowData.parentDir ? rowData.parentDir.name : null;
-            console.log(parentDir)
-            // console.log(rowData);
-
-            PlayController.loadRandom(parentDir);
-        }
+        
 
     }
 

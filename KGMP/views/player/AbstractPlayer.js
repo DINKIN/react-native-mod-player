@@ -27,7 +27,6 @@ const UrlTool = require('../utils/UrlTool'),
 
 
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
-    SummaryCard           = require('./accessories/SummaryCard'),
     MusicControlButton    = require('./accessories/MusicControlButton'),
     PatternView           = require('./PatternView/CompositeView'),
     styles                = require('./AbstractPlayerStyles'),
@@ -85,36 +84,41 @@ class AbstractPlayer extends BaseView {
         patReg : 'onWkWebViewPatternsRegistered'
     };
 
-    state = {
-        prevPat        : -1,
-        pattern        : -1,
-        songLoaded     : 0,
-        playingSong    : 0,
-        numberPatterns : 0,
-        leftSide       : 'l',
-        rightSide      : 'r',
-        fileRecord     : null,
-        sliderPosition : 0,
-        currentPattern : -1,
-        plotterMirror  : false,
-        plotterFill    : false,
-        plotterType    : 'buffer'
-    };
+    setInitialState() {
+        this.state = {
+            prevPat        : -1,
+            pattern        : -1,
+            songLoaded     : 0,
+            playingSong    : 0,
+            numberPatterns : 0,
+            leftSide       : 'l',
+            rightSide      : 'r',
+            fileRecord     : null,
+            sliderPosition : 0,
+            currentPattern : -1,
+            plotterMirror  : false,
+            plotterFill    : false,
+            plotterType    : 'buffer',
+            modObject      : this.props.modObject
+        };
+    }
 
     render() {
         // debugger;
         var state     = this.state,
             props     = this.props,
-            modObject = state.modObject || props.modObject; // TOdo refactor
+            modObject = state.modObject; // TOdo refactor
 
         if (! modObject) {
             return <View />;
         }
 
-        this.fileRecord = state.fileRecord || props.fileRecord;
+        var fileRecord = this.fileRecord = state.fileRecord || props.fileRecord;
+
+        // debugger;
 
         var buttonChars = this.buttonChars,
-            liked       = this.fileRecord.like_value == 1,
+            liked       = fileRecord.like_value == 1,
             centerBtnChar,
             centerBtnStyle;
 
@@ -129,7 +133,7 @@ class AbstractPlayer extends BaseView {
 
         var fileName = modObject.file_name ? modObject.file_name : modObject.fileName,
             pattern  = modObject.patterns[modObject.patternOrds[0]],
-            songName = this.fileRecord.song_name;
+            songName = fileRecord.song_name;
 
 
         if (songName) {
@@ -188,7 +192,7 @@ class AbstractPlayer extends BaseView {
                 uri : imgUri
             }
 
-        let likeDislikeStyle = {color:'#888'};
+        // let likeDislikeStyle = {color:'#888'};
         var BlurViewType = BlurView;
 
 
@@ -265,13 +269,13 @@ class AbstractPlayer extends BaseView {
                     </View>
 
                     <View style={styles.controlsContainer}>
-                        <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true} fontStyle={likeDislikeStyle}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
                         <View style={{flex:1}}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle} fontStyle={{fontSize:30}} style={{marginHorizontal : 20}}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
                         <View style={{flex:1}}/>
-                        <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked} fontStyle={likeDislikeStyle}/>
+                        <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
                     </View>            
                     {/*
 
@@ -502,30 +506,20 @@ class AbstractPlayer extends BaseView {
 
 
     like() {
-        MCQueueManager.updateLikeStatus(1, this.state.modObject.id_md5, (rowData) => {
-            setTimeout(() => {
-                this.fileRecord.like_value = 1;
+        var modObject = this.state.modObject || this.props.modObject;
+        PlayController.like(
+            modObject.id_md5, 
+            (rowData) => {
+                this.state.fileRecord.like_value = 1;
                 this.setState({});
-
-            }, 500);
-        });
+            }
+        );
     }
 
     dislike () {
-        this.pauseTrack();
-        // this.showDislikeSpinner();
+        var modObject = this.state.modObject || this.props.modObject;
 
-        setTimeout(() => {
-            MCQueueManager.updateLikeStatus(-1, this.state.modObject.id_md5, (rowData) => {
-                if (rowData) {
-                    this.loadFile(rowData);                    
-                }
-                else {
-                    alert('Apologies, there are no more files in the queue');
-                    window.mainNavigator.popToTop();
-                }
-            });
-        }, 350);
+        PlayController.dislike(modObject.id_md5);
     }
 
     loadFile(rowData, callback) {

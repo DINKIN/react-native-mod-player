@@ -66,8 +66,8 @@ var getDirectories = function(path, callback) {
 const Icon           = require('react-native-vector-icons/Ionicons'),
       BaseView       = require('./BaseView'),
       BrowseList     = require('./List/BrowseList'),
-      FavsViewNav    = require('./List/FavoritesViewNavigator'),
-      RandomPlayer   = require('./player/RandomPlayer'),
+      // FavsViewNav    = require('./List/FavoritesViewNavigator'),
+      // RandomPlayer   = require('./player/RandomPlayer'),
       PlayController = require('./PlayController');
 
 let windowStyles = {

@@ -6,9 +6,7 @@ import React, {
     PropTypes
 } from "react";
 
-import {
-
-} from "react-native";
+// import {} from "react-native";
 
 import EventEmitter from 'EventEmitter';
 var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter');
@@ -21,8 +19,9 @@ var {
 
 
 class PlayController {
-    isPlaying : false;
-    isLoading : false;
+    isPlaying   : false;
+    isLoading   : false;
+    eventObject : null;
 
     constructor() {
         this.eventEmitter = new EventEmitter();
@@ -33,10 +32,10 @@ class PlayController {
                 var eventType = eventObject.eventType;
 
                 if (eventType == 'fileLoad') {
-                    this.emit('fileLoaded', {
-                        modObject  : eventObject.modObject,
-                        fileRecord : eventObject.fileRecord
-                    });
+                    // debugger;
+                    this.eventObject = eventObject;
+
+                    this.emit('fileLoaded', eventObject);
                 }
                 else if (eventType == 'play' || eventType == 'playSleep') {
                     this.emitPlay();
@@ -44,12 +43,6 @@ class PlayController {
                 else if (eventType == 'pause' || eventType == 'pauseSleep') {
                     this.emitPause();
                 }
-
-
-
-                // debugger;
-
-                // this.emit('commandCenterEvent', eventObject)
             }
         );
     }
@@ -78,7 +71,6 @@ class PlayController {
 
         var filePath = window.bundlePath + unescape(fileRecord.directory) + unescape(fileRecord.name);
 
-        // debugger;
         MCModPlayerInterface.loadFile(
             filePath,
             //failure
@@ -89,10 +81,12 @@ class PlayController {
             },        
             //success
             (modObject) => {
-                this.emit('fileLoaded', {
+                var eventObject = this.eventObject = {
                     modObject  : modObject,
                     fileRecord : fileRecord
-                });
+                };
+
+                this.emit('fileLoaded', eventObject);
 
                 callback && callback(); // used for showing the player view for the 1st time
                 this.isPlaying = true;
@@ -104,12 +98,10 @@ class PlayController {
 
     loadRandom(path) {
         MCQueueManager.setBrowseType(2);
-        
+
         MCQueueManager.getNextRandomAndClearQueue(
             path,
             (fileRecord) => {
-                console.log('new file', fileRecord);
-
                 this.loadFile(fileRecord);
             }
         );
@@ -132,26 +124,48 @@ class PlayController {
         }
 
         console.log('previous');
-        MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {
-            
-            this.loadFile(
-                fileRecord,
-                () => {
-                    this.pause();
-                }
-            );
-       
+        MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {            
+            this.loadFile(fileRecord);
         });
     }
 
     emitPause = () => {
         this.isPlaying = false;
-        this.emit('pause', null);
+        this.emit('pause', this.eventObject);
     }
 
     emitPlay = () => {
         this.isPlaying = true;
-        this.emit('play', null);
+        this.emit('play', this.eventObject);
+    }
+
+    like(id_md5, callback) {
+        // debugger;
+        MCQueueManager.updateLikeStatus(
+            1, 
+            id_md5, 
+            (rowData) => {
+                this.emit('like', id_md5);
+                callback && callback(rowData);
+            }
+        );
+    }
+
+    dislike(id_md5) {
+        MCQueueManager.updateLikeStatus(
+            -1, 
+            id_md5, 
+            (rowData) => {
+                this.emit('dislike', id_md5);
+
+                if (rowData) {
+                    this.loadFile(rowData);                    
+                }
+                else {
+                    alert('Apologies, there are no more files in the queue');
+                }
+            }
+        );
     }
 
     pause() {

@@ -17,7 +17,8 @@ import {
 const DirectoryRow = require('./DirectoryRow'),
       FileRow      = require('./FileRow'),
       ShuffleRow   = require('./ShuffleRow'),
-      BaseView     = require('../BaseView');
+      BaseView     = require('../BaseView'),
+      PlayController = require('../PlayController');
 
 
 var initialPaths,
@@ -54,13 +55,18 @@ var getDirectories = function(path, callback) {
         );
     }
 };
-class BrowseView extends BaseView{
+
+class BrowseList extends BaseView{
+    lastPlayedIndex : undefined;
 
     setInitialState() {
-        const props = this.props;
+        const props = this.props,
+              hasInitialPaths = !!props.initialPaths;
 
         this.state = {
-            initialPaths : (props && props.initialPaths) ? props.initialPaths : null
+            initialPaths    : hasInitialPaths ? props.initialPaths : null,
+            hasInitialPaths : hasInitialPaths,
+            dataSource      : this.getNewDataSource(props.initialPaths)
         };
 
     }
@@ -69,9 +75,11 @@ class BrowseView extends BaseView{
 
     componentWillMount() {
         super.componentWillMount();
-        var props = this.props;
 
-        if (props.initialPaths) {
+        var props = this.props,
+            state = this.state;
+
+        if (state.hasInitialPaths) {
             return;
         }
 
@@ -79,45 +87,106 @@ class BrowseView extends BaseView{
 
         getDirectories(null, (directories) => {
             this.setState({
-                initialPaths : directories
+                dataSource : this.getNewDataSource(directories)
             });
-
-            // Debug purposes. automates the showing of the player
-            // setTimeout(() => {
-            //     this.onRowPress(initialPaths[12], this.refs.navigator);
-
-            //     setTimeout(() => {
-            //         // debugger;
-            //         this.onRowPress(loadedDirectories[8], this.refs.navigator);
-            //         // PlayController.pause();
-
-            //         setTimeout(() => {
-            //             this.refs.modPlayer.show();
-            //             PlayController.pause();
-            //         }, 500);
-            //     }, 500);
-            // }, 500);
         });
 
     }
 
-    getNewDataSource() {
-        var props        = this.props,
-            state        = this.state,
-            initialPaths = props.initialPaths || state.initialPaths || [],
-            dataSource   = new ListView.DataSource({
+
+    componentDidMount() {
+        // super.componentDidMount();
+
+        // This is for top-level directory list
+        if (! this.state.hasInitialPaths) {
+            return;
+        }
+
+        this.addListenersOn(PlayController.eventEmitter, {
+            play : this.onPlayControllerPlay,
+
+            pause : (eventObject) => {
+                console.log(this.className, 'pause event', eventObject)
+
+                // var state = this.state;
+                // state.playingSong = 0;
+                // this.setState(state);
+            },
+
+            commandCenterFileLoaded : (eventObj) => {
+                console.log(this.className, 'commandCenterFileLoaded event')
+
+                // debugger;
+                // console.log('onCommandCenterEvent ' + eventObj.eventType);
+                // console.log(eventObj);
+                // debugger;
+                // var eventType = eventObj.eventType;
+
+                // if(eventType == 'playSleep') {
+                //     this.setState({playingSong:1});
+                // }
+                // else if(eventType == 'pauseSleep') {
+                //     this.setState({playingSong:0});
+                // }
+                // else {
+                //     this.onButtonPress(eventObj.eventType);
+                // }
+            },
+
+            fileLoaded : (config) => {
+                console.log(this.className, 'Received fileLoaded');
+
+                var fileRecord = config.fileRecord,
+                    modObject  = config.modObject;
+            } 
+        });
+
+    }
+
+    onPlayControllerPlay = (eventObject) => {        
+        
+        var initialPaths = this.state.initialPaths,
+            fileRecord   = eventObject.fileRecord;
+
+
+        var i   = 0,
+            len = initialPaths.length,
+            fileObj;
+
+        for (; i < len; i++) {
+            fileObj = initialPaths[i];
+
+            if (fileObj.id_md5 == fileRecord.id_md5) {
+                fileObj.isPlaying = true;
+            }
+            else {
+                fileObj.isPlaying = false;
+            }
+        }
+
+        this.setState({
+            dataSource : this.getNewDataSource(initialPaths)
+        });
+    };
+
+    getNewDataSource(paths, fileRecord) {
+        var props      = this.props,
+            dataSource = new ListView.DataSource({
                 rowHasChanged : function(r1, r2) {
                     return r1 !== r2;
                 }
             });
 
+        // debugger;
+        paths = [].concat(paths || []);
         
-        initialPaths.unshift({
+        paths.unshift({
             isShuffleRow : 1,
             parentDir    : props.parentDir
         });
 
-        return dataSource.cloneWithRows(initialPaths)
+        // debugger;
+        return dataSource.cloneWithRows(paths);
         
     }
 
@@ -148,7 +217,14 @@ class BrowseView extends BaseView{
     // },
 
     shouldComponentUpdate(nextProps, nextState) {
-        return ! (this.state.initialPaths || this.props.initialPaths);
+        console.log('rejected shouldComponentUpdate');
+        var state = this.state;
+
+        if (nextState.dataSource != state.dataSource) {
+            return true;
+        }
+
+        return ! (state.initialPaths);
     }
 
     render() {
@@ -156,11 +232,12 @@ class BrowseView extends BaseView{
             <ListView 
                 enableEmptySections={false}
                 style={[styles.listView, this.props.style]} 
-                dataSource={this.getNewDataSource()} 
+                dataSource={this.state.dataSource} 
                 initialListSize={10} 
                 pageSize={50} 
+                overflow={'hidden'}
                 scrollRenderAheadDistance={150} 
-                renderRow={this._renderRow}
+                renderRow={this.renderRow}
             />
         );
     }
@@ -169,11 +246,12 @@ class BrowseView extends BaseView{
         var props = this.props,
             state = this.state;
 
-        props.onRowPress(state.initialPaths[rowID], rowData, rowID, props.navigator, this);
+
+        props.onRowPress(rowData, rowID, props.navigator, this);
     };
 
 
-    _renderRow = (rowData, sectionID, rowID) => {
+    renderRow = (rowData, sectionID, rowID) => {
                     
         if (rowData.isShuffleRow) {
             return <ShuffleRow onPress={this.onRowPress} rowData={rowData} rowID={'shuffleRow'}/>
@@ -221,4 +299,4 @@ var styles = StyleSheet.create({
    
 });
 
-module.exports = BrowseView;
+module.exports = BrowseList;

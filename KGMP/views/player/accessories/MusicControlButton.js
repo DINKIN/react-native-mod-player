@@ -51,13 +51,14 @@ class MusicControlButton extends BaseView {
             props           = this.props,
             btnChar         = props.btnChar,
             pressedState    = this.state.pressed,
-            fontStyle       = styles.buttonFont,
-            likedStyle;
-            // fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
+            // fontStyle       = styles.buttonFont,
+            likedStyle,
+            fontStyle       = props.isLikeBtn ? styles.likeButtonFont : styles.buttonFont;
 
         if (this.props.liked) {
             likedStyle = styles.greenColor;
         }
+
 
         // TODO: Clean this up!
         return (
@@ -129,11 +130,12 @@ class MusicControlButton extends BaseView {
 
         likeButtonFont : {
             fontFamily  : 'fontello', 
-            fontSize    : 22
+            fontSize    : 22,
+            color       : '#888'
         },
 
         greenColor : {
-            color : '#00FF00',
+            color : '#8C8',
             // fontWeight : 'bold'
         }
 

@@ -37,13 +37,14 @@ class FileRow extends Component {
             songName = <Text style={styles.songName}>{songName}</Text>;
         }
 
+        var iconColor = rowData.isPlaying ? '#000' : 'transparent';
 
         name = decodeURI(name);
 
         return (
             <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={this.onPress}>
                 <View style={styles.rowContainer}>
-                    <Ionicons name='ios-volume-up' size={30} style={{width:20, color:'#EFEFEF'}}/>
+                    <Ionicons name='ios-volume-up' size={30} style={{width:20, color:iconColor}}/>
                     <View style={styles.row}>
                         <Text style={styles.rowText} numberOfLines={1}>{name}</Text>
                         {songName}
