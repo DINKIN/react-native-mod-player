@@ -369,31 +369,16 @@ class AbstractPlayer extends BaseView {
         this.addListenersOn(PlayController.eventEmitter, {
             play : () => {
                 this.registerPatternUpdateHandler();
-                this.setState(this.state);
+                this.setState({
+                    playingSong : 1
+                });
             },
 
             pause : () => {
-                var state = this.state;
-                state.playingSong = 0;
-                this.setState(state);
-            },
-
-            commandCenterFileLoaded : (eventObj) => {
-                // debugger;
-                // console.log('onCommandCenterEvent ' + eventObj.eventType);
-                // console.log(eventObj);
-                // debugger;
-                var eventType = eventObj.eventType;
-
-                if(eventType == 'playSleep') {
-                    this.setState({playingSong:1});
-                }
-                else if(eventType == 'pauseSleep') {
-                    this.setState({playingSong:0});
-                }
-                else {
-                    this.onButtonPress(eventObj.eventType);
-                }
+                this.deregisterPatternUpdateHandler();
+                this.setState({
+                    playingSong : 0
+                });
             },
 
             fileLoaded : (config) => {
@@ -482,10 +467,9 @@ class AbstractPlayer extends BaseView {
     }
 
     playTrack() {
-        var props = this.props,
-            state = this.state;
-   
-        state.playingSong = 1;
+        this.setState({
+            playingSong : 1
+        });
 
         PlayController.resume();
     }
@@ -497,7 +481,9 @@ class AbstractPlayer extends BaseView {
         if (state.playingSong) {
             this.deregisterPatternUpdateHandler();     
             PlayController.pause();
-
+            this.setState({
+                playingSong : 0
+            });
         }
         else {
             callback && callback();

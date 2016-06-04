@@ -103,42 +103,30 @@ class BrowseList extends BaseView{
         }
 
         this.addListenersOn(PlayController.eventEmitter, {
-            play : this.onPlayControllerPlay,
-
-            pause : (eventObject) => {
-                console.log(this.className, 'pause event', eventObject)
-
-                // var state = this.state;
-                // state.playingSong = 0;
-                // this.setState(state);
-            },
-
-            dislike: this.onPlayControllerDislike,
-
-            commandCenterFileLoaded : (eventObj) => {
-                console.log(this.className, 'commandCenterFileLoaded event')
-
-                // debugger;
-                // console.log('onCommandCenterEvent ' + eventObj.eventType);
-                // console.log(eventObj);
-                // debugger;
-                // var eventType = eventObj.eventType;
-
-                // if(eventType == 'playSleep') {
-                //     this.setState({playingSong:1});
-                // }
-                // else if(eventType == 'pauseSleep') {
-                //     this.setState({playingSong:0});
-                // }
-                // else {
-                //     this.onButtonPress(eventObj.eventType);
-                // }
-            },
+            play    : this.onPlayControllerPlay,
+            pause   : this.onPlayControllerPause,
+            dislike : this.onPlayControllerDislike,
         });
 
     }
 
-    onPlayControllerDislike = (fileRecord) => {        
+    onPlayControllerPause = (eventObject) => {
+        var initialPaths = this.state.initialPaths,
+            fileRecord   = eventObject.fileRecord;
+
+        var i   = 0,
+            len = initialPaths.length;
+
+        for (; i < len; i++) {
+            initialPaths[i].isPlaying = false;
+        }
+
+        this.setState({
+            dataSource : this.getNewDataSource(initialPaths)
+        });
+    };
+
+    onPlayControllerDislike = (id_md5) => {        
         
         var initialPaths = this.state.initialPaths,
             i            = 0,
@@ -148,11 +136,10 @@ class BrowseList extends BaseView{
         for (; i < len; i++) {
             fileObj = initialPaths[i];
 
-            if (fileObj.id_md5 == fileRecord.id_md5) {
-                console.log('fileObj', fileObj)
-                console.log('fileRecord', fileRecord)
-                // initialPaths.splice(--i, 1);
-                // break;
+            if (fileObj.id_md5 == id_md5) {
+                console.log('removed', i, fileObj.name);
+                initialPaths.splice(i, 1);
+                break;
             }
         }
 
