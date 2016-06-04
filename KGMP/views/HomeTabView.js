@@ -228,7 +228,7 @@ class HomeTabView extends React.Component {
             if (isDir) {
                 title = unescape(fileRecord.name);
                 getDirectories(fileRecord.name, (records)=> {
-                    loadedDirectories = initialPaths; // for debug purposes
+                    // loadedDirectories = initialPaths; // for debug purposes
 
                     var route = {
                         title           : title,

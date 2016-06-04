@@ -113,6 +113,8 @@ class BrowseList extends BaseView{
                 // this.setState(state);
             },
 
+            dislike: this.onPlayControllerDislike,
+
             commandCenterFileLoaded : (eventObj) => {
                 console.log(this.className, 'commandCenterFileLoaded event')
 
@@ -132,16 +134,32 @@ class BrowseList extends BaseView{
                 //     this.onButtonPress(eventObj.eventType);
                 // }
             },
-
-            fileLoaded : (config) => {
-                console.log(this.className, 'Received fileLoaded');
-
-                var fileRecord = config.fileRecord,
-                    modObject  = config.modObject;
-            } 
         });
 
     }
+
+    onPlayControllerDislike = (fileRecord) => {        
+        
+        var initialPaths = this.state.initialPaths,
+            i            = 0,
+            len          = initialPaths.length,
+            fileObj;
+
+        for (; i < len; i++) {
+            fileObj = initialPaths[i];
+
+            if (fileObj.id_md5 == fileRecord.id_md5) {
+                console.log('fileObj', fileObj)
+                console.log('fileRecord', fileRecord)
+                // initialPaths.splice(--i, 1);
+                // break;
+            }
+        }
+
+        this.setState({
+            dataSource : this.getNewDataSource(initialPaths)
+        });
+    };
 
     onPlayControllerPlay = (eventObject) => {        
         
@@ -177,7 +195,6 @@ class BrowseList extends BaseView{
                 }
             });
 
-        // debugger;
         paths = [].concat(paths || []);
         
         paths.unshift({
@@ -185,36 +202,10 @@ class BrowseList extends BaseView{
             parentDir    : props.parentDir
         });
 
-        // debugger;
         return dataSource.cloneWithRows(paths);
         
     }
 
-    // setRecordIsPlaying: function(rowID, isPlaying) {
-    //     // debugger;
-    //     var rawData = this.props.rowData,
-    //         record  = rawData[rowID],
-    //         len     = rawData.length,
-    //         i       = 0, 
-    //         r,
-    //         rowData;
-            
-    //     for (; i < len; i++) {
-    //         if (rawData[i].isPlaying) {
-    //             rawData[i].isPlaying = false;
-    //         };
-    //     }
-
-    //     if (record) {
-    //         record.isPlaying = isPlaying;
-
-    //         rowData = this.extractNamesForRow(rawData);
-
-    //         this.setState({
-    //             dataSource : this.state.dataSource.cloneWithRows(rowData)
-    //         });
-    //     } 
-    // },
 
     shouldComponentUpdate(nextProps, nextState) {
         console.log('rejected shouldComponentUpdate');

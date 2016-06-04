@@ -57,11 +57,6 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
     
     
     if ([json isEqualToString:@" "]) {
-        if (updateThread) {
-            printf(" ----- STOPPING GLPlot THREAD LOOP -----\n");
-            [updateThread cancel];
-            updateThread = nil;
-        }
         player.ltPlotter = nil;
         return;
     }
@@ -69,12 +64,6 @@ RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
 
     
     if ([json isEqualToString:@"rU"]) {
-        if (updateThread) {
-            printf(" ----- STOPPING GLPlot THREAD LOOP -----\n");
-
-            [updateThread cancel];
-            updateThread = nil;
-        }
         self.rtView = nil;
         
         player.rtPlotter = nil;

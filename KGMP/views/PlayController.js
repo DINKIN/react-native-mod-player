@@ -69,10 +69,10 @@ class PlayController {
         console.log("loadFile");
         console.log(JSON.stringify(fileRecord, undefined, 4));
 
-        var filePath = window.bundlePath + unescape(fileRecord.directory) + unescape(fileRecord.name);
+        // var filePath = window.bundlePath + unescape(fileRecord.directory) + unescape(fileRecord.name);
 
         MCModPlayerInterface.loadFile(
-            filePath,
+            fileRecord,
             //failure
             (data) => {
                 alert('failure in loading file ' + unescape(fileRecord.name));

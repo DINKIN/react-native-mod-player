@@ -517,7 +517,8 @@ class AbstractPlayer extends BaseView {
     }
 
     dislike () {
-        var modObject = this.state.modObject || this.props.modObject;
+        var modObject = this.state.modObject;
+
 
         PlayController.dislike(modObject.id_md5);
     }

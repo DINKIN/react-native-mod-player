@@ -100,7 +100,7 @@ struct StatusObject statuses[NUM_BUFFERS];
 - (NSDictionary *) loadFile:(NSString *)path {
 
     self.modInfo = [self.modPlayer loadFile:path];
-     NSArray *pathParts = [path componentsSeparatedByString:@"/"];
+    NSArray *pathParts = [path componentsSeparatedByString:@"/"];
     
     self.loadedFileName = [pathParts objectAtIndex:[pathParts count] - 1];
     
@@ -296,20 +296,12 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
     [self updateInfoCenter];
 
     return;
-//    [self updateInfoCenter];
-//    AudioQueueSetParameter(mAudioQueue, kAudioQueueParam_Volume, 1.0f);
-//    AudioQueueStart(mAudioQueue, NULL);
-//    self.isPrimed = false;
-//    self.isPlaying = true;
 }
 
 - (void) pause {
-//    [self.output stop];
     isPaused = true;
     self.isPlaying = false;
     [self updateInfoCenter];
-
-
 }
 
 - (void) resume {
@@ -317,7 +309,6 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
     isPaused = false;
     self.isPlaying = true;
     [self updateInfoCenter];
-
 }
 
 

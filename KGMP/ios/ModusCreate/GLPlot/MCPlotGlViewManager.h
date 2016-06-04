@@ -13,11 +13,7 @@
 #import <pthread.h>
 
 
-@interface MCPlotGlViewManager : RCTViewManager {
-    NSThread *updateThread;
-    
-    SInt16 *bufferData;
-    
+@interface MCPlotGlViewManager : RCTViewManager {    
     float *bufferLeft,
           *bufferRight;
     

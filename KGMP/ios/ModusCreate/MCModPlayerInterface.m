@@ -7,18 +7,36 @@
 //
 
 #import "MCModPlayerInterface.h"
+#import "MCQueueManager.h"
 
-@implementation MCModPlayerInterface
+@implementation MCModPlayerInterface {
+   NSDictionary *globalModObject;
+   
+}
 @synthesize bridge = _bridge;
 
 int instanceCount = 0;
+BOOL hasInitialized = false;
 
 RCT_EXPORT_MODULE();
 
++ (id)sharedManager {
+    static MCModPlayerInterface *shared = nil;
+    static dispatch_once_t onceToken;
+  
+    dispatch_once(&onceToken, ^{
+        shared = [[self alloc] init];
+    });
+    return shared;
+}
+
+
 - (instancetype) init {
+    
     if (self = [super init]) {
-        NSLog(@"MCModPlayerInterface init");
+        NSLog(@"MCModPlayerInterface init %p", self);
         instanceCount++;
+        hasInitialized = true;
         [self configureCommandCenter];
 
         return self;
@@ -77,10 +95,9 @@ RCT_EXPORT_MODULE();
 - (NSDictionary *) loadFileViaPathString:(NSString *)path {
     MCModPlayer *player = [MCModPlayer sharedManager];
     
-    NSDictionary *modInfo = [player initializeSound:path];
-
+    NSDictionary *modObject = [player initializeSound:path];
     
-    if (modInfo == nil) {
+    if (modObject == nil) {
         return nil;
     }
     else {
@@ -88,11 +105,11 @@ RCT_EXPORT_MODULE();
         self.currentRow   = 0;
         self.currentOrder  = 0;
 
-        NSArray *ords = [modInfo objectForKey:@"patternOrds"];
+        NSArray *ords = [modObject objectForKey:@"patternOrds"];
 
         self.currentPattern = [ords objectAtIndex:0];
 
-        return modInfo;
+        return modObject;
     }
 }
 
@@ -107,18 +124,30 @@ RCT_EXPORT_MODULE();
     return [self loadFileViaPathString:path];
 }
 
-RCT_EXPORT_METHOD(loadFile:(NSString *)path
-                 errorCallback:(RCTResponseSenderBlock)errorCallback
-                 callback:(RCTResponseSenderBlock)callback) {
-    
-    
-    NSDictionary *modInfo = [self loadFileViaPathString:path];
+- (NSDictionary *) getGlobalModObject {
 
-    if (modInfo == nil) {
+    return globalModObject;
+}
+
+RCT_EXPORT_METHOD(loadFile:(NSDictionary *)fileRecord
+             errorCallback:(RCTResponseSenderBlock)errorCallback
+                  callback:(RCTResponseSenderBlock)callback) {
+   
+    NSLog(@"fileRecord %@", fileRecord);
+    
+    NSString *bundlePath = [[NSBundle mainBundle] bundlePath],
+             *fileDir    = [[fileRecord valueForKey:@"directory"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+             *fileName   = [[fileRecord valueForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+             *filePath   = [NSString stringWithFormat:@"%@/KEYGENMUSiC MusicPack/%@%@", bundlePath, fileDir, fileName];
+    
+    NSDictionary *modObject = [self loadFileViaPathString:filePath];
+    globalModObject = modObject;
+    
+    if (modObject == nil) {
         errorCallback(@[@"Could not initialize audio."]);
     }
     else {
-        callback(@[modInfo]);
+        callback(@[modObject]);
     }
 }
 
@@ -202,14 +231,14 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
  
     MCModPlayer *player = [MCModPlayer sharedManager];
     
-    NSDictionary *modInfo  = [player initializeSound:filePath],
+    NSDictionary *modObject  = [player initializeSound:filePath],
                  *patterns = [player getAllPatterns:filePath];
     
-    NSMutableDictionary *allModInfo = [[NSMutableDictionary alloc] initWithDictionary:modInfo];
+    NSMutableDictionary *allmodObject = [[NSMutableDictionary alloc] initWithDictionary:modObject];
     
-    [allModInfo setObject:patterns forKey:@"patterns"];
+    [allmodObject setObject:patterns forKey:@"patterns"];
     
-    callback(@[allModInfo]);
+    callback(@[allmodObject]);
 }
 
 
@@ -239,7 +268,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     }
     else {
         // When the UI becomes active, emit this event
-        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modObject){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
                 @"eventType" : @"playSleep"
             }];
@@ -271,7 +300,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
                 eventType = @"pauseSleep";
             }
             
-            [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+            [player registerCallbackSinceLastSleep:^(NSDictionary *modObject){
                 [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
                     @"eventType" : @"pauseSleep"
                 }];
@@ -296,7 +325,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     }
     else {
         // When the UI becomes active, emit this event
-        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modObject){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:@{
                 @"eventType" : @"pauseSleep"
             }];
@@ -320,12 +349,12 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     [player pause];
     
     
-    NSDictionary *modInfo = [self loadFileViaDictionary:file];
+    NSDictionary *modObject = [self loadFileViaDictionary:file];
     [player play];
     
     NSDictionary *eventBody = @{
         @"eventType"  : @"fileLoad",
-        @"modObject"  : modInfo,
+        @"modObject"  : modObject,
         @"fileRecord" : file
     };
     
@@ -334,14 +363,11 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     }
     else {
         // When the UI becomes active, emit this event
-        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modObject){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
         }];
     }
     
-
-
-
     return MPRemoteCommandHandlerStatusSuccess;
 }
 
@@ -355,12 +381,12 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     NSDictionary *file = [qMgr getPrevious];
     [player pause];
     
-    NSDictionary *modInfo = [self loadFileViaDictionary:file];
+    NSDictionary *modObject = [self loadFileViaDictionary:file];
     [player play];
     
     NSDictionary *eventBody = @{
         @"eventType"  : @"fileLoad",
-        @"modObject"  : modInfo,
+        @"modObject"  : modObject,
         @"fileRecord" : file
     };
     
@@ -369,7 +395,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     }
     else {
         // When the UI becomes active, emit this event
-        [player registerCallbackSinceLastSleep:^(NSDictionary *modInfo){
+        [player registerCallbackSinceLastSleep:^(NSDictionary *modObject){
             [_bridge.eventDispatcher sendDeviceEventWithName:@"commandCenterEvent" body:eventBody];
         }];
     }
@@ -532,7 +558,10 @@ switch (routeChangeReason) {
 
 
 
-
+- (BOOL) isPlaying {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    return player.isPlaying;
+}
 
 
 

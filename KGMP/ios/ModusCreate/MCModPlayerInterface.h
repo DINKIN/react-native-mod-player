@@ -14,7 +14,6 @@
 
 @interface MCModPlayerInterface : NSObject <RCTBridgeModule>
 
-@property NSDictionary *modInfo;
 
 @property int currentRow;
 @property int currentPattern;
@@ -22,8 +21,10 @@
 @property double then;
 @property BOOL appActive;
 
++ (id)sharedManager;
 - (void) audioRouteChanged:(NSNotification *)notification;
-
+- (BOOL) isPlaying;
+- (NSDictionary *) getGlobalModObject;
 
 @end
 

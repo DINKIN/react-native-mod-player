@@ -14,7 +14,7 @@
 #import <Foundation/Foundation.h>
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
-
+#import "MCModPlayerInterface.h"
 #import <sqlite3.h>
 
 
@@ -112,6 +112,30 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
     queue = [[NSMutableArray alloc] initWithArray:[self getFilesForDirectory:dirName]];
     queueIndex = 0;
 
+    MCModPlayerInterface *playerInterface = [_bridge moduleForClass:[MCModPlayerInterface class]];
+//    [self.bridge]
+
+    
+
+    if ([playerInterface isPlaying]) {
+        NSDictionary *modObject = [playerInterface getGlobalModObject];
+        NSString *key = @"id_md5";
+        NSString *idMd5 = [modObject valueForKey:key];
+        
+        for (NSDictionary *object in queue) {
+            if ([idMd5 isEqualToString:[object valueForKey:key]]) {
+                NSLog(@"Found %@", object);
+                
+                NSMutableDictionary *newObject = [object mutableCopy];
+                [newObject setValue:@YES forKey:@"isPlaying"];
+                
+                NSUInteger index = [queue indexOfObject:object];
+                [queue replaceObjectAtIndex:index withObject:newObject];
+            }
+        }
+
+    
+    }
 
 //    NSLog(@"%@", [queue objectAtIndex:0]);
 //    browseType = 0;
@@ -200,8 +224,6 @@ RCT_EXPORT_METHOD(getNextRandom:(RCTResponseSenderBlock)successCallback) {
     NSDictionary *file = [self getNextRandom];
     successCallback(@[file]);
 }
-
-
 
 
 RCT_EXPORT_METHOD(getPreviousRandom:(RCTResponseSenderBlock)successCallback) {
