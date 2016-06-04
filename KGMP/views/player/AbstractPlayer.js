@@ -18,8 +18,9 @@ import {
 
 import PlayController from '../PlayController';
 
-const Slider = require('react-native-slider');
-const UrlTool = require('../utils/UrlTool'),
+const Slider = require('react-native-slider'),
+      Ionicons = require('react-native-vector-icons/Ionicons'),
+      UrlTool = require('../utils/UrlTool'),
       { 
           BlurView,
           VibrancyView
@@ -165,8 +166,8 @@ class AbstractPlayer extends BaseView {
 
         let targetWidth = windowDimensions.width - 50,
             mainImageDims = {
-                height: Math.floor((464 / 700) * targetWidth),
-                width: targetWidth
+                height : targetWidth - 30,// Math.floor((464 / 700) * targetWidth),
+                width  : targetWidth
             };
 
 
@@ -219,18 +220,28 @@ class AbstractPlayer extends BaseView {
             <Image style={[styles.container, this.props.style]} source={rootImageSource}>
                 <BlurViewType blurType={"light"} style={[styles.container, {paddingTop: 30, backgroundColor :'rgba(255,255,255, .8)'}]}>
                     <View {...panHandlers}>
-                        <View style={styles.titleBar}>
-                            <Text style={{fontSize:30, fontWeight:'300', marginBottom : 5}}>{modObject.group}</Text>
-                            <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}} numberOfLines={1}>{fileName}</Text>
-                            <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
-                                {songName}
-                            </Text>
-                        </View>
+                        <Text style={{fontSize:30, fontWeight:'300', marginBottom : 5, textAlign : 'center'}}>{modObject.group}</Text>
                         
                         <View style={{justifyContent:'center', paddingHorizontal:25, marginBottom : 20}}>
                             <AnimatedLazyImage source={source} style={imgStyle}/>
                         </View>
                     </View>
+
+                    <View style={{flexDirection:'row'}}>
+                        <View style={{width : 50, alignSelf : 'stretch'}}/>
+
+                        <View style={styles.titleBar}>
+                            <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}} numberOfLines={1}>{fileName}</Text>
+                            <Text style={{fontSize:14, fontWeight:'300', color:'#AAA', width: 200, marginBottom : 5, textAlign : 'center'}} numberOfLines={1}>
+                                {songName}
+                            </Text>
+                        </View>
+
+                        <TouchableOpacity onPress={this.onGearPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
+                            <Ionicons name="ios-cog" size={25} color='#666'/>
+                        </TouchableOpacity>
+                    </View>
+
                     <TouchableOpacity activeOpacity={.75} style={styles.vizContainer} onPress={this.onPlotterPress}>
                         <MCAudioPlotGlView ref="ltGLV" 
                                            plotterType={state.plotterType} 
@@ -238,8 +249,7 @@ class AbstractPlayer extends BaseView {
                                            style={styles.vizItem}
                                            shouldFill={state.plotterFill}
                                            shouldMirror={state.plotterMirror} 
-                                           lineColor={'#AAA'} 
-                                           />
+                                           lineColor={'#AAA'}/>
                         
                         <View style={styles.vizSeparator}/>
                         
@@ -249,10 +259,10 @@ class AbstractPlayer extends BaseView {
                                            style={styles.vizItem} 
                                            shouldFill={state.plotterFill}
                                            shouldMirror={state.plotterMirror}  
-                                           lineColor={'#AAA'} 
-                                           />
+                                           lineColor={'#AAA'} />
                     </TouchableOpacity>
-                    <View style={{marginTop: 5, paddingVertical:15, alignItems:'center'}}>
+
+                    <View style={{marginTop: 5, paddingVertical:0, alignItems:'center'}}>
                         <Slider
                             ref={'slider'}
                             minimumValue={0}
@@ -270,20 +280,22 @@ class AbstractPlayer extends BaseView {
 
                     <View style={styles.controlsContainer}>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"dislike"} btnStyle={"dislikeButton"} isLikeBtn={true}/>
+                        
                         <View style={{flex:1}}/>
+                        
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"prev"} btnStyle={"prevButton"}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={centerBtnChar} btnStyle={centerBtnStyle} fontStyle={{fontSize:30}} style={{marginHorizontal : 20}}/>
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"next"} btnStyle={"nextButton"}/>
+                        
                         <View style={{flex:1}}/>
+                        
                         <MusicControlButton onPress={this.onButtonPress} btnChar={"like"} btnStyle={"likeButton"} isLikeBtn={true} liked={liked}/>
                     </View>            
                     {/*
 
                     <SummaryCard style={{height: 167}} data={modObject} ref={"summaryCard"}/>
                     */}                
-                    <View style={{flex:1, overflow: 'hidden', backgroundColor:'transparent'}}>
-
-                    </View>
+              
 
                     {/*
                     <BridgedWKWebView ref={"webView"} style={styles.webView} localUrl={"pattern_view.html"} onWkWebViewEvent={this.onWkWebViewEvent}/>
@@ -308,6 +320,11 @@ class AbstractPlayer extends BaseView {
                 </BlurViewType>
             </Image>
         );
+    }
+
+    onGearPress = () => {
+        // debugger;
+        PlayController.emitShowEQScreen();
     }
 
     onPlotterPress = () => {
@@ -389,13 +406,12 @@ class AbstractPlayer extends BaseView {
                 // console.log('Pattern orders', modObject.patternOrds);
                 // debugger;
                 this.loading = false;
-
                 
                 this.fileRecord = fileRecord;
                 modObject.id_md5 = fileRecord.id_md5;
                 modObject.fileName = modObject.file_name;
                 this.patterns = modObject.patterns;
-                // this.onWkWebViewInit();
+
                 this.playTrack();
 
                 this.setState({

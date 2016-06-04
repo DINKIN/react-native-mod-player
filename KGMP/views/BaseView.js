@@ -19,7 +19,7 @@ class BaseView extends Component {
         super(opts);   
         this.className = this.constructor.name;
        
-        this.setInitialState && this.setInitialState();
+        this.setInitialState && this.setInitialState(opts);
     }   
 
 

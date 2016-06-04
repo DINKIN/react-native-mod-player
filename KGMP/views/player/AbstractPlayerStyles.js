@@ -53,8 +53,9 @@ module.exports = StyleSheet.create({
         // height            : 20,
         padding           : 10,
         // borderColor       : borderColor,
-        flexDirection     : 'column',
-        alignItems    : 'center'
+        flexDirection  : 'column',
+        flex : 1,
+        alignItems     : 'center'
     },
 
 
@@ -64,7 +65,6 @@ module.exports = StyleSheet.create({
     },
     
     controlsContainer : {
-        marginTop         : 5,
         height            : 40,
         paddingVertical   : 30,
         paddingHorizontal : 10,

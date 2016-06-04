@@ -139,6 +139,10 @@ class PlayController {
         this.emit('play', this.eventObject);
     }
 
+    emitShowEQScreen = () => {
+        this.emit('showEQScreen');
+    }
+
     like(id_md5, callback) {
         // debugger;
         MCQueueManager.updateLikeStatus(

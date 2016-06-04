@@ -112,14 +112,12 @@ class AnimatedPlayer extends BaseView {
 
             pause : () => {
                 this.forceUpdate();
-
             },
 
             play : () => {
                 this.forceUpdate();
                 this.show();
-
-                // setTimeout(() => { this.show(true) }, 1000)
+                setTimeout(() => { this.show(true) }, 1000)
             }
         });     
     }
@@ -128,7 +126,7 @@ class AnimatedPlayer extends BaseView {
 
 
     show(force){
-        console.log(this.className, 'show()', force)
+        // console.log(this.className, 'show()', force)
         if (! this.hasShown && ! force) {
 
             Animated.timing(this.state.pan.y, {

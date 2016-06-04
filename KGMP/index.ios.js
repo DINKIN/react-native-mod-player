@@ -22,11 +22,6 @@ window.styles = {
 
 console.disableYellowBox = true; 
 
-
-
-// var styles = require('./jsx/Styles'),
-
-
 const Main = require('./views/HomeTabView');
 
 const { 
@@ -36,13 +31,6 @@ const {
 
 
 // CONTINUE: Start window.bundlePath;
-
-// Cache the bundlepath globally so we can access it later =)
-MCFsTool.getBundlePath((bundlepath) => {
-    console.log(bundlepath)
-    window.bundlePath = bundlepath;
-});
-
 
 // StatusBar.setBarStyle('light-content', true);
 

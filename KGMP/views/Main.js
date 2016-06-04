@@ -1,7 +1,8 @@
 
 
 const BaseView = require('./BaseView'),
-      HomeMenu = require('./HomeMenu');
+      HomeMenu = require('./HomeMenu'),
+      EQView   = require('./EQView')
 
 import React, {
     Component, 
@@ -97,6 +98,7 @@ class Main extends BaseView  {
             };
 
 
+        debugger;
       
 
         return (

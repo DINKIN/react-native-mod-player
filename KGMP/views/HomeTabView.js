@@ -23,6 +23,7 @@ import {
 import Navigation from './Navigation';
 import AnimatedPlayer from './player/AnimatedPlayer';
 import ListPlayer from './player/ListPlayer';
+import EQView from './EQView';
 
 
 const Icon             = require('react-native-vector-icons/Ionicons'),
@@ -148,20 +149,21 @@ class HomeTabView extends React.Component {
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
 
-        setTimeout(() => {
-            return;
-            var song = {
-                "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
-                "song_name": "",
-                "like_value": 0,
-                "in_queue": 0,
-                "directory": "CLASS/",
-                "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
-                "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
-            };
-            PlayController.loadFile(song)
-            // setTimeout(() => { PlayController.pause() }, 500)
-        }, 1000)
+        // setTimeout(() => {
+        //     // return;
+        //     var song = {
+        //         "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
+        //         "song_name": "",
+        //         "like_value": 0,
+        //         "in_queue": 0,
+        //         "directory": "CLASS/",
+        //         "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
+        //         "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
+        //     };
+
+        //     PlayController.loadFile(song);
+        //     setTimeout(() => { PlayController.pause() }, 250);
+        // }, 1000)
 
         this.tabs = [
             // This sh*t is starting to get Sencha-like real quick!
@@ -209,8 +211,6 @@ class HomeTabView extends React.Component {
     }
 
     onRowPress = (fileRecord, rowID, childNavigator, ownerList) => {
-
-
         // Shuffle row
         if (fileRecord.isShuffleRow) {
 
@@ -261,17 +261,8 @@ class HomeTabView extends React.Component {
 
             }
         }
-        
 
     }
-
-    // loadModFile = (fileRecord) => {
-    //     PlayController.loadFile(fileRecord, () => {
-    //         // PlayController.pause();
-    //         // this.refs.modPlayer.showForTheFirstTime();
-    //     });
-    // }
-
 
     setTabState(tabNo) {
         let state = this.state;
@@ -335,12 +326,16 @@ class HomeTabView extends React.Component {
 
 
         return (
-            <TabNavigator tabBarStyle={styles.tabBar}
-                          animatedPlayerView={AnimatedPlayer}
-                          sceneStyle={{paddingBottom:0}}>
+            <View style={{flex:1}}>
+                <TabNavigator style={{flex:1}}
+                              tabBarStyle={styles.tabBar}
+                              animatedPlayerView={AnimatedPlayer}
+                              sceneStyle={{}}>
 
-                {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}
-            </TabNavigator>
+                    {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}
+                </TabNavigator>
+                <EQView/>
+            </View>
         );
     }
 
