@@ -100,6 +100,7 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 //- (void) setDelegate:(id)someDelegate;
 - (void) registerInfoCallback:(void(^)(int32_t *playerState))executionBlock;
 - (void) registerCallbackSinceLastSleep:(void(^)(NSDictionary *modInfo))executionBlock;
+- (void) setEq:(int)eqIndex withGain:(float) gain;
 
 - (void) appHasGoneInBackground;
 - (void) appHasGoneInForeground;

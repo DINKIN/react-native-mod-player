@@ -241,6 +241,16 @@ RCT_EXPORT_METHOD(loadModusAboutMod:(RCTResponseSenderBlock)errorCallback
     callback(@[allmodObject]);
 }
 
+RCT_EXPORT_METHOD(setEQ:(nonnull NSNumber*)index
+               withGain:(nonnull NSNumber*)gain) {
+   
+    MCModPlayer *player = [MCModPlayer sharedManager];
+    [player setEq:[index intValue] withGain:[gain floatValue]];
+    
+    NSLog(@"%@ %@", index, gain);
+    
+}
+
 
 RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
                   callback:(RCTResponseSenderBlock)callback) {

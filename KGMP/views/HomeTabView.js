@@ -151,15 +151,25 @@ class HomeTabView extends React.Component {
 
         setTimeout(() => {
             // return;
+            // var song = {
+            //     "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
+            //     "song_name": "",
+            //     "like_value": 0,
+            //     "in_queue": 0,
+            //     "directory": "CLASS/",
+            //     "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
+            //     "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
+            // };
+
             var song = {
-                "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
-                "song_name": "",
+                "id_md5": "a2517f005c486abb152a13592d25fa64",
+                "song_name": "http%3A//www.at4re.com",
                 "like_value": 0,
                 "in_queue": 0,
-                "directory": "CLASS/",
-                "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
-                "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
-            };
+                "directory": "AT4RE/",
+                "file_name_short": "Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it",
+                "name": "AT4RE%20-%20Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it"
+            }
 
             PlayController.loadFile(song);
             // setTimeout(() => { PlayController.pause() }, 250);

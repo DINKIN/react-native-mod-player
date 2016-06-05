@@ -109,9 +109,6 @@ class AnimatedModal extends BaseView {
                 ]
             };
 
-        // onSlidingStart={this.onSlidingStart}
-        // onSlidingComplete={this.onSliderChangeComplete}
-
         return (
             <Animated.View  style={containerStyle}>
                 <BlurView blurType="light" style={{flex:1, paddingTop : 30}}>
@@ -119,7 +116,7 @@ class AnimatedModal extends BaseView {
                         <Text>Close</Text>
                     </TouchableOpacity>
                     {/* EQ Stuff here*/}
-                    <Text style={{fontWeight:'100', fontSize:30}}>Equalizer</Text>
+                    <Text style={{fontWeight:'100', fontSize:30, textAlign : 'center'}}>Equalizer</Text>
 
                     <View style={{flex:1}}>
                         <EQView/>

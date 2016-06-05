@@ -105,6 +105,10 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 
+- (void) setEq:(int)eqIndex withGain:(float) gain {
+    PEQ[eqIndex].G = gain;
+}
+
 - (id) init {
     NSLog(@"MCModPlayer init");
     self.appActive = true;
@@ -190,16 +194,16 @@ struct StatusObject statuses[NUM_BUFFERS];
     lastPattern = -1;
     lastRow = -1;
 //
-    PEQ[0].G = 1.0f;
-    PEQ[1].G = 1.0f;
-    PEQ[2].G = -0.0f;
-    PEQ[3].G = 0.0f;
-    PEQ[4].G = 0.0f;
-    PEQ[5].G = 0.0f;
-    PEQ[6].G = 0.0f;
-    PEQ[7].G = 0.0f;
-    PEQ[8].G = 5.0f;
-    PEQ[9].G = 5.0f;
+//    PEQ[0].G = 1.0f;
+//    PEQ[1].G = 1.0f;
+//    PEQ[2].G = -0.0f;
+//    PEQ[3].G = 0.0f;
+//    PEQ[4].G = 0.0f;
+//    PEQ[5].G = 0.0f;
+//    PEQ[6].G = 0.0f;
+//    PEQ[7].G = 0.0f;
+//    PEQ[8].G = 5.0f;
+//    PEQ[9].G = 5.0f;
 
 //    __block NSDate *date = [NSDate date];
 //    printf("%f\n", timePassed_ms);
@@ -248,7 +252,7 @@ struct StatusObject statuses[NUM_BUFFERS];
                 playerState[2] = currentStep[2];
                 playerState[3] = currentStep[3];
 
-                [weakSelf notifyInterface:playerState];
+//                [weakSelf notifyInterface:playerState];
             }
 
         }
@@ -264,10 +268,10 @@ struct StatusObject statuses[NUM_BUFFERS];
         // Apply the EQ to right
         for (int i = 0; i < 10; i++) {
             [PEQ[i] filterData:rightBuffer numFrames:context->frames numChannels:1];
-            [CDT counterClipping:rightBuffer numFrames:context->frames numChannels:1];
+//            [CDT counterClipping:rightBuffer numFrames:context->frames numChannels:1];
         }
     
-        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
+//        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
     
 
         

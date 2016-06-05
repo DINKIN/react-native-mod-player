@@ -19,6 +19,12 @@ import {
     StatusBar
 } from "react-native";
 
+
+const {
+    MCModPlayerInterface,
+    MCQueueManager
+} = require('NativeModules');
+
 const windowDimensions = Dimensions.get('window');
 
 const BaseView = require('./BaseView'),
@@ -99,15 +105,15 @@ class EQView extends BaseView {
                 </Text>
                 <Text style={{fontSize:10, fontWeight:'100'}}>-15db</Text>
 
-                <Slider minimumValue={-15}
+                <Slider minimumValue={-5}
                         value={0}
-                        maximumValue={15}
+                        maximumValue={5}
                         trackStyle={styles.sliderTrack}
                         thumbStyle={styles.sliderThumb}
                         minimumTrackTintColor={'#666'}
                         style={styles.slider}
                         step={.05}
-                        onValueChange={(value) => { console.log(frequency, value)}}
+                        onValueChange={(value) => { MCModPlayerInterface.setEQ(index, value); console.log(frequency, value)}}
                         />
 
                 <Text style={{marginRight:12, fontSize:10, fontWeight:'100'}}>+15db</Text>
@@ -116,8 +122,8 @@ class EQView extends BaseView {
     }
 
     render() {
-        var state = this.state,
-            styles = this.styles,
+        var state   = this.state,
+            styles  = this.styles,
             sliders = [];
 
         // onSlidingStart={this.onSlidingStart}
