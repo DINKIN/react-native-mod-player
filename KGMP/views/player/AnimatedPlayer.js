@@ -117,7 +117,7 @@ class AnimatedPlayer extends BaseView {
             play : () => {
                 this.forceUpdate();
                 this.show();
-                setTimeout(() => { this.show(true) }, 1000)
+                // setTimeout(() => { this.show(true) }, 1000)
             }
         });     
     }

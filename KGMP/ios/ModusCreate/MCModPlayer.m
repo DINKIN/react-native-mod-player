@@ -20,8 +20,10 @@
     BOOL isLoading,
          isPaused;
     
-    NVPeakingEQFilter *PEQ[10];
-    NVClippingDetection *CDT;
+//    NVPeakingEQFilter *PEQ[10];
+//    NVClippingDetection *CDT;
+
+    AEParametricEqModule *PEQ[10];
 }
 
 
@@ -53,14 +55,11 @@ struct StatusObject statuses[NUM_BUFFERS];
     return sharedMyManager;
 }
 
-- (void) configureEQ {
+- (void) configureEQ:(AERenderer *) renderer {
     float QFactor = 2.0f; // define Q factor of the bands
     
-
     // define initial gain
     float initialGain = 0.0f;
-
-
 /*
     Taken from itunes
     '32hz',
@@ -75,7 +74,8 @@ struct StatusObject statuses[NUM_BUFFERS];
     '16Khz',
 */
 
-    // define center frequencies of the bands
+
+ // define center frequencies of the bands
     float centerFrequencies[10];
     centerFrequencies[0] = 32.0f;
     centerFrequencies[1] = 64.0f;
@@ -88,25 +88,23 @@ struct StatusObject statuses[NUM_BUFFERS];
     centerFrequencies[8] = 8000.0f;
     centerFrequencies[9] = 16000.0f;
 
-    AVAudioSession * audioSession = [AVAudioSession sharedInstance];
-
-    double sr = audioSession.sampleRate;
-    // init PeakingFilters
-    // You'll later need to be able to set the gain for these (as the sliders change)
-    // So define them somewhere global using NVPeakingEQFilter *PEQ[10];
     for (int i = 0; i < 10; i++) {
-       PEQ[i] = [[NVPeakingEQFilter alloc] initWithSamplingRate:sr];
-       PEQ[i].Q = QFactor;
-       PEQ[i].centerFrequency = centerFrequencies[i];
-       PEQ[i].G = initialGain;
-    }
+//       PEQ[i] = [[NVPeakingEQFilter alloc] initWithSamplingRate:sr];
+//       PEQ[i].Q = QFactor;
+//       PEQ[i].centerFrequency = centerFrequencies[i];
+//       PEQ[i].G = initialGain;
 
+        PEQ[i] = [[AEParametricEqModule alloc] initWithRenderer:renderer];
+        PEQ[i].qFactor = QFactor;
+        PEQ[i].centerFrequency = centerFrequencies[i];
+        PEQ[i].gain = initialGain;
+    }
 
 }
 
 
 - (void) setEq:(int)eqIndex withGain:(float) gain {
-    PEQ[eqIndex].G = gain;
+    PEQ[eqIndex].gain = gain;
 }
 
 - (id) init {
@@ -114,7 +112,6 @@ struct StatusObject statuses[NUM_BUFFERS];
     self.appActive = true;
     
     if (self = [super init]) {
-        [self configureEQ];
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
         [notificationCenter addObserver:self
@@ -193,24 +190,15 @@ struct StatusObject statuses[NUM_BUFFERS];
     
     lastPattern = -1;
     lastRow = -1;
-//
-//    PEQ[0].G = 1.0f;
-//    PEQ[1].G = 1.0f;
-//    PEQ[2].G = -0.0f;
-//    PEQ[3].G = 0.0f;
-//    PEQ[4].G = 0.0f;
-//    PEQ[5].G = 0.0f;
-//    PEQ[6].G = 0.0f;
-//    PEQ[7].G = 0.0f;
-//    PEQ[8].G = 5.0f;
-//    PEQ[9].G = 5.0f;
+
+    [self configureEQ:renderer];
+
 
 //    __block NSDate *date = [NSDate date];
 //    printf("%f\n", timePassed_ms);
 
     renderer.block = ^(const AERenderContext * _Nonnull context) {
         AEBufferStack *bufferStack = context->stack;
-                
         
         const AudioBufferList * bufferList = AEBufferStackPushWithChannels(bufferStack, 1, 2);
 
@@ -219,7 +207,6 @@ struct StatusObject statuses[NUM_BUFFERS];
         }
         
 //        double timePassed_ms = [date timeIntervalSinceNow];
-//        
 //        printf("%f\n", timePassed_ms * -1000.0);
 //        date = [NSDate date];
        
@@ -252,7 +239,7 @@ struct StatusObject statuses[NUM_BUFFERS];
                 playerState[2] = currentStep[2];
                 playerState[3] = currentStep[3];
 
-//                [weakSelf notifyInterface:playerState];
+                [weakSelf notifyInterface:playerState];
             }
 
         }
@@ -261,21 +248,13 @@ struct StatusObject statuses[NUM_BUFFERS];
 
         // apply the EQ to left
         for (int i = 0; i < 10; i++) {
-            [PEQ[i] filterData:leftBuffer numFrames:context->frames numChannels:1];
-            [CDT counterClipping:leftBuffer numFrames:context->frames numChannels:1];
+            AEModuleProcess(PEQ[i], context);
         }
-        
-        // Apply the EQ to right
-        for (int i = 0; i < 10; i++) {
-            [PEQ[i] filterData:rightBuffer numFrames:context->frames numChannels:1];
-//            [CDT counterClipping:rightBuffer numFrames:context->frames numChannels:1];
-        }
-    
-//        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
-    
-
         
         AERenderContextOutput(context, 1);
+    
+        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
+    
     };
     
     
@@ -287,8 +266,8 @@ struct StatusObject statuses[NUM_BUFFERS];
 #if TARGET_OS_IPHONE
     
 #else
-    NSLog(@"setPreferredIOBufferDuration()");
-    [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
+//    NSLog(@"setPreferredIOBufferDuration()");
+//    [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
 #endif
 //    [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
 

@@ -150,7 +150,7 @@ class HomeTabView extends React.Component {
         MCModPlayerInterface.pause(() => {});
 
         setTimeout(() => {
-            // return;
+            return;
             // var song = {
             //     "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
             //     "song_name": "",
