@@ -376,12 +376,13 @@ class AbstractPlayer extends BaseView {
     componentDidMount() {
         // console.log(this.refs)
 
-        // setTimeout(()=> {
-        //     // debugger;
-        //     // this.refs.rtGLV.setPlotterRegistered('r');
-        //     // this.refs.ltGLV.setPlotterRegistered('l');
-        //     this.playTrack();
-        // }, 350);
+        setTimeout(()=> {
+            // debugger;
+            // this.refs.rtGLV.setPlotterRegistered('r');
+            // this.refs.ltGLV.setPlotterRegistered('l');
+            // this.playTrack();
+            this.onGearPress()
+        }, 3000);
 
         this.addListenersOn(PlayController.eventEmitter, {
             play : () => {

@@ -23,7 +23,7 @@ import {
 import Navigation from './Navigation';
 import AnimatedPlayer from './player/AnimatedPlayer';
 import ListPlayer from './player/ListPlayer';
-import EQView from './EQView';
+import AnimatedModal from './AnimatedModal';
 
 
 const Icon             = require('react-native-vector-icons/Ionicons'),
@@ -149,21 +149,21 @@ class HomeTabView extends React.Component {
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
 
-        // setTimeout(() => {
-        //     // return;
-        //     var song = {
-        //         "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
-        //         "song_name": "",
-        //         "like_value": 0,
-        //         "in_queue": 0,
-        //         "directory": "CLASS/",
-        //         "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
-        //         "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
-        //     };
+        setTimeout(() => {
+            // return;
+            var song = {
+                "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
+                "song_name": "",
+                "like_value": 0,
+                "in_queue": 0,
+                "directory": "CLASS/",
+                "file_name_short": "Giants.%20Citizen%20Kabuto%20installer.it",
+                "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
+            };
 
-        //     PlayController.loadFile(song);
-        //     setTimeout(() => { PlayController.pause() }, 250);
-        // }, 1000)
+            PlayController.loadFile(song);
+            // setTimeout(() => { PlayController.pause() }, 250);
+        }, 1000)
 
         this.tabs = [
             // This sh*t is starting to get Sencha-like real quick!
@@ -334,7 +334,7 @@ class HomeTabView extends React.Component {
 
                     {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}
                 </TabNavigator>
-                <EQView/>
+                <AnimatedModal/>
             </View>
         );
     }

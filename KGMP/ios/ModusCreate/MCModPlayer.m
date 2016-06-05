@@ -8,6 +8,10 @@
 #import "MCModPlayer.h"
 #import "MCPlotGlViewManager.h"
 
+#import "NVDSP.h"
+#import "NVPeakingEQFilter.h"
+#import "NVSoundLevelMeter.h"
+#import "NVClippingDetection.h"
 @implementation MCModPlayer {
 
     int lastPattern,
@@ -15,6 +19,9 @@
     
     BOOL isLoading,
          isPaused;
+    
+    NVPeakingEQFilter *PEQ[10];
+    NVClippingDetection *CDT;
 }
 
 
@@ -31,6 +38,8 @@ struct StatusObject {
 };
 
 
+
+
 struct StatusObject statuses[NUM_BUFFERS];
 
 + (id)sharedManager {
@@ -44,11 +53,64 @@ struct StatusObject statuses[NUM_BUFFERS];
     return sharedMyManager;
 }
 
+- (void) configureEQ {
+    float QFactor = 2.0f; // define Q factor of the bands
+    
+
+    // define initial gain
+    float initialGain = 0.0f;
+
+
+/*
+    Taken from itunes
+    '32hz',
+    '64hz',
+    '125hz',
+    '250hz',
+    '500hz',
+    '1Khz',
+    '2Khz',
+    '4Khz',
+    '8Khz',
+    '16Khz',
+*/
+
+    // define center frequencies of the bands
+    float centerFrequencies[10];
+    centerFrequencies[0] = 32.0f;
+    centerFrequencies[1] = 64.0f;
+    centerFrequencies[2] = 125.0f;
+    centerFrequencies[3] = 250.0f;
+    centerFrequencies[4] = 500.0f;
+    centerFrequencies[5] = 1000.0f;
+    centerFrequencies[6] = 2000.0f;
+    centerFrequencies[7] = 4000.0f;
+    centerFrequencies[8] = 8000.0f;
+    centerFrequencies[9] = 16000.0f;
+
+    AVAudioSession * audioSession = [AVAudioSession sharedInstance];
+
+    double sr = audioSession.sampleRate;
+    // init PeakingFilters
+    // You'll later need to be able to set the gain for these (as the sliders change)
+    // So define them somewhere global using NVPeakingEQFilter *PEQ[10];
+    for (int i = 0; i < 10; i++) {
+       PEQ[i] = [[NVPeakingEQFilter alloc] initWithSamplingRate:sr];
+       PEQ[i].Q = QFactor;
+       PEQ[i].centerFrequency = centerFrequencies[i];
+       PEQ[i].G = initialGain;
+    }
+
+
+}
+
+
 - (id) init {
     NSLog(@"MCModPlayer init");
     self.appActive = true;
     
     if (self = [super init]) {
+        [self configureEQ];
         NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         
         [notificationCenter addObserver:self
@@ -127,6 +189,17 @@ struct StatusObject statuses[NUM_BUFFERS];
     
     lastPattern = -1;
     lastRow = -1;
+//
+    PEQ[0].G = 1.0f;
+    PEQ[1].G = 1.0f;
+    PEQ[2].G = -0.0f;
+    PEQ[3].G = 0.0f;
+    PEQ[4].G = 0.0f;
+    PEQ[5].G = 0.0f;
+    PEQ[6].G = 0.0f;
+    PEQ[7].G = 0.0f;
+    PEQ[8].G = 5.0f;
+    PEQ[9].G = 5.0f;
 
 //    __block NSDate *date = [NSDate date];
 //    printf("%f\n", timePassed_ms);
@@ -179,9 +252,24 @@ struct StatusObject statuses[NUM_BUFFERS];
             }
 
         }
+
+//        int halfFrames = context->frames / 2;
+
+        // apply the EQ to left
+        for (int i = 0; i < 10; i++) {
+            [PEQ[i] filterData:leftBuffer numFrames:context->frames numChannels:1];
+            [CDT counterClipping:leftBuffer numFrames:context->frames numChannels:1];
+        }
+        
+        // Apply the EQ to right
+        for (int i = 0; i < 10; i++) {
+            [PEQ[i] filterData:rightBuffer numFrames:context->frames numChannels:1];
+            [CDT counterClipping:rightBuffer numFrames:context->frames numChannels:1];
+        }
     
         [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
     
+
         
         AERenderContextOutput(context, 1);
     };
@@ -198,6 +286,7 @@ struct StatusObject statuses[NUM_BUFFERS];
     NSLog(@"setPreferredIOBufferDuration()");
     [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
 #endif
+//    [audioSession setPreferredIOBufferDuration:audioSession.sampleRate error:NULL];
 
     NSError *activationError = nil;
         
@@ -282,7 +371,7 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 		
 
         [session setCategory:AVAudioSessionCategoryPlayback error:nil];
-
+    
 		[session setActive:YES error:nil];
         [player resume];
 	}

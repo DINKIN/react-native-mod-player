@@ -32,6 +32,20 @@ const Slider = require('react-native-slider'),
       } = require('react-native-blur');
 
 
+
+var frequencies = [
+    '32hz',
+    '64hz',
+    '125hz',
+    '250hz',
+    '500hz',
+    '1Khz',
+    '2Khz',
+    '4Khz',
+    '8Khz',
+    '16Khz',
+]
+
 class EQView extends BaseView {
     isHidden = true;
     restingPosition = windowDimensions.height;
@@ -47,108 +61,78 @@ class EQView extends BaseView {
             height: 20,
             borderRadius: 0,
             backgroundColor: '#666',
-        }
+        },
+        slider : {
+            width : windowDimensions.width - 175,
+            // borderWidth:1
+        },
 
+        sliderRow : {
+            flexDirection  : 'row', 
+            justifyContent : 'space-between', 
+            alignItems     : 'center',
+            alignSelf      : 'stretch',
+            marginVertical : 5
+        }
     });
 
 
     setInitialState() {
         this.state = {
-            pan          : new Animated.ValueXY(),
-            containerTop : windowDimensions.height,
+          
         };
     }
 
     componentDidMount() {
-        this.addListenersOn(PlayController.eventEmitter, {
-            showEQScreen : this.show
-        });
+       
     }
 
-    show = () => {
-        StatusBar.setHidden(true, true);
+    buildSlider(frequency, index) {
+        var state = this.state,
+            styles = this.styles;
 
-        Animated.timing(this.state.pan.y, {
-            duration : 300,
-            toValue  : -windowDimensions.height,
-            easing   : Easing.inOut(Easing.quad)
-        })
-        .start(() => {
-            StatusBar.setHidden(true, 'slide');
-        });
 
-        isHidden = false;
-    }
-    
-    hide = () => {
-        // debugger;
-        this.isHidden = true;
-        Animated.timing(this.state.pan.y, {
-            duration : 300,
-            toValue  : this.restingPosition,
-            easing   : Easing.inOut(Easing.quad)
-        })
-        .start(() => {
-            StatusBar.setHidden(false, 'slide');
-        });;
+        return (
+            <View style={styles.sliderRow} key={index}>
+                <Text style={{marginLeft:10,marginRight:5, fontWeight:'100', width:50}}>
+                    {frequency}:
+                </Text>
+                <Text style={{fontSize:10, fontWeight:'100'}}>-15db</Text>
+
+                <Slider minimumValue={-15}
+                        value={0}
+                        maximumValue={15}
+                        trackStyle={styles.sliderTrack}
+                        thumbStyle={styles.sliderThumb}
+                        minimumTrackTintColor={'#666'}
+                        style={styles.slider}
+                        step={.05}
+                        onValueChange={(value) => { console.log(frequency, value)}}
+                        />
+
+                <Text style={{marginRight:12, fontSize:10, fontWeight:'100'}}>+15db</Text>
+            </View>
+        )
     }
 
     render() {
         var state = this.state,
             styles = this.styles,
-            containerStyle = {
-                width           : windowDimensions.width,
-                height          : windowDimensions.height,
-                backgroundColor : 'rgba(255,255,255, .5)',
-                position        : 'absolute',
-                top             : state.containerTop,
-                transform       : [
-                    { translateX : state.pan.x },
-                    { translateY : state.pan.y }
-                ]
-            };
+            sliders = [];
 
         // onSlidingStart={this.onSlidingStart}
         // onSlidingComplete={this.onSliderChangeComplete}
 
+        for (let i = 0, len = frequencies.length; i < 10; i ++)  {
+            sliders.push(this.buildSlider(frequencies[i], i));
+        }
+
+        console.log('sliders', sliders)
+
         return (
-            <Animated.View  style={containerStyle}>
-                <BlurView blurType="light" style={{flex:1, paddingTop : 30}}>
-                    <TouchableOpacity onPress={this.hide}>
-                        <Text>Close</Text>
-                    </TouchableOpacity>
-                    {/* EQ Stuff here*/}
-
-                    <View style={{justifyContent : 'center', alignItems: 'center', flex:1}}>
-                        <Slider minimumValue={0}
-                                value={.5}
-                                maximumValue={1}
-                                trackStyle={styles.sliderTrack}
-                                thumbStyle={styles.sliderThumb}
-                                minimumTrackTintColor={'#666'}
-                                style={{width:windowDimensions.width - 50, marginVertical:10}}
-                                step={.05}/>
-
-                        <Slider minimumValue={0}
-                                value={.5}
-                                maximumValue={1}
-                                trackStyle={styles.sliderTrack}
-                                thumbStyle={styles.sliderThumb}
-                                minimumTrackTintColor={'#666'}
-                                style={{width:windowDimensions.width - 50, marginVertical:10}}
-                                step={.05}/>
-
-                        <Slider minimumValue={0}
-                                value={.5}
-                                maximumValue={1}
-                                trackStyle={styles.sliderTrack}
-                                thumbStyle={styles.sliderThumb}
-                                minimumTrackTintColor={'#666'}
-                                style={{width:windowDimensions.width - 50, marginVertical:10}}
-                                step={.05}/>
-                    </View>
-                </BlurView>
-            </Animated.View>
+            <View style={{justifyContent : 'center', alignItems: 'center', flex:1}}>
+                {sliders}
+            </View>
         )
     }
 
