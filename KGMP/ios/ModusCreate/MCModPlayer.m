@@ -8,10 +8,6 @@
 #import "MCModPlayer.h"
 #import "MCPlotGlViewManager.h"
 
-#import "NVDSP.h"
-#import "NVPeakingEQFilter.h"
-#import "NVSoundLevelMeter.h"
-#import "NVClippingDetection.h"
 @implementation MCModPlayer {
 
     int lastPattern,
