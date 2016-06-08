@@ -38,6 +38,8 @@ RCT_EXPORT_MODULE();
         instanceCount++;
         hasInitialized = true;
         [self configureCommandCenter];
+        
+        [[MCModPlayer sharedManager] STOP];
 
         return self;
     }
@@ -60,8 +62,6 @@ RCT_EXPORT_MODULE();
 {
     _bridge = bridge;
     MCModPlayerInterface *interface = self;
-    //        NSString *formatString = @"%i";
-
 
     self.then = CACurrentMediaTime();
 
@@ -133,7 +133,7 @@ RCT_EXPORT_METHOD(loadFile:(NSDictionary *)fileRecord
              errorCallback:(RCTResponseSenderBlock)errorCallback
                   callback:(RCTResponseSenderBlock)callback) {
    
-    NSLog(@"fileRecord %@", fileRecord);
+//    NSLog(@"fileRecord %@", fileRecord);
     
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath],
              *fileDir    = [[fileRecord valueForKey:@"directory"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
@@ -245,10 +245,20 @@ RCT_EXPORT_METHOD(setEQ:(nonnull NSNumber*)index
                withGain:(nonnull NSNumber*)gain) {
    
     MCModPlayer *player = [MCModPlayer sharedManager];
-    [player setEq:[index intValue] withGain:[gain floatValue]];
+    [player setEQ:[index intValue] withGain:[gain floatValue]];
     
-    NSLog(@"%@ %@", index, gain);
+//    NSLog(@"%@ %@", index, gain);
+}
+
+RCT_EXPORT_METHOD(getEQ:(RCTResponseSenderBlock)callback) {
+    MCModPlayer *player = [MCModPlayer sharedManager];
+
+    NSArray *presets = [player getEQ];
+    NSLog(@"%@", presets);
     
+    
+    
+    callback(@[presets]);
 }
 
 
@@ -260,6 +270,37 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
     [player setOrder:newOrder];
     callback(@[]);
 }
+
+
+-(NSArray *) getEQPresets {
+
+    NSString *sql = @"SELECT * FROM eqSettings where id_md5 like ''";
+
+    return [[MCDBManager sharedManager] execQuery:sql];
+}
+
+- (NSDictionary<NSString *, id> *)constantsToExport {
+  return @{@"eqPresets": [self getEQPresets]};
+}
+
+RCT_EXPORT_METHOD(getEQPresets:(RCTResponseSenderBlock)callback) {
+    NSArray *eqPresets = [self getEQPresets];
+    callback(@[eqPresets]);
+}
+
+RCT_EXPORT_METHOD(setEQBasedOnPreset:(NSString *)preset
+                        withCallback:(RCTResponseSenderBlock)callback) {
+    
+    
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM eqSettings where id_md5 like '' and NAME is '%@' ORDER BY name ASC", preset];
+    
+    NSDictionary *eqPreset = [[[MCDBManager sharedManager] execQuery:sql] objectAtIndex:0];
+    
+    [[MCModPlayer sharedManager] setEQByPreset:eqPreset];
+    
+    callback(@[eqPreset]);
+}
+
 
 #pragma mark Utilities
 

@@ -1,4 +1,4 @@
-//
+;//
 //  MCPlotGlViewManager.m
 //  UIExplorer
 //
@@ -17,6 +17,7 @@
 
 }
 
+@synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE()
 
@@ -25,7 +26,8 @@ RCT_EXPORT_MODULE()
     MCPlotGlView *view = [MCPlotGlView new];
     return view;
 }
-//
+
+
 RCT_EXPORT_VIEW_PROPERTY(plotterType, NSString);
 RCT_EXPORT_VIEW_PROPERTY(shouldMirror, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(shouldFill, BOOL);
@@ -41,48 +43,36 @@ RCT_CUSTOM_VIEW_PROPERTY(backgroundColor, NSString, MCPlotGlView) {
 
 
 RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
-    MCModPlayer *player = [MCModPlayer sharedManager];
     
-    //    NSLog(@"%@ view %p self = %p, %p", json, view, self, self);
+    NSLog(@"%@ MCPlotGlView %p self = %p, %p", json, view, self, self);
     view.registered = json;
 
 //    NSLog(@"%@ %@",  NSStringFromClass([self class]),  NSStringFromSelector(_cmd));
-    if ([json isEqualToString:@"l"]) {
-        self.ltView = view;
-    }
+//    if ([json isEqualToString:@"l"]) {
+//        self.ltView = view;
+//    }
+//    
+//    if ([json isEqualToString:@"r"]) {
+//        self.rtView = view;
+//    }
     
-    if ([json isEqualToString:@"r"]) {
-        self.rtView = view;
-    }
     
-    
-    if ([json isEqualToString:@" "]) {
-        player.ltPlotter = nil;
-        return;
-    }
-    
-
-    
-    if ([json isEqualToString:@"rU"]) {
-        self.rtView = nil;
-        
-        player.rtPlotter = nil;
-        return;
-    }
-   
-    
-    [[MCModPlayer sharedManager] setDelegate:self];
+//    [[MCModPlayer sharedManager] setDelegate:self];
 }
-
-
 
 // Used by the delegate
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames {
 
-    if (self.ltView && self.rtView) {
-        [self.ltView update:leftBuffer  withSize:nFrames];
-        [self.rtView update:rightBuffer withSize:nFrames];
-    }
+//    if (self.ltView && self.rtView) {
+//        [self.ltView update:leftBuffer  withSize:nFrames];
+//        [self.rtView update:rightBuffer withSize:nFrames];
+//    }
+}
+
+// Used by the view. Bad practice? probably.
+-(void) clearUpdateDelegate {
+//    [[MCModPlayer sharedManager] setDelegate:nil];
+
 }
 
 @end

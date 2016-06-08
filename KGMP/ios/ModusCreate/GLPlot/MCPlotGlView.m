@@ -8,29 +8,15 @@
 
 #import "MCPlotGlView.h"
 #import "RCTViewManager.h"
-#import "RCTBridge.h"
 #import "UIView+React.h"
 #import "RCTAutoInsetsProtocol.h"
 
+#import "MCModPlayer.h"
+
+
 @implementation MCPlotGlView {
     UIColor *lineColor;
-}
-
-
-// Called via manager
-- (void) update:(float[])data withSize:(int)size {
-
-    if (self.plotter) {
-        __weak typeof (self) weakSelf = self;
-
-//       NSDate *date = [NSDate date];
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            printf("%f\n", [date timeIntervalSinceNow] * -1000.0);
-
-            [weakSelf.plotter updateBuffer:data withBufferSize:size];
-        });
-    
-    }
+    __weak RCTBridge *_bridge;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -40,7 +26,7 @@
         EZAudioPlot *plotter = [[EZAudioPlot alloc] initWithFrame:frame];
 
         plotter.plotType = EZPlotTypeBuffer;
-        plotter.rollingHistoryLength=128;
+        plotter.rollingHistoryLength = 128;
         
         NSLog(@"%p %@ created an EZAudioPlotGL %@ %p",  self, NSStringFromClass([self class]), self.registered, plotter);
         self.plotter = plotter;
@@ -51,37 +37,30 @@
     return self;
 }
 
+// Called via manager
+- (void) update:(float[])data withSize:(int)size {
+
+    if (self.plotter) {
+        typeof(self) weakSelf = self;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.plotter) {
+                [weakSelf.plotter updateBuffer:data withBufferSize:size];
+            }
+        });
+    
+    }
+}
 
 - (void)layoutSubviews {
-//    NSLog(@"%p %@ layoutSubviews %@",  self, NSStringFromClass([self class]), self.registered);
-//
-//    NSLog(@"%@", @{
-//        @"bounds"    : NSStringFromCGRect(self.bounds),
-//        @"transform" : NSStringFromCGAffineTransform(self.transform),
-//        @"frame"     : NSStringFromCGRect(self.frame)
-//    });
-
-//    self.plotter.bounds = self.bounds;
     self.plotter.frame = self.bounds;
-//    self.plotter.transform = self.transform;
-//    [self.plotter sizeThatFits:self.bounds.size];
     [super layoutSubviews];
-    
-//    NSDictionary *sizes2 = @{
-//        @"bounds"    : NSStringFromCGRect(self.plotter.bounds),
-//        @"transform" : NSStringFromCGAffineTransform(self.plotter.transform),
-//        @"frame"     : NSStringFromCGRect(self.plotter.frame)
-//    };
-//    
-//    NSLog(@"self.plotter %@ %@", self.registered, sizes2);
-//    
 }
 
 - (void) setNewLineColor:(UIColor * _Nullable)color {
     if (self.plotter) {
         self.plotter.color = color;
     }
-//    NSLog(@"setLineColor %@", color);
 }
 
 - (void) setShouldMirror:(BOOL *)shouldMirror {
@@ -108,19 +87,39 @@
 
 
 - (void) setNewBackgroundColor:(UIColor * _Nullable)color {
-
     if (self.plotter) {
         self.plotter.backgroundColor = color;
     }
-//    NSLog(@"setNewBackgroundColor %@", color);
+}
+
+- (void) setRegistered:(NSString *)registered {
+    
+//    NSLog(@"setRegistered %@", registered);
+    
+    if ([registered isEqualToString:@"l"]) {
+        [[MCModPlayer sharedManager] setLeftDelegate:self];
+
+    }
+    else if ([registered isEqualToString:@"r"]) {
+        [[MCModPlayer sharedManager] setRightDelegate:self];
+    }
+    
+    _registered = registered;
 }
 
 
 - (void) dealloc {
     if (self.plotter) {
-        NSLog(@"%@ DESTROYING an EZAudioPlotGL %@ %p",  NSStringFromClass([self class]), self.registered, self.plotter);
-        [self.plotter removeFromSuperview];
-        self.plotter = nil;
+//        NSLog(@"%@ ------ DESTROYING an EZAudioPlotGL %@ %p",  NSStringFromClass([self class]), self.registered, self.plotter);
+//        if ([self.registered isEqualToString:@"l"]) {
+////            [[MCModPlayer sharedManager] setLeftDelegate:nil];
+//        }
+//        else if ([self.registered isEqualToString:@"r"]) {
+////            [[MCModPlayer sharedManager] setRightDelegate:nil];
+//
+//        }
+//        [self.plotter removeFromSuperview];
+//        self.plotter = nil;
     }
 }
 

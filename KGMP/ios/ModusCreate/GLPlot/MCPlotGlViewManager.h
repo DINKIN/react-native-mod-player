@@ -10,7 +10,6 @@
 
 #import "MCPlotGlView.h"
 #import "MCModPlayer.h"
-#import <pthread.h>
 
 
 @interface MCPlotGlViewManager : RCTViewManager {    
@@ -24,5 +23,6 @@
 @property MCPlotGlView *rtView;
 
 -(void) updateLeft:(float *)leftBuffer andRight:(float *)rightBuffer  withNumFrames:(int)nFrames;
+-(void) clearUpdateDelegate;
 
 @end

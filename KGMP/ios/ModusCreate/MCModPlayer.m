@@ -16,10 +16,11 @@
     BOOL isLoading,
          isPaused;
     
-//    NVPeakingEQFilter *PEQ[10];
-//    NVClippingDetection *CDT;
-
+    id leftDelegate;
+    id rightDelegate;
     AEParametricEqModule *PEQ[10];
+    
+    
 }
 
 
@@ -58,16 +59,16 @@ struct StatusObject statuses[NUM_BUFFERS];
     float initialGain = 0.0f;
 /*
     Taken from itunes
-    '32hz',
-    '64hz',
-    '125hz',
-    '250hz',
-    '500hz',
-    '1Khz',
-    '2Khz',
-    '4Khz',
-    '8Khz',
-    '16Khz',
+    '32Hz',
+    '64Hz',
+    '125Hz',
+    '250Hz',
+    '500Hz',
+    '1KHz',
+    '2KHz',
+    '4KHz',
+    '8KHz',
+    '16KHz',
 */
 
 
@@ -85,11 +86,6 @@ struct StatusObject statuses[NUM_BUFFERS];
     centerFrequencies[9] = 16000.0f;
 
     for (int i = 0; i < 10; i++) {
-//       PEQ[i] = [[NVPeakingEQFilter alloc] initWithSamplingRate:sr];
-//       PEQ[i].Q = QFactor;
-//       PEQ[i].centerFrequency = centerFrequencies[i];
-//       PEQ[i].G = initialGain;
-
         PEQ[i] = [[AEParametricEqModule alloc] initWithRenderer:renderer];
         PEQ[i].qFactor = QFactor;
         PEQ[i].centerFrequency = centerFrequencies[i];
@@ -99,8 +95,34 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 
-- (void) setEq:(int)eqIndex withGain:(float) gain {
+- (void) setEQ:(int)eqIndex withGain:(float) gain {
     PEQ[eqIndex].gain = gain;
+}
+
+- (void) setEQByPreset:(NSDictionary *)preset {
+    
+    PEQ[0].gain = [[preset valueForKey:@"freq32Hz"] doubleValue];
+    PEQ[1].gain = [[preset valueForKey:@"freq64Hz"] doubleValue];
+    PEQ[2].gain = [[preset valueForKey:@"freq125Hz"] doubleValue];
+    PEQ[3].gain = [[preset valueForKey:@"freq250Hz"] doubleValue];
+    PEQ[4].gain = [[preset valueForKey:@"freq500Hz"] doubleValue];
+    PEQ[5].gain = [[preset valueForKey:@"freq1kHz"] doubleValue];
+    PEQ[6].gain = [[preset valueForKey:@"freq2kHz"] doubleValue];
+    PEQ[7].gain = [[preset valueForKey:@"freq4kHz"] doubleValue];
+    PEQ[8].gain = [[preset valueForKey:@"freq8kHz"] doubleValue];
+    PEQ[9].gain = [[preset valueForKey:@"freq16kHz"] doubleValue];
+    
+}
+
+- (NSArray *) getEQ {
+    NSMutableArray *presets = [NSMutableArray new];
+    
+    for (int i = 0; i < 10; i++) {
+        NSNumber *preset = [[NSNumber alloc] initWithFloat:PEQ[i].gain];
+        [presets addObject:preset];
+    }
+    
+    return presets;
 }
 
 - (id) init {
@@ -240,17 +262,20 @@ struct StatusObject statuses[NUM_BUFFERS];
 
         }
 
-//        int halfFrames = context->frames / 2;
-
         // apply the EQ to left
         for (int i = 0; i < 10; i++) {
             AEModuleProcess(PEQ[i], context);
         }
         
         AERenderContextOutput(context, 1);
-    
-        [delegate updateLeft:leftBuffer andRight:rightBuffer withNumFrames:context->frames];
-    
+       
+        if (leftDelegate) {
+            [leftDelegate  update:leftBuffer  withSize:context->frames];
+        }
+        
+        if (rightDelegate) {
+            [rightDelegate update:rightBuffer withSize:context->frames];
+        }
     };
     
     
@@ -282,6 +307,14 @@ struct StatusObject statuses[NUM_BUFFERS];
     return self.modInfo;
 }
 
+
+// STOP!!!!
+- (void) STOP {
+    if (self.output) {
+        NSLog(@"STOP!!!! STOP!!!! STOP!!!! STOP!!!!!!!");
+        [self.output stop];
+    }
+}
 
 - (NSArray *) getPatternData:(NSNumber *)patternNumber {
     if (! self.modPlayer) {
@@ -389,6 +422,15 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
     NSLog(@"Delegate set %p", aDelegate);
     delegate = aDelegate;
 
+}
+- (void) setLeftDelegate:(id)newDelegate {
+    NSLog(@"LEFT Delegate set %p", newDelegate);
+    leftDelegate = newDelegate;
+}
+
+- (void) setRightDelegate:(id)newDelegate {
+    NSLog(@"RIGHT Delegate set %p", newDelegate);
+    rightDelegate = newDelegate;
 }
 
 

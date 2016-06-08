@@ -38,7 +38,7 @@ class ShuffleRow extends Component {
     onPress = () => {
         var props = this.props;
 
-        props.onPress(props.rowData, props.rowID)
+        props.onPress(props.rowData, props.rowID);
     }
 
 

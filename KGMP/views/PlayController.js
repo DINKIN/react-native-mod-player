@@ -184,6 +184,11 @@ class PlayController {
         MCModPlayerInterface.setOrder(order, callback);
     }
 
+    persistEQ()  {
+        // MCModPlayerInterface.getEQ();
+        
+    }
+
 }
 
 module.exports = new PlayController();

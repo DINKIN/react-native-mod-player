@@ -47,6 +47,7 @@
     
     id delegate;
 
+
 }
   
 @property NSDictionary *modInfo;
@@ -100,13 +101,19 @@ void interrruptCallback (void *inUserData,UInt32 interruptionState );
 //- (void) setDelegate:(id)someDelegate;
 - (void) registerInfoCallback:(void(^)(int32_t *playerState))executionBlock;
 - (void) registerCallbackSinceLastSleep:(void(^)(NSDictionary *modInfo))executionBlock;
-- (void) setEq:(int)eqIndex withGain:(float) gain;
+- (void) setEQ:(int)eqIndex withGain:(float) gain;
+- (void) setEQByPreset:(NSDictionary *)preset;
+- (NSArray *) getEQ;
 
 - (void) appHasGoneInBackground;
 - (void) appHasGoneInForeground;
 - (void) setDelegate:(id)aDelegate;
-- (void) setOrder:(NSNumber *)newOrder;
 
+- (void) setLeftDelegate:(id)newDelegate;
+- (void) setRightDelegate:(id)newDelegate;
+
+- (void) setOrder:(NSNumber *)newOrder;
+- (void) STOP;
 
 
 @end

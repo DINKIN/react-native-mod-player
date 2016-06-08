@@ -32,19 +32,20 @@
 		7150E3361CE7F84300158C40 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7150E3341CE7F6BD00158C40 /* libRNBlur.a */; };
 		7195F6D51CF4CDEE00A1E02A /* liblibOpenMPT.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7195F6D41CF4CDE600A1E02A /* liblibOpenMPT.0.2.a */; };
 		7195F6D81CF4DB0100A1E02A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7195F6D71CF4DB0100A1E02A /* libz.tbd */; };
+		71A16DE71D05E9C800C21003 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DDF1D05E9C800C21003 /* Entypo.ttf */; };
+		71A16DE81D05E9C800C21003 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE01D05E9C800C21003 /* EvilIcons.ttf */; };
+		71A16DE91D05E9C800C21003 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE11D05E9C800C21003 /* FontAwesome.ttf */; };
+		71A16DEA1D05E9C800C21003 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE21D05E9C800C21003 /* Foundation.ttf */; };
+		71A16DEB1D05E9C800C21003 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE31D05E9C800C21003 /* Ionicons.ttf */; };
+		71A16DEC1D05E9C800C21003 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */; };
+		71A16DED1D05E9C800C21003 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE51D05E9C800C21003 /* Octicons.ttf */; };
+		71A16DEE1D05E9C800C21003 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE61D05E9C800C21003 /* Zocial.ttf */; };
+		71A16DF11D086DE600C21003 /* MCDBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71A16DF01D086DE600C21003 /* MCDBManager.m */; };
 		71C9BE9F1CF1ED3E007F8A69 /* EZAudioiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; };
 		71C9BED21CF1FDFD007F8A69 /* MCPlotGlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */; };
 		71C9BED31CF1FDFD007F8A69 /* MCPlotGlViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */; };
 		71C9BED41CF2050F007F8A69 /* EZAudioiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; };
 		71C9BED51CF2050F007F8A69 /* EZAudioiOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71C9BE8C1CF1ED37007F8A69 /* EZAudioiOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		71D1183E1CAAFFEF008D0DA2 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118361CAAFFEF008D0DA2 /* Entypo.ttf */; };
-		71D1183F1CAAFFEF008D0DA2 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */; };
-		71D118401CAAFFEF008D0DA2 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */; };
-		71D118411CAAFFEF008D0DA2 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D118391CAAFFEF008D0DA2 /* Foundation.ttf */; };
-		71D118421CAAFFEF008D0DA2 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */; };
-		71D118431CAAFFEF008D0DA2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */; };
-		71D118441CAAFFEF008D0DA2 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */; };
-		71D118451CAAFFEF008D0DA2 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */; };
 		71DC53431CEA4004000CC5F8 /* libTheAmazingAudioEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71DC533A1CEA3F62000CC5F8 /* libTheAmazingAudioEngine.a */; };
 		71EA077E1CA9A92100995808 /* KEYGENMUSiC MusicPack in Resources */ = {isa = PBXBuildFile; fileRef = 71EA077D1CA9A92100995808 /* KEYGENMUSiC MusicPack */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -234,19 +235,21 @@
 		7150E32F1CE7F6BD00158C40 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		7195F6CF1CF4CDE600A1E02A /* libOpenMPT.0.2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libOpenMPT.0.2.xcodeproj; path = ../external_libraries/libOpenMPT.0.2/libOpenMPT.0.2.xcodeproj; sourceTree = "<group>"; };
 		7195F6D71CF4DB0100A1E02A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		71A16DDF1D05E9C800C21003 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		71A16DE01D05E9C800C21003 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		71A16DE11D05E9C800C21003 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		71A16DE21D05E9C800C21003 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		71A16DE31D05E9C800C21003 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
+		71A16DE51D05E9C800C21003 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		71A16DE61D05E9C800C21003 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		71A16DEF1D086DE600C21003 /* MCDBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCDBManager.h; path = ModusCreate/MCDBManager.h; sourceTree = "<group>"; };
+		71A16DF01D086DE600C21003 /* MCDBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCDBManager.m; path = ModusCreate/MCDBManager.m; sourceTree = "<group>"; };
 		71C9BE861CF1ED37007F8A69 /* EZAudio.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = EZAudio.xcodeproj; path = ../external_libraries/libEzAudio/EZAudio/EZAudio.xcodeproj; sourceTree = "<group>"; };
 		71C9BECE1CF1FDFD007F8A69 /* MCPlotGlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCPlotGlView.h; path = ModusCreate/GLPlot/MCPlotGlView.h; sourceTree = "<group>"; };
 		71C9BECF1CF1FDFD007F8A69 /* MCPlotGlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCPlotGlView.m; path = ModusCreate/GLPlot/MCPlotGlView.m; sourceTree = "<group>"; };
 		71C9BED01CF1FDFD007F8A69 /* MCPlotGlViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCPlotGlViewManager.h; path = ModusCreate/GLPlot/MCPlotGlViewManager.h; sourceTree = "<group>"; };
 		71C9BED11CF1FDFD007F8A69 /* MCPlotGlViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCPlotGlViewManager.m; path = ModusCreate/GLPlot/MCPlotGlViewManager.m; sourceTree = "<group>"; };
-		71D118361CAAFFEF008D0DA2 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		71D118391CAAFFEF008D0DA2 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		71DC53261CEA3F62000CC5F8 /* TheAmazingAudioEngine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TheAmazingAudioEngine.xcodeproj; path = ../external_libraries/TAAE2/TheAmazingAudioEngine.xcodeproj; sourceTree = "<group>"; };
 		71EA077D1CA9A92100995808 /* KEYGENMUSiC MusicPack */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "KEYGENMUSiC MusicPack"; path = "../../KEYGENMUSiC MusicPack"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -392,6 +395,8 @@
 				713A28961CA961F1000D9060 /* MCModPlayerInterface.m */,
 				713A28971CA961F1000D9060 /* MCQueueManager.h */,
 				713A28981CA961F1000D9060 /* MCQueueManager.m */,
+				71A16DEF1D086DE600C21003 /* MCDBManager.h */,
+				71A16DF01D086DE600C21003 /* MCDBManager.m */,
 			);
 			name = "Modus Create";
 			sourceTree = "<group>";
@@ -456,14 +461,14 @@
 		71D1182A1CAAFFE5008D0DA2 /* vector-icons */ = {
 			isa = PBXGroup;
 			children = (
-				71D118361CAAFFEF008D0DA2 /* Entypo.ttf */,
-				71D118371CAAFFEF008D0DA2 /* EvilIcons.ttf */,
-				71D118381CAAFFEF008D0DA2 /* FontAwesome.ttf */,
-				71D118391CAAFFEF008D0DA2 /* Foundation.ttf */,
-				71D1183A1CAAFFEF008D0DA2 /* Ionicons.ttf */,
-				71D1183B1CAAFFEF008D0DA2 /* MaterialIcons.ttf */,
-				71D1183C1CAAFFEF008D0DA2 /* Octicons.ttf */,
-				71D1183D1CAAFFEF008D0DA2 /* Zocial.ttf */,
+				71A16DDF1D05E9C800C21003 /* Entypo.ttf */,
+				71A16DE01D05E9C800C21003 /* EvilIcons.ttf */,
+				71A16DE11D05E9C800C21003 /* FontAwesome.ttf */,
+				71A16DE21D05E9C800C21003 /* Foundation.ttf */,
+				71A16DE31D05E9C800C21003 /* Ionicons.ttf */,
+				71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */,
+				71A16DE51D05E9C800C21003 /* Octicons.ttf */,
+				71A16DE61D05E9C800C21003 /* Zocial.ttf */,
 			);
 			name = "vector-icons";
 			sourceTree = "<group>";
@@ -791,17 +796,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				713A288F1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf in Resources */,
-				71D118411CAAFFEF008D0DA2 /* Foundation.ttf in Resources */,
-				71D118421CAAFFEF008D0DA2 /* Ionicons.ttf in Resources */,
-				71D1183E1CAAFFEF008D0DA2 /* Entypo.ttf in Resources */,
+				71A16DEA1D05E9C800C21003 /* Foundation.ttf in Resources */,
+				71A16DEB1D05E9C800C21003 /* Ionicons.ttf in Resources */,
+				71A16DE71D05E9C800C21003 /* Entypo.ttf in Resources */,
 				713A288B1CA96144000D9060 /* keygenmusicplayer.db in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				71D118451CAAFFEF008D0DA2 /* Zocial.ttf in Resources */,
+				71A16DEE1D05E9C800C21003 /* Zocial.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				71D118401CAAFFEF008D0DA2 /* FontAwesome.ttf in Resources */,
-				71D118431CAAFFEF008D0DA2 /* MaterialIcons.ttf in Resources */,
-				71D1183F1CAAFFEF008D0DA2 /* EvilIcons.ttf in Resources */,
-				71D118441CAAFFEF008D0DA2 /* Octicons.ttf in Resources */,
+				71A16DE91D05E9C800C21003 /* FontAwesome.ttf in Resources */,
+				71A16DEC1D05E9C800C21003 /* MaterialIcons.ttf in Resources */,
+				71A16DE81D05E9C800C21003 /* EvilIcons.ttf in Resources */,
+				71A16DED1D05E9C800C21003 /* Octicons.ttf in Resources */,
 				713A288D1CA961B3000D9060 /* fontello.ttf in Resources */,
 				71EA077E1CA9A92100995808 /* KEYGENMUSiC MusicPack in Resources */,
 			);
@@ -836,6 +841,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				713A289A1CA961F1000D9060 /* MCModPlayer.m in Sources */,
 				713A289C1CA961F1000D9060 /* MCQueueManager.m in Sources */,
+				71A16DF11D086DE600C21003 /* MCDBManager.m in Sources */,
 				713A28A01CA96201000D9060 /* MC_OMPT.m in Sources */,
 				713A28991CA961F1000D9060 /* MCFsTool.m in Sources */,
 				71C9BED21CF1FDFD007F8A69 /* MCPlotGlView.m in Sources */,

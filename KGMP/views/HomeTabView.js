@@ -61,7 +61,7 @@ var getDirectories = function(path, callback) {
             },
             // Success
             (response) =>  {
-                callback(response)               
+                callback(response);              
             }
         );
     }
@@ -149,6 +149,7 @@ class HomeTabView extends React.Component {
     componentWillMount() {
         MCModPlayerInterface.pause(() => {});
 
+        // Automation for debugotron
         setTimeout(() => {
             return;
             // var song = {
@@ -172,7 +173,10 @@ class HomeTabView extends React.Component {
             }
 
             PlayController.loadFile(song);
-            // setTimeout(() => { PlayController.pause() }, 250);
+            // setTimeout(() => { 
+                
+            //     PlayController.pause(); 
+            // }, 500);
         }, 1000)
 
         this.tabs = [

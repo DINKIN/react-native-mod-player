@@ -6,16 +6,17 @@
 //  Copyright (c) 2015 Facebook. All rights reserved.
 //
 
+
 #import "RCTView.h"
 #import "RCTComponent.h"
-
-//#import "EZAudioPlotGL.h"
+#import "RCTBridge.h"
 #import "EZAudioPlot.h"
+#import "RCTInvalidating.h"
 
-
-@interface MCPlotGlView : RCTView {
+@interface MCPlotGlView : RCTView <RCTInvalidating> {
     BOOL isRendering;
 }
+
 
 
 @property(nullable, nonatomic,strong) NSString *registered;

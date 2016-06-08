@@ -16,7 +16,8 @@ import {
     Dimensions,
     Animated,
     Easing,
-    StatusBar
+    StatusBar,
+    PanResponder
 } from "react-native";
 
 const windowDimensions = Dimensions.get('window');
@@ -36,6 +37,7 @@ const Slider = require('react-native-slider'),
 class AnimatedModal extends BaseView {
     isHidden = true;
     restingPosition = windowDimensions.height;
+    panResponder = null;
 
     styles = StyleSheet.create({
         sliderTrack: {
@@ -60,10 +62,70 @@ class AnimatedModal extends BaseView {
         };
     }
 
+    componentWillMount() {
+        super.componentWillMount();
+        this.configurePanResponder();
+  
+    }
+
     componentDidMount() {
+
         this.addListenersOn(PlayController.eventEmitter, {
             showEQScreen : this.show
         });
+    }
+
+   configurePanResponder() {
+        console.log('configurePanResponder ----------------------------------------------------------')
+        this.panResponder = PanResponder.create({
+            onMoveShouldSetResponderCapture     : () => true, //Tell iOS that we are allowing the movement
+            onMoveShouldSetPanResponderCapture  : () => true, // Same here, tell iOS that we allow dragging
+            
+            onPanResponderGrant                 : (e, gestureState) => {
+                let pan = this.state.pan;
+                // debugger;
+
+                pan.setOffset({
+                    x: pan.x.__getAnimatedValue(), 
+                    y: pan.y.__getAnimatedValue()
+                });
+                
+                pan.setValue({
+                    x: 0, 
+                    y: 0
+                });
+            },
+
+            onPanResponderMove: Animated.event([ // Creates a function to handle the movement and set offsets
+                null, 
+                {dy: this.state.pan.y}
+            ]), 
+
+            onPanResponderRelease: (e, gestureState) => {
+                this.state.pan.flattenOffset();
+                let deltaY = gestureState.dy;
+                // console.log('gestureState.dy',gestureState.dy)
+
+                if (deltaY >= 150) {
+                    this.hide();
+                    // console.log('this.hide()')
+                } 
+                else if (deltaY <= -100) {
+                    // console.log('this.show();()')
+                    this.show(true);
+                }
+                // TODO : This has a bug. fix.
+                else {
+                    if (deltaY > 0) {
+                        this.show(true);
+                    }
+                    else {
+                        this.hide();
+                    }
+
+                }
+            }
+        });  
     }
 
     show = () => {
@@ -84,12 +146,14 @@ class AnimatedModal extends BaseView {
     hide = () => {
         // debugger;
         this.isHidden = true;
+
         Animated.timing(this.state.pan.y, {
             duration : 300,
             toValue  : this.restingPosition,
             easing   : Easing.inOut(Easing.quad)
         })
         .start(() => {
+            // PlayController.persistEQ();
             StatusBar.setHidden(false, 'slide');
         });;
     }
@@ -109,18 +173,26 @@ class AnimatedModal extends BaseView {
                 ]
             };
 
+      
+
+
         return (
-            <Animated.View  style={containerStyle}>
-                <BlurView blurType="light" style={{flex:1, paddingTop : 30}}>
-                    <TouchableOpacity onPress={this.hide}>
-                        <Text>Close</Text>
-                    </TouchableOpacity>
+            <Animated.View  style={containerStyle} {...this.panResponder.panHandlers}>
+                <BlurView blurType="light" style={{flex:1, paddingTop : 15}}>
                     {/* EQ Stuff here*/}
-                    <Text style={{fontWeight:'100', fontSize:30, textAlign : 'center'}}>Equalizer</Text>
+                    <Text style={{fontWeight:'100', fontSize:30, textAlign : 'center', marginBottom : 15}} >
+                        Equalizer
+                    </Text>
 
                     <View style={{flex:1}}>
-                        <EQView/>
+                        <EQView style={{flex:1}}/>
                     </View>
+                    
+                    <TouchableOpacity onPress={this.hide} style={{marginTop : 10, paddingBottom:12, justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
+                        <Text style={{fontSize : 18, color:'#666'}}>
+                            Close
+                        </Text>
+                    </TouchableOpacity>
                 </BlurView>
             </Animated.View>
         )

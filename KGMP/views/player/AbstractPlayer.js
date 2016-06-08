@@ -238,7 +238,7 @@ class AbstractPlayer extends BaseView {
                         </View>
 
                         <TouchableOpacity onPress={this.onGearPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
-                            <Ionicons name="ios-cog" size={25} color='#666'/>
+                            <Ionicons name="ios-options-outline" size={25} color='#666'/>
                         </TouchableOpacity>
                     </View>
 
@@ -377,11 +377,12 @@ class AbstractPlayer extends BaseView {
         // console.log(this.refs)
 
         setTimeout(()=> {
+            return;
             // debugger;
-            // this.refs.rtGLV.setPlotterRegistered('r');
-            // this.refs.ltGLV.setPlotterRegistered('l');
             // this.playTrack();
             // this.onGearPress()
+            // PlayController.emitShowEQScreen();
+
         }, 3000);
 
         this.addListenersOn(PlayController.eventEmitter, {
@@ -441,8 +442,6 @@ class AbstractPlayer extends BaseView {
             rightSide      : 'rU'
         })
 
-        this.refs.ltGLV.setPlotterUnRegistered('lU');
-        this.refs.rtGLV.setPlotterUnRegistered('rU');
     }
 
     deregisterPatternUpdateHandler() {
