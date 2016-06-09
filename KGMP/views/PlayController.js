@@ -32,7 +32,6 @@ class PlayController {
                 var eventType = eventObject.eventType;
 
                 if (eventType == 'fileLoad') {
-                    // debugger;
                     this.eventObject = eventObject;
 
                     this.emit('fileLoaded', eventObject);
@@ -144,7 +143,6 @@ class PlayController {
     }
 
     like(id_md5, callback) {
-        // debugger;
         MCQueueManager.updateLikeStatus(
             1, 
             id_md5, 

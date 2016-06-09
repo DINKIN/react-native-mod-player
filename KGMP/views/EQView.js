@@ -117,11 +117,11 @@ class EQView extends BaseView {
                 <Text style={{marginLeft:10, fontWeight:'100', width:47}}>
                     {frequency}:
                 </Text>
-                <Text style={{fontSize:10, fontWeight:'100'}}>-15db</Text>
+                <Text style={{fontSize:10, fontWeight:'100'}}>-10db</Text>
 
-                <Slider minimumValue={-15}
+                <Slider minimumValue={-10}
                         value={value}
-                        maximumValue={15}
+                        maximumValue={10}
                         trackStyle={styles.sliderTrack}
                         thumbStyle={styles.sliderThumb}
                         minimumTrackTintColor={'#666'}
@@ -130,7 +130,7 @@ class EQView extends BaseView {
                         onValueChange={(value) => { MCModPlayerInterface.setEQ(index, value);}}
                         />
 
-                <Text style={{marginRight:12, fontSize:10, fontWeight:'100'}}>+15db</Text>
+                <Text style={{marginRight:12, fontSize:10, fontWeight:'100'}}>+10db</Text>
             </View>
         )
     }

@@ -33,9 +33,8 @@ var RCTDeviceEventEmitter = require('RCTDeviceEventEmitter'),
     styles                = require('./AbstractPlayerStyles'),
     CloseButton           = require('./accessories/CloseButton'),
     BaseView              = require('../BaseView'),
-    AnimatedLazyImage     = require('../common/AnimatedLazyImage');
-
-var MCAudioPlotGlView = require('./MCAudioPlotGlView');
+    AnimatedLazyImage     = require('../common/AnimatedLazyImage'),
+    MCAudioPlotGlView     = require('./MCAudioPlotGlView');
 
 var {
         MCModPlayerInterface,
@@ -56,14 +55,14 @@ windowDimensions.mid = (windowDimensions.height - 30) / 2;
 
 class AbstractPlayer extends BaseView {
 
-    data     = null;  // Used to paint out the view (song title, num tracks, etc)
-    plotters = null;  // References to the child plotter instances (LibEzPlotGlView)
+    data      = null;  // Used to paint out the view (song title, num tracks, etc)
+    plotters  = null;  // References to the child plotter instances (LibEzPlotGlView)
     dirInfo   = null;
     rowID     = null;
-    patternsRegistered = null; // used to check if patterns are registered by wkwebview
+    patternsRegistered        = null; // used to check if patterns are registered by wkwebview
     commandCenterEventHandler = null; 
     patternUpdateHandler      = null;
-    patterns           = null; // used to store pattern data.
+    patterns                  = null; // used to store pattern data.
     loading = false; // used to control floods of loading from the UI
     prevPat = null;
     
@@ -105,10 +104,9 @@ class AbstractPlayer extends BaseView {
     }
 
     render() {
-        // debugger;
         var state     = this.state,
             props     = this.props,
-            modObject = state.modObject; // TOdo refactor
+            modObject = state.modObject; 
 
         if (! modObject) {
             return <View />;
@@ -116,7 +114,6 @@ class AbstractPlayer extends BaseView {
 
         var fileRecord = this.fileRecord = state.fileRecord || props.fileRecord;
 
-        // debugger;
 
         var buttonChars = this.buttonChars,
             liked       = fileRecord.like_value == 1,
@@ -374,16 +371,14 @@ class AbstractPlayer extends BaseView {
 
 
     componentDidMount() {
-        // console.log(this.refs)
 
-        setTimeout(()=> {
-            return;
+        // setTimeout(()=> {
+            // return;
             // debugger;
             // this.playTrack();
             // this.onGearPress()
-            // PlayController.emitShowEQScreen();
 
-        }, 3000);
+        // }, 3000);
 
         this.addListenersOn(PlayController.eventEmitter, {
             play : () => {

@@ -73,6 +73,10 @@ class AnimatedModal extends BaseView {
         this.addListenersOn(PlayController.eventEmitter, {
             showEQScreen : this.show
         });
+
+        // setTimeout(() => {
+        //     this.show(true);
+        // }, 1000);
     }
 
    configurePanResponder() {
@@ -106,22 +110,23 @@ class AnimatedModal extends BaseView {
                 let deltaY = gestureState.dy;
                 // console.log('gestureState.dy',gestureState.dy)
 
-                if (deltaY >= 150) {
+                console.log('deltaY', deltaY)
+                if (deltaY >= 200) {
                     this.hide();
                     // console.log('this.hide()')
                 } 
-                else if (deltaY <= -100) {
+                else if (deltaY <= -150) {
                     // console.log('this.show();()')
                     this.show(true);
                 }
                 // TODO : This has a bug. fix.
                 else {
-                    if (deltaY > 0) {
+                    // if (deltaY > 0) {
                         this.show(true);
-                    }
-                    else {
-                        this.hide();
-                    }
+                    // }
+                    // else {
+                    //     this.hide();
+                    // }
 
                 }
             }
@@ -177,7 +182,8 @@ class AnimatedModal extends BaseView {
 
 
         return (
-            <Animated.View  style={containerStyle} {...this.panResponder.panHandlers}>
+            // <Animated.View style={containerStyle} {...this.panResponder.panHandlers}>
+            <Animated.View style={containerStyle}>
                 <BlurView blurType="light" style={{flex:1, paddingTop : 15}}>
                     {/* EQ Stuff here*/}
                     <Text style={{fontWeight:'100', fontSize:30, textAlign : 'center', marginBottom : 15}} >

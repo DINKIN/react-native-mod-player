@@ -28,8 +28,9 @@ const UrlTool          = require('../utils/UrlTool'),
       windowDimensions = Dimensions.get('window');
 
 class AnimatedPlayer extends BaseView {
-    hasShown = false;
-    isHidden = true;
+    hasShown        = false;
+    isHidden        = true;
+    restingPosition = -35;
 
     setInitialState() {
 
@@ -44,8 +45,6 @@ class AnimatedPlayer extends BaseView {
 
     componentWillMount() {
         super.componentWillMount();
-
-        // this.configurePanResponder();
     }
 
     configurePanResponder() {
@@ -77,25 +76,32 @@ class AnimatedPlayer extends BaseView {
             onPanResponderRelease: (e, gestureState) => {
                 this.state.pan.flattenOffset();
                 let deltaY = gestureState.dy;
-                // console.log('gestureState.dy',gestureState.dy)
+                console.log('gestureState.dy',gestureState.dy, 'this.isHidden', this.isHidden)
 
-                if (deltaY >= 150) {
-                    this.hide();
-                    // console.log('this.hide()')
-                } 
-                else if (deltaY <= -100) {
-                    // console.log('this.show();()')
-                    this.show(true);
-                }
-                // TODO : This has a bug. fix.
-                else {
-                    if (deltaY > 0) {
+
+                if (this.isHidden) {
+                    if (deltaY >= 200) {  // DOWN action
+                        this.hide();
+                    } 
+                    else if (deltaY <= -150) { // UP action
                         this.show(true);
                     }
                     else {
-                        this.hide();
+                        this.hide()
                     }
-
+                }
+                
+                else if (! this.isHidden) {
+                    if (deltaY >= 125) { // DOWN action
+                        this.hide();
+                    }  
+                    else if (deltaY <= -200) { // UP Action
+                        this.show(true);
+                    }
+                    else {
+                        this.show(true)
+                    }
+                    
                 }
             }
         });  
@@ -117,25 +123,25 @@ class AnimatedPlayer extends BaseView {
             play : () => {
                 this.forceUpdate();
                 this.show();
-                // setTimeout(() => { this.show(true) }, 500)
+
+                // setTimeout(() => {
+                //     this.show(true);
+                // }, 1000);
             }
         });     
     }
 
-    restingPosition = -35;
 
 
     show(force){
-        // console.log(this.className, 'show()', force)
         if (! this.hasShown && ! force) {
-
+            /* This is for the initial animation to show the toolbar */
             Animated.timing(this.state.pan.y, {
                 duration : 150,
                 toValue  : -37, //windowDimensions.height - 40
                 easing   : Easing.inOut(Easing.quad)
             })
             .start(() => {
-                console.log('Animation is done')
                 this.setState({
                     pan       : this.props.pan,
                     playerTop : windowDimensions.height - 63
@@ -147,14 +153,15 @@ class AnimatedPlayer extends BaseView {
 
             this.hasShown = true;   
         }
-        else if (this.isHidden && force) {
+        else if (force) {
+            /* Animate to reveal the entire screen */
             Animated.timing(this.state.pan.y, {
                 duration : 150,
                 toValue  : -(windowDimensions.height - 20),
                 easing   : Easing.inOut(Easing.quad)
             }).start();
 
-            isHidden = false;
+            this.isHidden = false;
         }
 
     }
@@ -184,7 +191,6 @@ class AnimatedPlayer extends BaseView {
                 width           : windowDimensions.width,
                 height          : windowDimensions.height,
                 backgroundColor : 'transparent',
-                // backgroundColor : 'rgba(255,255,255,.9)',//'transparent',
                 position        : 'absolute',
                 top             : state.playerTop,
                 transform       : [
@@ -196,7 +202,6 @@ class AnimatedPlayer extends BaseView {
                 height         : 40,
                 flexDirection  : 'row',
                 justifyContent : 'space-between',
-                // backgroundColor   : 'rgba(255, 255, 255, .7)',
                 alignItems     : 'center',
                 left           : 0,
                 right          : 0,
@@ -234,16 +239,9 @@ class AnimatedPlayer extends BaseView {
                     height : mainImageDims.height
                 },
                 imgStyle = {
-                    width         : mainImageDims.width, 
-                    height        : mainImageDims.height,
-                    marginRight   : 10,
-                    // shadowColor   : '#000',
-                    // shadowOpacity : .5,
-                    // shadowRadius  : 2,
-                    // shadowOffset  : {
-                    //     width  : 0,
-                    //     height : 2
-                    // }
+                    width       : mainImageDims.width, 
+                    height      : mainImageDims.height,
+                    marginRight : 10
                 }; 
             
             toolbarView = (
@@ -293,8 +291,6 @@ class AnimatedPlayer extends BaseView {
             justifyContent : 'center', 
             borderTopWidth: 1, 
             borderTopColor : '#EFEFEF', 
-            // borderBottomWidth : 5, 
-            // borderBottomColor : '#AEAEAE',
             padding : 5, 
             flex:1
         }

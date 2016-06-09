@@ -151,7 +151,7 @@ class HomeTabView extends React.Component {
 
         // Automation for debugotron
         setTimeout(() => {
-            return;
+            // return;
             // var song = {
             //     "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
             //     "song_name": "",
@@ -173,10 +173,16 @@ class HomeTabView extends React.Component {
             }
 
             PlayController.loadFile(song);
-            // setTimeout(() => { 
+            setTimeout(() => { 
                 
-            //     PlayController.pause(); 
-            // }, 500);
+                PlayController.pause(); 
+            }, 500);
+
+            setTimeout(() => {
+
+                // PlayController.emitShowEQScreen();
+
+            }, 2000);
         }, 1000)
 
         this.tabs = [
