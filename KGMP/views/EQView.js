@@ -92,7 +92,7 @@ class EQView extends BaseView {
             justifyContent : 'space-between', 
             alignItems     : 'center',
             alignSelf      : 'stretch',
-            marginVertical :0,
+            marginVertical : 0,
             // borderWidth    :1
         }
     });
@@ -127,6 +127,8 @@ class EQView extends BaseView {
                         minimumTrackTintColor={'#666'}
                         style={styles.slider}
                         step={.05}
+                        animationType={'spring'}
+                        animateTransitions={true}
                         onValueChange={(value) => { MCModPlayerInterface.setEQ(index, value);}}
                         />
 
