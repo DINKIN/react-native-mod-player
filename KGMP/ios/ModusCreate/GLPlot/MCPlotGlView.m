@@ -21,14 +21,14 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self == [super initWithFrame:frame]) {
-        NSLog(@"%p %@ initWithFrame %@",  self, NSStringFromClass([self class]), NSStringFromCGRect(frame));
+//        NSLog(@"%p %@ initWithFrame %@",  self, NSStringFromClass([self class]), NSStringFromCGRect(frame));
 
         EZAudioPlot *plotter = [[EZAudioPlot alloc] initWithFrame:frame];
 
         plotter.plotType = EZPlotTypeBuffer;
         plotter.rollingHistoryLength = 128;
         
-        NSLog(@"%p %@ created an EZAudioPlotGL %@ %p",  self, NSStringFromClass([self class]), self.registered, plotter);
+//        NSLog(@"%p %@ created an EZAudioPlotGL %@ %p",  self, NSStringFromClass([self class]), self.registered, plotter);
         self.plotter = plotter;
         [self addSubview:self.plotter];
 

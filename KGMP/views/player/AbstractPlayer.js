@@ -234,7 +234,7 @@ class AbstractPlayer extends BaseView {
                             </Text>
                         </View>
 
-                        <TouchableOpacity onPress={this.onGearPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
+                        <TouchableOpacity onPress={this.onEqButtonPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
                             <Ionicons name="ios-options-outline" size={25} color='#666'/>
                         </TouchableOpacity>
                     </View>
@@ -319,9 +319,9 @@ class AbstractPlayer extends BaseView {
         );
     }
 
-    onGearPress = () => {
-        // debugger;
-        PlayController.emitShowEQScreen();
+    onEqButtonPress = () => {
+        var state = this.state;
+        PlayController.emitShowEQScreen(state.fileRecord, state.eqSettings);
     }
 
     onPlotterPress = () => {
@@ -376,7 +376,7 @@ class AbstractPlayer extends BaseView {
             // return;
             // debugger;
             // this.playTrack();
-            // this.onGearPress()
+            // this.onEqButtonPress()
 
         // }, 3000);
 
@@ -396,7 +396,7 @@ class AbstractPlayer extends BaseView {
             },
 
             fileLoaded : (config) => {
-                console.log(this.constructor.name, 'Received fileLoaded')
+                console.log(this.constructor.name, 'Received fileLoaded', config);
                 var fileRecord = config.fileRecord,
                     modObject  = config.modObject;
 
@@ -411,14 +411,22 @@ class AbstractPlayer extends BaseView {
 
                 this.playTrack();
 
+
                 this.setState({
-                    fileRecord : fileRecord,
-                    modObject : modObject,
+                    fileRecord     : fileRecord,
+                    modObject      : modObject,
+                    eqSettings     : modObject.eqSettings,
                     currentPattern : -1,
                     sliderPosition : 0
                 });
 
-            } 
+            },
+
+            eqSettingsPersisted : (eqSettings) => {
+                this.setState({
+                    eqSettings : eqSettings
+                });
+            }
         })
     }
 

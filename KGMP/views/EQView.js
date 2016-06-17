@@ -20,6 +20,8 @@ import {
     ActionSheetIOS
 } from "react-native";
 
+const AnimatedModal = require('./AnimatedModal');
+
 
 const {
     MCModPlayerInterface,
@@ -32,11 +34,8 @@ const BaseView = require('./BaseView'),
       PlayController = require('./PlayController');
 
 const Slider = require('react-native-slider'),
-      Ionicons = require('react-native-vector-icons/Ionicons'),
-      { 
-          BlurView,
-          VibrancyView
-      } = require('react-native-blur');
+      Ionicons = require('react-native-vector-icons/Ionicons');
+
 
 
 
@@ -66,9 +65,13 @@ const freqNameKeyMap = [
     'freq16kHz'
 ]
 
-class EQView extends BaseView {
+
+class EQView extends AnimatedModal {
     isHidden = true;
     restingPosition = windowDimensions.height;
+    title = 'Equalizer';
+    startingEqSettings = null;
+
 
     styles = StyleSheet.create({
         sliderTrack: {
@@ -99,16 +102,42 @@ class EQView extends BaseView {
 
 
     setInitialState() {
-        var defaultPreset = MCModPlayerInterface.eqPresets[0],
-            state = Object.assign({}, defaultPreset);
+        super.setInitialState();
+
+        var defaultPreset = Object.assign({}, MCModPlayerInterface.eqPresets[0]),
+            state = Object.assign({
+                isCustomized : false,
+                eqSettings : defaultPreset,
+            }, this.state);
 
         this.state = state;
     }
 
+    componentDidMount() {
+
+        this.addListenersOn(PlayController.eventEmitter, {
+            showEQScreen : this.onShowEQScreen
+        });
+
+        // setTimeout(() => { this.show(true); }, 100);
+    }
+
+    onShowEQScreen = (fileRecord, eqSettings) => {
+        this.startingEqSettings = eqSettings;
+
+        this.setState({
+            eqSettings : eqSettings || Object.assign({}, MCModPlayerInterface.eqPresets[0]),
+            fileRecord : fileRecord           
+        });
+
+        this.show();
+    }
+
+    
+
     buildSlider(frequency, index) {
-        var state = this.state,
-            styles = this.styles,
-            value  = +state[freqNameKeyMap[index]];
+        var styles = this.styles
+            value  = +this.state.eqSettings[freqNameKeyMap[index]];
 
         // console.log(index, freqNameKeyMap[index], value, state);
 
@@ -129,7 +158,7 @@ class EQView extends BaseView {
                         step={.05}
                         animationType={'spring'}
                         animateTransitions={true}
-                        onValueChange={(value) => { MCModPlayerInterface.setEQ(index, value);}}
+                        onValueChange={(value) => { this.onValueChange(value, index)}}
                         />
 
                 <Text style={{marginRight:12, fontSize:10, fontWeight:'100'}}>+10db</Text>
@@ -137,9 +166,10 @@ class EQView extends BaseView {
         )
     }
 
-    render() {
+    renderCenter() {
         var state   = this.state,
             styles  = this.styles,
+            name    = state.eqSettings.name,
             sliders = [];
 
         // onSlidingStart={this.onSlidingStart}
@@ -149,15 +179,18 @@ class EQView extends BaseView {
             sliders.push(this.buildSlider(frequencies[i], i));
         }
 
+        var presetName = state.isCustomized ? ('*' + name) : name,
+            labelColor = state.isCustomized ? '#000' : '#666';
+
         // console.log('sliders', sliders)
 
         return (
             <View style={[this.props.style, {justifyContent : 'space-between', alignItems: 'center'}]}>
                 <TouchableOpacity onPress={this.onEQPresetPress} style={{marginVertical: 5,flexDirection:'row', alignItems:'center'}}>
-                    <Text style={{color:'#666'}}>
-                        Preset: {this.state.name}
+                    <Text style={{color: labelColor}}>
+                        Preset: {presetName}
                     </Text>
-                    <Ionicons name="ios-arrow-down" size={15} color='#666' style={{marginLeft:5}}/>
+                    <Ionicons name="ios-arrow-down" size={15} color={labelColor} style={{marginLeft:5}}/>
                 </TouchableOpacity>
                 {sliders}
             </View>
@@ -168,7 +201,13 @@ class EQView extends BaseView {
         var buttons = [],
             i  = 0,
             presets = MCModPlayerInterface.eqPresets,
-            len = presets.length;
+            len = presets.length,
+            presets;
+
+        // debugger;
+        if (this.startingEqSettings) {
+            presets = [this.startingEqSettings].concat(presets);
+        }            
 
         for (; i < len; i++) {
             buttons.push(presets[i].name);
@@ -186,16 +225,108 @@ class EQView extends BaseView {
     }
 
     onEqPresetChosen = (buttonIndex) => {
-        console.log(buttonIndex);
+        var startingEqSettings = this.startingEqSettings,
+            chosenPreset;
 
-        var chosenPreset = MCModPlayerInterface.eqPresets[buttonIndex];
+        if (startingEqSettings && buttonIndex == 0) {
+            chosenPreset = startingEqSettings;
+        }
+        else if (startingEqSettings && buttonIndex > 0) {
+            chosenPreset = MCModPlayerInterface.eqPresets[buttonIndex - 1];
+        }
+        else {
+            chosenPreset = MCModPlayerInterface.eqPresets[buttonIndex];
+        }
+
         console.log('chosenPreset', JSON.stringify(chosenPreset, undefined, 4));
 
-        MCModPlayerInterface.setEQBasedOnPreset(chosenPreset.name, () => {
-            this.setState(chosenPreset);
+        MCModPlayerInterface.setEqBasedOnParams(chosenPreset, () => {
+            // var state = Object.assign({ isCustomized : false }, chosenPreset);
+            this.setState({
+                isCustomized : false, 
+                eqSettings   : chosenPreset 
+            });
         });
     }
 
+    onValueChange = (value, index) => { 
+        var newState =  { isCustomized : true };
+
+        newState.eqSettings = Object.assign({}, this.state.eqSettings);
+
+        newState.eqSettings[freqNameKeyMap[index]] = value;
+
+        this.setState(newState);
+
+        MCModPlayerInterface.setEQ(index, value);
+    }
+
+    getEQValues() {
+        return this.state.eqSettings; // Values are stored directly in state for simplicity.
+    }
+
+
+    renderCancelButton() {
+        return <TouchableOpacity onPress={this.onCancel} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
+                    <Text style={{fontSize : 18, color:'#F66'}}>
+                        Cancel
+                    </Text>
+                </TouchableOpacity>
+    }
+
+    renderSaveButton() {
+        return <TouchableOpacity onPress={this.onSave} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
+                    <Text style={{fontSize : 18, color:'#4F4'}}>
+                        Save
+                    </Text>
+                </TouchableOpacity>
+    }
+
+    onCancel = () => {
+        let chosenPreset;
+
+        if (this.startingEqSettings) {
+            chosenPreset = this.startingEqSettings;
+        }
+        else {
+            chosenPreset = this.state.eqSettings;
+        }
+
+        // console.log('chosenPreset', JSON.stringify(chosenPreset, undefined, 4));
+
+        MCModPlayerInterface.setEqBasedOnParams(chosenPreset, function() {});
+        this.hide();
+    }
+
+    onSave = () => {
+        var state = this.state,
+            eqSettings = this.state.eqSettings;
+        
+        eqSettings.id_md5 = state.fileRecord.id_md5;
+
+        console.log('isCustomized', this.state.isCustomized);
+        console.log(JSON.stringify(eqSettings, undefined, 4))
+
+        this.hide();
+
+        // We can defer persisting the data until after the view clears.
+        setTimeout(() => {
+            if (! eqSettings.name.match('Custom ')) {
+                var newName = 'Custom ' + eqSettings.name;
+
+                eqSettings = Object.assign({} , eqSettings);
+                eqSettings.name = newName;
+            }
+
+            PlayController.persistEqSettings(eqSettings);
+
+            this.setState({
+                isCustomized : false, 
+                eqSettings   : eqSettings
+            });
+        }, 1000);
+
+    }
 
 }
 

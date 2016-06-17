@@ -50,10 +50,11 @@ class PlayController {
         MCQueueManager.setBrowseType(this.browseType = 0);
     }
 
-    // Abstract method for less typing
-    emit(eventName, eventData) {
-        console.log(this.constructor.name, 'Emitting' , eventName/*, eventData*/)
-        this.eventEmitter.emit(eventName, eventData);
+    // Abstract method for less typing 
+    // TODO: Figure out a better convention than eventData, otherEventData
+    emit(eventName, eventData, otherEventData) {
+        console.log(this.constructor.name, 'Emitting' , eventName, eventData, otherEventData)
+        this.eventEmitter.emit(eventName, eventData, otherEventData);
     }
 
     toggle() {
@@ -122,7 +123,7 @@ class PlayController {
             return;
         }
 
-        console.log('previous');
+        // console.log('previous');
         MCQueueManager.getPreviousFileFromCurrentSet((fileRecord)=> {            
             this.loadFile(fileRecord);
         });
@@ -138,8 +139,8 @@ class PlayController {
         this.emit('play', this.eventObject);
     }
 
-    emitShowEQScreen = () => {
-        this.emit('showEQScreen');
+    emitShowEQScreen = (fileRecord, eqSettings) => {
+        this.emit('showEQScreen', fileRecord, eqSettings);
     }
 
     like(id_md5, callback) {
@@ -182,9 +183,14 @@ class PlayController {
         MCModPlayerInterface.setOrder(order, callback);
     }
 
-    persistEQ()  {
-        // MCModPlayerInterface.getEQ();
-        
+    persistEqSettings(eqSettings)  {
+        MCModPlayerInterface.persistEQForSong(
+            eqSettings,
+            () => {
+                delete eqSettings.fileRecord;
+                this.emit('eqSettingsPersisted', eqSettings);
+            }
+        );        
     }
 
 }

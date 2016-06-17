@@ -43,21 +43,9 @@ RCT_CUSTOM_VIEW_PROPERTY(backgroundColor, NSString, MCPlotGlView) {
 
 
 RCT_CUSTOM_VIEW_PROPERTY(side, BOOL, MCPlotGlView) {
-    
-    NSLog(@"%@ MCPlotGlView %p self = %p, %p", json, view, self, self);
+//    NSLog(@"%@ MCPlotGlView %p self = %p, %p", json, view, self, self);
     view.registered = json;
 
-//    NSLog(@"%@ %@",  NSStringFromClass([self class]),  NSStringFromSelector(_cmd));
-//    if ([json isEqualToString:@"l"]) {
-//        self.ltView = view;
-//    }
-//    
-//    if ([json isEqualToString:@"r"]) {
-//        self.rtView = view;
-//    }
-    
-    
-//    [[MCModPlayer sharedManager] setDelegate:self];
 }
 
 // Used by the delegate

@@ -31,7 +31,7 @@
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *dbPath = [documentsDirectory stringByAppendingPathComponent:filename];
   
-  
+    NSLog(@"dbPath = %@", dbPath);
 
     if (![[NSFileManager defaultManager] fileExistsAtPath:dbPath]) {
         // If the db file doesn't exist in the documents directory

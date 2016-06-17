@@ -23,8 +23,7 @@ import {
 const windowDimensions = Dimensions.get('window');
 
 const BaseView = require('./BaseView'),
-      PlayController = require('./PlayController'),
-      EQView = require('./EQView');
+      PlayController = require('./PlayController');
 
 const Slider = require('react-native-slider'),
       Ionicons = require('react-native-vector-icons/Ionicons'),
@@ -68,16 +67,7 @@ class AnimatedModal extends BaseView {
   
     }
 
-    componentDidMount() {
-
-        this.addListenersOn(PlayController.eventEmitter, {
-            showEQScreen : this.show
-        });
-
-        // setTimeout(() => {
-        //     this.show(true);
-        // }, 1000);
-    }
+    
 
    configurePanResponder() {
         console.log('configurePanResponder ----------------------------------------------------------')
@@ -133,8 +123,8 @@ class AnimatedModal extends BaseView {
         });  
     }
 
-    show = () => {
-        StatusBar.setHidden(true, true);
+    show() {
+        
 
         Animated.timing(this.state.pan.y, {
             duration : 300,
@@ -163,6 +153,10 @@ class AnimatedModal extends BaseView {
         });;
     }
 
+    renderCenter() {
+        return <View/>;
+    }
+
     render() {
         var state = this.state,
             styles = this.styles,
@@ -187,18 +181,17 @@ class AnimatedModal extends BaseView {
                 <BlurView blurType="light" style={{flex:1, paddingTop : 15}}>
                     {/* EQ Stuff here*/}
                     <Text style={{fontWeight:'100', fontSize:30, textAlign : 'center', marginBottom : 15}} >
-                        Equalizer
+                        {this.title}
                     </Text>
 
                     <View style={{flex:1}}>
-                        <EQView style={{flex:1}}/>
+                        {this.renderCenter()}
                     </View>
                     
-                    <TouchableOpacity onPress={this.hide} style={{marginTop : 10, paddingBottom:12, justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
-                        <Text style={{fontSize : 18, color:'#666'}}>
-                            Close
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection : "row", justifyContent : 'space-around', marginTop : 10, paddingBottom:12}}>
+                        {this.renderCancelButton()}
+                        {this.renderSaveButton()}
+                    </View>
                 </BlurView>
             </Animated.View>
         )

@@ -65,7 +65,7 @@ CREATE TABLE eqSettings (
 
 insert into eqSettings VALUES (
     "",
-    "App Default",     -- Name 
+    "Flat",     -- Name 
     "0",     --32
     "0",     --64
     "0",     --125
@@ -186,20 +186,6 @@ insert into eqSettings VALUES (
     "3.25"      --16K
 );
 
-insert into eqSettings VALUES (
-    "",
-    "Flat",     -- Name 
-    "0",     --32
-    "0",     --64
-    "0",     --125
-    "0",     --250
-    "0",     --500
-    "0",     --1K
-    "0",     --2K
-    "0",     --4K
-    "0",     --8K
-    "0"      --16K
-);
 
 insert into eqSettings VALUES (
     "",

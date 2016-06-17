@@ -34,7 +34,7 @@ RCT_EXPORT_MODULE();
 - (instancetype) init {
     
     if (self = [super init]) {
-        NSLog(@"MCModPlayerInterface init %p", self);
+//        NSLog(@"MCModPlayerInterface init %p", self);
         instanceCount++;
         hasInitialized = true;
         [self configureCommandCenter];
@@ -121,6 +121,7 @@ RCT_EXPORT_MODULE();
     NSString *appUrl = [[NSBundle mainBundle] bundlePath],
              *path   = [NSString stringWithFormat:@"%@%@%@%@", appUrl, @"/KEYGENMUSiC MusicPack/", dir, name];
     
+    
     return [self loadFileViaPathString:path];
 }
 
@@ -133,21 +134,43 @@ RCT_EXPORT_METHOD(loadFile:(NSDictionary *)fileRecord
              errorCallback:(RCTResponseSenderBlock)errorCallback
                   callback:(RCTResponseSenderBlock)callback) {
    
-//    NSLog(@"fileRecord %@", fileRecord);
+    NSLog(@"fileRecord %@", fileRecord);
+    
+    
     
     NSString *bundlePath = [[NSBundle mainBundle] bundlePath],
              *fileDir    = [[fileRecord valueForKey:@"directory"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
              *fileName   = [[fileRecord valueForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
-             *filePath   = [NSString stringWithFormat:@"%@/KEYGENMUSiC MusicPack/%@%@", bundlePath, fileDir, fileName];
+             *filePath   = [NSString stringWithFormat:@"%@/KEYGENMUSiC MusicPack/%@%@", bundlePath, fileDir, fileName],
+             *id_md5     = [fileRecord valueForKey:@"id_md5"],
+             *sql        = [NSString stringWithFormat:@"SELECT * FROM eqSettings where id_md5 = \"%@\"", id_md5];
+    
+    NSArray *eqSettings = [[MCDBManager sharedManager] execQuery:sql];
+    
+    NSDictionary *eqSetting;
+    
+    if ([eqSettings count] > 0) {
+        eqSetting = [eqSettings objectAtIndex:0];
+        [[MCModPlayer sharedManager] setEQByPreset:eqSetting];
+    }
+    else {
+        eqSetting = nil;
+    }
+    
+    
     
     NSDictionary *modObject = [self loadFileViaPathString:filePath];
-    globalModObject = modObject;
+    
+    NSMutableDictionary *mutableModObject = [modObject mutableCopy];
+    [mutableModObject setValue:eqSetting forKey:@"eqSettings"];
+    
+    globalModObject = mutableModObject;
     
     if (modObject == nil) {
         errorCallback(@[@"Could not initialize audio."]);
     }
     else {
-        callback(@[modObject]);
+        callback(@[mutableModObject]);
     }
 }
 
@@ -254,9 +277,6 @@ RCT_EXPORT_METHOD(getEQ:(RCTResponseSenderBlock)callback) {
     MCModPlayer *player = [MCModPlayer sharedManager];
 
     NSArray *presets = [player getEQ];
-    NSLog(@"%@", presets);
-    
-    
     
     callback(@[presets]);
 }
@@ -266,7 +286,7 @@ RCT_EXPORT_METHOD(setOrder:(nonnull NSNumber *) newOrder
                   callback:(RCTResponseSenderBlock)callback) {
     
     MCModPlayer *player = [MCModPlayer sharedManager];
-    NSLog(@"new Order %@", newOrder);
+//    NSLog(@"new Order %@", newOrder);
     [player setOrder:newOrder];
     callback(@[]);
 }
@@ -288,17 +308,49 @@ RCT_EXPORT_METHOD(getEQPresets:(RCTResponseSenderBlock)callback) {
     callback(@[eqPresets]);
 }
 
-RCT_EXPORT_METHOD(setEQBasedOnPreset:(NSString *)preset
+RCT_EXPORT_METHOD(setEqBasedOnParams:(NSDictionary *)eqPreset
                         withCallback:(RCTResponseSenderBlock)callback) {
     
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM eqSettings where id_md5 like '' and NAME is '%@' ORDER BY name ASC", preset];
-    
-    NSDictionary *eqPreset = [[[MCDBManager sharedManager] execQuery:sql] objectAtIndex:0];
-    
+//    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM eqSettings where id_md5 like '' and NAME is '%@' ORDER BY name ASC", preset];
+//    
+//    NSDictionary *eqPreset = [[[MCDBManager sharedManager] execQuery:sql] objectAtIndex:0];
+//    
     [[MCModPlayer sharedManager] setEQByPreset:eqPreset];
     
     callback(@[eqPreset]);
+}
+
+RCT_EXPORT_METHOD(persistEQForSong:(NSDictionary *)eqSettings
+                    withCallback:(RCTResponseSenderBlock)callback) {
+   
+    NSString *sql = [NSString stringWithFormat:@"DELETE FROM eqSettings where id_md5 = \"%@\";", [eqSettings valueForKey:@"id_md5"]];
+    [[MCDBManager sharedManager] execQuery:sql];
+
+   
+   
+    sql = [NSString stringWithFormat:@"REPLACE INTO eqSettings (id_md5, name, freq32Hz, freq64Hz, freq125Hz, freq250Hz, freq500Hz, freq1kHz, freq2kHz, freq4kHz, freq8kHz, freq16kHz) "
+                                                 "VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\");",
+                                                [eqSettings valueForKey:@"id_md5"],
+                                                [eqSettings valueForKey:@"name"],
+                                                [eqSettings valueForKey:@"freq32Hz"], 
+                                                [eqSettings valueForKey:@"freq64Hz"], 
+                                                [eqSettings valueForKey:@"freq125Hz"], 
+                                                [eqSettings valueForKey:@"freq250Hz"], 
+                                                [eqSettings valueForKey:@"freq500Hz"], 
+                                                [eqSettings valueForKey:@"freq1kHz"], 
+                                                [eqSettings valueForKey:@"freq2kHz"], 
+                                                [eqSettings valueForKey:@"freq4kHz"], 
+                                                [eqSettings valueForKey:@"freq8kHz"], 
+                                                [eqSettings valueForKey:@"freq16kHz"]
+                                             ];
+    
+    NSLog(@"SQL: %@",sql);
+    
+    
+    [[MCDBManager sharedManager] execQuery:sql];
+    callback(@[]);
+
 }
 
 

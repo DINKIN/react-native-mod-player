@@ -23,7 +23,7 @@ import {
 import Navigation from './Navigation';
 import AnimatedPlayer from './player/AnimatedPlayer';
 import ListPlayer from './player/ListPlayer';
-import AnimatedModal from './AnimatedModal';
+import EQView from './EQView';
 
 
 const Icon             = require('react-native-vector-icons/Ionicons'),
@@ -152,6 +152,8 @@ class HomeTabView extends React.Component {
         // Automation for debugotron
         setTimeout(() => {
             // return;
+
+            let song;
             // var song = {
             //     "id_md5": "c3151fcdafadb7836144bf60c5c15d5e",
             //     "song_name": "",
@@ -162,27 +164,37 @@ class HomeTabView extends React.Component {
             //     "name": "CLASS%20-%20Giants.%20Citizen%20Kabuto%20installer.it"
             // };
 
-            var song = {
-                "id_md5": "a2517f005c486abb152a13592d25fa64",
-                "song_name": "http%3A//www.at4re.com",
+            // const song = {
+            //     "id_md5": "a2517f005c486abb152a13592d25fa64",
+            //     "song_name": "http%3A//www.at4re.com",
+            //     "like_value": 0,
+            //     "in_queue": 0,
+            //     "directory": "AT4RE/",
+            //     "file_name_short": "Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it",
+            //     "name": "AT4RE%20-%20Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it"
+            // }
+
+            song = {
+                "id_md5": "1bf2fe963ff603a32cc5bf44c4c3eed3",
+                "song_name": "kortis",
                 "like_value": 0,
                 "in_queue": 0,
-                "directory": "AT4RE/",
-                "file_name_short": "Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it",
-                "name": "AT4RE%20-%20Super%20Video%20to%20WMA%20Converter%201.01%20B-Forcer.it"
-            }
+                "directory": "2000AD/",
+                "file_name_short": "Creatures%20To%20The%20Rescue%20+3%20trn.mod",
+                "name": "2000AD%20-%20Creatures%20To%20The%20Rescue%20+3%20trn.mod"
+            };
 
             PlayController.loadFile(song);
             setTimeout(() => { 
                 
                 PlayController.pause(); 
-            }, 500);
+            }, 400);
 
-            setTimeout(() => {
+            setTimeout(function() {
 
-                // PlayController.emitShowEQScreen();
+                // PlayController.emitShowEQScreen(song);
 
-            }, 2000);
+            }, 1000);
         }, 1000)
 
         this.tabs = [
@@ -354,7 +366,7 @@ class HomeTabView extends React.Component {
 
                     {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}
                 </TabNavigator>
-                <AnimatedModal/>
+                <EQView/>
             </View>
         );
     }

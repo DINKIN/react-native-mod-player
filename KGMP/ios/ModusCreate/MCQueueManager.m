@@ -113,7 +113,7 @@ RCT_EXPORT_METHOD(getFilesForDirectory:(NSString *)dirName
         
         for (NSDictionary *object in queue) {
             if ([idMd5 isEqualToString:[object valueForKey:key]]) {
-                NSLog(@"Found %@", object);
+//                NSLog(@"Found %@", object);
                 
                 NSMutableDictionary *newObject = [object mutableCopy];
                 [newObject setValue:@YES forKey:@"isPlaying"];

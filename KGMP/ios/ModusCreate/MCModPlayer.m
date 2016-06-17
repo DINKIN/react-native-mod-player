@@ -126,7 +126,7 @@ struct StatusObject statuses[NUM_BUFFERS];
 }
 
 - (id) init {
-    NSLog(@"MCModPlayer init");
+//    NSLog(@"MCModPlayer init");
     self.appActive = true;
     
     if (self = [super init]) {
@@ -419,17 +419,17 @@ void interruptionListenerCallback (void *inUserData, UInt32 interruptionState ) 
 
 
 - (void) setDelegate:(id)aDelegate {
-    NSLog(@"Delegate set %p", aDelegate);
+//    NSLog(@"Delegate set %p", aDelegate);
     delegate = aDelegate;
 
 }
 - (void) setLeftDelegate:(id)newDelegate {
-    NSLog(@"LEFT Delegate set %p", newDelegate);
+//    NSLog(@"LEFT Delegate set %p", newDelegate);
     leftDelegate = newDelegate;
 }
 
 - (void) setRightDelegate:(id)newDelegate {
-    NSLog(@"RIGHT Delegate set %p", newDelegate);
+//    NSLog(@"RIGHT Delegate set %p", newDelegate);
     rightDelegate = newDelegate;
 }
 
