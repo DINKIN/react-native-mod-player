@@ -225,7 +225,9 @@ class AbstractPlayer extends BaseView {
                     </View>
 
                     <View style={{flexDirection:'row'}}>
-                        <View style={{width : 50, alignSelf : 'stretch'}}/>
+                        <TouchableOpacity onPress={this.onEqButtonPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
+                            <Ionicons name="ios-settings" size={25} color='#666'/>
+                        </TouchableOpacity>
 
                         <View style={styles.titleBar}>
                             <Text style={{fontSize:16, fontWeight:'300', color:'#999', marginBottom : 5}} numberOfLines={1}>{fileName}</Text>
@@ -235,7 +237,7 @@ class AbstractPlayer extends BaseView {
                         </View>
 
                         <TouchableOpacity onPress={this.onEqButtonPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
-                            <Ionicons name="ios-options-outline" size={25} color='#666'/>
+                            <Ionicons name="ios-plus-outline" size={25} color='#666'/>
                         </TouchableOpacity>
                     </View>
 

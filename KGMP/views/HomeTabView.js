@@ -23,7 +23,7 @@ import {
 import Navigation from './Navigation';
 import AnimatedPlayer from './player/AnimatedPlayer';
 import ListPlayer from './player/ListPlayer';
-import EQView from './EQView';
+import EQView from './AnimatedModal/EQView';
 
 
 const Icon             = require('react-native-vector-icons/Ionicons'),
@@ -188,7 +188,7 @@ class HomeTabView extends React.Component {
             setTimeout(() => { 
                 
                 PlayController.pause(); 
-            }, 400);
+            }, 500);
 
             setTimeout(function() {
 

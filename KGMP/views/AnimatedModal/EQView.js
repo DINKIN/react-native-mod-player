@@ -30,8 +30,7 @@ const {
 
 const windowDimensions = Dimensions.get('window');
 
-const BaseView = require('./BaseView'),
-      PlayController = require('./PlayController');
+const PlayController = require('../PlayController');
 
 const Slider = require('react-native-slider'),
       Ionicons = require('react-native-vector-icons/Ionicons');
@@ -118,8 +117,6 @@ class EQView extends AnimatedModal {
         this.addListenersOn(PlayController.eventEmitter, {
             showEQScreen : this.onShowEQScreen
         });
-
-        // setTimeout(() => { this.show(true); }, 100);
     }
 
     onShowEQScreen = (fileRecord, eqSettings) => {
@@ -185,8 +182,8 @@ class EQView extends AnimatedModal {
         // console.log('sliders', sliders)
 
         return (
-            <View style={[this.props.style, {justifyContent : 'space-between', alignItems: 'center'}]}>
-                <TouchableOpacity onPress={this.onEQPresetPress} style={{marginVertical: 5,flexDirection:'row', alignItems:'center'}}>
+            <View style={[this.props.style, {justifyContent : 'space-between', alignItems: 'center', flex:1}]}>
+                <TouchableOpacity onPress={this.onEQPresetPress} style={{marginTop: 5, marginBottom:10, flexDirection:'row', alignItems:'center'}}>
                     <Text style={{color: labelColor}}>
                         Preset: {presetName}
                     </Text>
@@ -228,6 +225,7 @@ class EQView extends AnimatedModal {
         var startingEqSettings = this.startingEqSettings,
             chosenPreset;
 
+
         if (startingEqSettings && buttonIndex == 0) {
             chosenPreset = startingEqSettings;
         }
@@ -238,7 +236,11 @@ class EQView extends AnimatedModal {
             chosenPreset = MCModPlayerInterface.eqPresets[buttonIndex];
         }
 
-        console.log('chosenPreset', JSON.stringify(chosenPreset, undefined, 4));
+        if (! chosenPreset) {
+            return;
+        }
+
+        // console.log('chosenPreset', JSON.stringify(chosenPreset, undefined, 4));
 
         MCModPlayerInterface.setEqBasedOnParams(chosenPreset, () => {
             // var state = Object.assign({ isCustomized : false }, chosenPreset);
@@ -265,33 +267,37 @@ class EQView extends AnimatedModal {
         return this.state.eqSettings; // Values are stored directly in state for simplicity.
     }
 
-
-    renderCancelButton() {
-        return <TouchableOpacity onPress={this.onCancel} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
-                    <Text style={{fontSize : 18, color:'#F66'}}>
-                        Cancel
+    renderActionButton(text, handler, color) {
+        return <TouchableOpacity onPress={handler} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row', padding:10}}>
+                    <Text style={{fontSize : 18, color:color}}>
+                        {text}
                     </Text>
                 </TouchableOpacity>
+    }
+
+    renderCancelButton() {
+        return this.renderActionButton('Cancel', this.onCancel, '#F66')
     }
 
     renderSaveButton() {
-        return <TouchableOpacity onPress={this.onSave} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row'}}>
-                    <Text style={{fontSize : 18, color:'#4F4'}}>
-                        Save
-                    </Text>
-                </TouchableOpacity>
+        return this.renderActionButton('Save', this.onSave, '#4F4'); 
     }
 
     onCancel = () => {
-        let chosenPreset;
+        let startingEqSettings = this.startingEqSettings,
+            chosenPreset;
 
-        if (this.startingEqSettings) {
-            chosenPreset = this.startingEqSettings;
+        if (startingEqSettings) {
+            chosenPreset = startingEqSettings;
         }
-        else {
+        else if (!this.startingEqSettings && this.isCustomized)  {
             chosenPreset = this.state.eqSettings;
         }
+        else {
+            chosenPreset = MCModPlayerInterface.eqPresets[0];
+        }
 
+        // debugger;
         // console.log('chosenPreset', JSON.stringify(chosenPreset, undefined, 4));
 
         MCModPlayerInterface.setEqBasedOnParams(chosenPreset, function() {});

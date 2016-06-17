@@ -20,6 +20,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.mm */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		712DD4411D14415D00EDB6EE /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 712DD4401D14415D00EDB6EE /* Ionicons.ttf */; };
 		713A288B1CA96144000D9060 /* keygenmusicplayer.db in Resources */ = {isa = PBXBuildFile; fileRef = 713A288A1CA96144000D9060 /* keygenmusicplayer.db */; };
 		713A288D1CA961B3000D9060 /* fontello.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 713A288C1CA961B3000D9060 /* fontello.ttf */; };
 		713A288F1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 713A288E1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf */; };
@@ -36,7 +37,6 @@
 		71A16DE81D05E9C800C21003 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE01D05E9C800C21003 /* EvilIcons.ttf */; };
 		71A16DE91D05E9C800C21003 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE11D05E9C800C21003 /* FontAwesome.ttf */; };
 		71A16DEA1D05E9C800C21003 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE21D05E9C800C21003 /* Foundation.ttf */; };
-		71A16DEB1D05E9C800C21003 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE31D05E9C800C21003 /* Ionicons.ttf */; };
 		71A16DEC1D05E9C800C21003 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */; };
 		71A16DED1D05E9C800C21003 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE51D05E9C800C21003 /* Octicons.ttf */; };
 		71A16DEE1D05E9C800C21003 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71A16DE61D05E9C800C21003 /* Zocial.ttf */; };
@@ -218,6 +218,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KGMP/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = KGMP/main.mm; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		712DD4401D14415D00EDB6EE /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		713A288A1CA96144000D9060 /* keygenmusicplayer.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = keygenmusicplayer.db; path = ../../database_tools/keygenmusicplayer.db; sourceTree = "<group>"; };
 		713A288C1CA961B3000D9060 /* fontello.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = fontello.ttf; path = resources/fonts/fontello/font/fontello.ttf; sourceTree = "<group>"; };
 		713A288E1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Perfect DOS VGA 437 Win.ttf"; path = "resources/fonts/perfect_dos_vga_437/Perfect DOS VGA 437 Win.ttf"; sourceTree = "<group>"; };
@@ -239,7 +240,6 @@
 		71A16DE01D05E9C800C21003 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		71A16DE11D05E9C800C21003 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		71A16DE21D05E9C800C21003 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		71A16DE31D05E9C800C21003 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		71A16DE51D05E9C800C21003 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		71A16DE61D05E9C800C21003 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -464,8 +464,8 @@
 				71A16DDF1D05E9C800C21003 /* Entypo.ttf */,
 				71A16DE01D05E9C800C21003 /* EvilIcons.ttf */,
 				71A16DE11D05E9C800C21003 /* FontAwesome.ttf */,
+				712DD4401D14415D00EDB6EE /* Ionicons.ttf */,
 				71A16DE21D05E9C800C21003 /* Foundation.ttf */,
-				71A16DE31D05E9C800C21003 /* Ionicons.ttf */,
 				71A16DE41D05E9C800C21003 /* MaterialIcons.ttf */,
 				71A16DE51D05E9C800C21003 /* Octicons.ttf */,
 				71A16DE61D05E9C800C21003 /* Zocial.ttf */,
@@ -797,7 +797,6 @@
 			files = (
 				713A288F1CA961C6000D9060 /* Perfect DOS VGA 437 Win.ttf in Resources */,
 				71A16DEA1D05E9C800C21003 /* Foundation.ttf in Resources */,
-				71A16DEB1D05E9C800C21003 /* Ionicons.ttf in Resources */,
 				71A16DE71D05E9C800C21003 /* Entypo.ttf in Resources */,
 				713A288B1CA96144000D9060 /* keygenmusicplayer.db in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -806,6 +805,7 @@
 				71A16DE91D05E9C800C21003 /* FontAwesome.ttf in Resources */,
 				71A16DEC1D05E9C800C21003 /* MaterialIcons.ttf in Resources */,
 				71A16DE81D05E9C800C21003 /* EvilIcons.ttf in Resources */,
+				712DD4411D14415D00EDB6EE /* Ionicons.ttf in Resources */,
 				71A16DED1D05E9C800C21003 /* Octicons.ttf in Resources */,
 				713A288D1CA961B3000D9060 /* fontello.ttf in Resources */,
 				71EA077E1CA9A92100995808 /* KEYGENMUSiC MusicPack in Resources */,

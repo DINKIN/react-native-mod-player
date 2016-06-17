@@ -22,10 +22,8 @@ import {
 
 const windowDimensions = Dimensions.get('window');
 
-const BaseView = require('./BaseView'),
-      PlayController = require('./PlayController');
-
-const Slider = require('react-native-slider'),
+const BaseView = require('../BaseView'),
+      Slider = require('react-native-slider'),
       Ionicons = require('react-native-vector-icons/Ionicons'),
       { 
           BlurView,
@@ -37,21 +35,6 @@ class AnimatedModal extends BaseView {
     isHidden = true;
     restingPosition = windowDimensions.height;
     panResponder = null;
-
-    styles = StyleSheet.create({
-        sliderTrack: {
-            height: 2,
-            borderRadius: 0,
-            backgroundColor: '#666',
-        },
-        sliderThumb: {
-            width: 10,
-            height: 20,
-            borderRadius: 0,
-            backgroundColor: '#666',
-        }
-
-    });
 
 
     setInitialState() {
@@ -65,15 +48,14 @@ class AnimatedModal extends BaseView {
         super.componentWillMount();
         this.configurePanResponder();
   
-    }
-
-    
+    }    
 
    configurePanResponder() {
-        console.log('configurePanResponder ----------------------------------------------------------')
+        console.log('configurePanResponder ----------------------------------------------------------');
+
         this.panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture     : () => true, //Tell iOS that we are allowing the movement
-            onMoveShouldSetPanResponderCapture  : () => true, // Same here, tell iOS that we allow dragging
+            onMoveShouldSetPanResponderCapture  : () => true, //Same here, tell iOS that we allow dragging
             
             onPanResponderGrant                 : (e, gestureState) => {
                 let pan = this.state.pan;
@@ -103,21 +85,12 @@ class AnimatedModal extends BaseView {
                 console.log('deltaY', deltaY)
                 if (deltaY >= 200) {
                     this.hide();
-                    // console.log('this.hide()')
                 } 
                 else if (deltaY <= -150) {
-                    // console.log('this.show();()')
                     this.show(true);
                 }
-                // TODO : This has a bug. fix.
                 else {
-                    // if (deltaY > 0) {
-                        this.show(true);
-                    // }
-                    // else {
-                    //     this.hide();
-                    // }
-
+                    this.show(true);
                 }
             }
         });  
@@ -188,7 +161,7 @@ class AnimatedModal extends BaseView {
                         {this.renderCenter()}
                     </View>
                     
-                    <View style={{ flexDirection : "row", justifyContent : 'space-around', marginTop : 10, paddingBottom:12}}>
+                    <View style={{ flexDirection : "row", justifyContent : 'space-around', marginTop : 10, paddingBottom:15}}>
                         {this.renderCancelButton()}
                         {this.renderSaveButton()}
                     </View>
