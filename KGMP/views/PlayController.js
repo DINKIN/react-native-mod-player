@@ -143,6 +143,10 @@ class PlayController {
         this.emit('showEQScreen', fileRecord, eqSettings);
     }
 
+    emitShowPlaylistSelectorScreen = (fileRecord) => {
+        this.emit('showPlaylistSelectorScreen', fileRecord);
+    }
+
     like(id_md5, callback) {
         MCQueueManager.updateLikeStatus(
             1, 
@@ -191,6 +195,28 @@ class PlayController {
                 this.emit('eqSettingsPersisted', eqSettings);
             }
         );        
+    }
+
+    addSongToPlaylist(id_md5, playlistId, forceAdd, callback) {
+        MCModPlayerInterface.addSongToPlaylist(
+            id_md5,
+            playlistId,
+            forceAdd,
+            callback
+        );
+
+    }
+
+    addNewPlaylist(playlistName, callback) {
+        MCModPlayerInterface.addNewPlaylist(
+            playlistName,
+            (success) => {
+                if (success) {
+                    this.emit('playlistChange');
+                }
+                callback(success);
+            }
+        );
     }
 
 }

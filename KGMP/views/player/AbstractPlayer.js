@@ -236,7 +236,7 @@ class AbstractPlayer extends BaseView {
                             </Text>
                         </View>
 
-                        <TouchableOpacity onPress={this.onEqButtonPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
+                        <TouchableOpacity onPress={this.onAddToPlaylistPress} style={{width : 60, alignSelf : 'stretch',  justifyContent : 'center', alignItems : 'center'}}>
                             <Ionicons name="ios-plus-outline" size={25} color='#666'/>
                         </TouchableOpacity>
                     </View>
@@ -324,6 +324,10 @@ class AbstractPlayer extends BaseView {
     onEqButtonPress = () => {
         var state = this.state;
         PlayController.emitShowEQScreen(state.fileRecord, state.eqSettings);
+    }
+
+    onAddToPlaylistPress = () => {
+        PlayController.emitShowPlaylistSelectorScreen(this.state.fileRecord);
     }
 
     onPlotterPress = () => {

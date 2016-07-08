@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS plays;
 DROP TABLE IF EXISTS directories;
 DROP INDEX IF EXISTS song_index;
 DROP TABLE IF EXISTS eqSettings;
+DROP TABLE IF EXISTS playlists;
+DROP TABLE IF EXISTS playlistSong;
 
 CREATE TABLE songs (
     id_md5     TEXT, 
@@ -31,6 +33,18 @@ CREATE
         song_name 
     IS 
         NOT NULL; 
+
+
+CREATE TABLE playlists (
+    id           INTEGER PRIMARY KEY   AUTOINCREMENT,
+    dateModified timestamp default (strftime('%s', 'now')),
+    playlistName TEXT
+);
+
+CREATE TABLE playlistSong(
+    playlistId  INT,
+    id_md5      TEXT
+);
 
 /*
     centerFrequencies[0] = 32.0f;

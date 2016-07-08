@@ -70,7 +70,7 @@
 
 
 - (NSMutableArray *) execQuery:(NSString *)statementString {
-//    printf(" ***** Query: \n\t\t\t%s\n", [statementString UTF8String]);
+    printf(" ***** Query: \n\t\t\t%s\n", [statementString UTF8String]);
     
     sqlite3 *db = [self openDb];
     

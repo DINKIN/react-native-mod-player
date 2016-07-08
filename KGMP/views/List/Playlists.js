@@ -14,10 +14,10 @@ import {
 } from "react-native";
 
 
-const DirectoryRow = require('./DirectoryRow'),
-      FileRow      = require('./FileRow'),
-      ShuffleRow   = require('./ShuffleRow'),
-      BaseView     = require('../BaseView'),
+const PlaylistRow    = require('./PlaylistRow'),
+      FileRow        = require('./FileRow'),
+      ShuffleRow     = require('./ShuffleRow'),
+      BaseView       = require('../BaseView'),
       PlayController = require('../PlayController');
 
 
@@ -27,10 +27,10 @@ var initialPaths,
         MCQueueManager
     } = require('NativeModules');
 
-var getDirectories = function(path, callback) {
-    if (path) {
-        MCQueueManager.getFilesForDirectory(
-            path,
+var getPlaylists = function(playlistId, callback) {
+    if (playlistId) {
+        MCQueueManager.getFilesForPlaylist(
+            playlistId,
             // failure
             () => {
                 console.log('An Error Occurred');
@@ -42,36 +42,30 @@ var getDirectories = function(path, callback) {
         );
     }
     else {
-        MCQueueManager.getDirectories(
-            // failure
-            () => {
-                console.log('An Error Occurred');
-            },
-            // Success`
-            (response) =>  {
-                callback(response)               
-  
-            }
-        );
+         MCModPlayerInterface.getPlaylists((playlists) => {
+            console.log('playlists', JSON.stringify(playlists, undefined, 4))
+            // this.setState({
+            //     dataSource : this.getNewDataSource(playlists)
+            // });
+            callback(playlists);
+        });
     }
 };
 
-class BrowseList extends BaseView{
+
+
+
+class Playlists extends BaseView{
     lastPlayedIndex : undefined;
 
     setInitialState() {
-        const props = this.props,
-              hasInitialPaths = !!props.initialPaths;
+        const props = this.props
 
         this.state = {
-            initialPaths    : hasInitialPaths ? props.initialPaths : null,
-            hasInitialPaths : hasInitialPaths,
-            dataSource      : this.getNewDataSource(props.initialPaths)
+            dataSource : this.getNewDataSource(props.initialPaths)
         };
 
     }
-
-
 
     componentWillMount() {
         super.componentWillMount();
@@ -79,11 +73,9 @@ class BrowseList extends BaseView{
         var props = this.props,
             state = this.state;
 
-        if (state.hasInitialPaths) {
-            return;
-        }
 
-        getDirectories(null, (directories) => {
+        getPlaylists(null, (directories) => {
+            // debugger;
             this.setState({
                 dataSource : this.getNewDataSource(directories)
             });
@@ -93,22 +85,26 @@ class BrowseList extends BaseView{
 
 
     componentDidMount() {
-        // super.componentDidMount();
-
-        // This is for top-level directory list
-        if (! this.state.hasInitialPaths) {
-            return;
-        }
-
         this.addListenersOn(PlayController.eventEmitter, {
-            play    : this.onPlayControllerPlay,
-            pause   : this.onPlayControllerPause,
-            dislike : this.onPlayControllerDislike,
+            play           : this.onPlayControllerPlay,
+            pause          : this.onPlayControllerPause,
+            dislike        : this.onPlayControllerDislike,
+            playlistChange : this.onPlaylistChange
         });
 
     }
 
+    onPlaylistChange = () => {
+        getPlaylists(null, (directories) => {
+            // debugger;
+            this.setState({
+                dataSource : this.getNewDataSource(directories)
+            });
+        });
+    }
+
     onPlayControllerPause = (eventObject) => {
+        return
         var initialPaths = this.state.initialPaths,
             fileRecord   = eventObject.fileRecord;
 
@@ -125,7 +121,7 @@ class BrowseList extends BaseView{
     };
 
     onPlayControllerDislike = (id_md5) => {        
-        
+        return
         var initialPaths = this.state.initialPaths,
             i            = 0,
             len          = initialPaths.length,
@@ -147,7 +143,8 @@ class BrowseList extends BaseView{
     };
 
     onPlayControllerPlay = (eventObject) => {        
-        
+        return;
+
         var initialPaths = this.state.initialPaths,
             fileRecord   = eventObject.fileRecord;
 
@@ -193,6 +190,7 @@ class BrowseList extends BaseView{
 
 
     shouldComponentUpdate(nextProps, nextState) {
+        return true
         console.log('rejected shouldComponentUpdate');
         var state = this.state;
 
@@ -222,20 +220,21 @@ class BrowseList extends BaseView{
         var props = this.props,
             state = this.state;
 
-        
+
         props.onRowPress(rowData, rowID, props.navigator, this);
     };
 
 
     renderRow = (rowData, sectionID, rowID) => {
-                    
+        console.log(rowData)
+
         if (rowData.isShuffleRow) {
             return <ShuffleRow onPress={this.onRowPress} rowData={rowData} rowID={'shuffleRow'}/>
         }
 
-        return rowData.number_files 
+        return rowData.playlistName 
             ? 
-                <DirectoryRow rowData={rowData} rowID={rowID} onPress={this.onRowPress}/>
+                <PlaylistRow rowData={rowData} rowID={rowID} onPress={this.onRowPress}/>
             :
                 <FileRow rowData={rowData} rowID={rowID} onPress={this.onRowPress}/>
 
@@ -275,4 +274,4 @@ var styles = StyleSheet.create({
    
 });
 
-module.exports = BrowseList;
+module.exports = Playlists;

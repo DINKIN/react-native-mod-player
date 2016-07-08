@@ -44,7 +44,7 @@ class FileRow extends Component {
         return (
             <TouchableHighlight key={rowID} underlayColor={"#000"} onPress={this.onPress}>
                 <View style={styles.rowContainer}>
-                    <Ionicons name='ios-volume-up' size={30} style={{width:20, color:iconColor}}/>
+                    <Ionicons name='ios-volume-high' size={30} style={{width:20, color:iconColor}}/>
                     <View style={styles.row}>
                         <Text style={styles.rowText} numberOfLines={1}>{name}</Text>
                         {songName}
@@ -57,7 +57,7 @@ class FileRow extends Component {
     onPress = () => {
         var props = this.props;
 
-        props.onPress(props.rowData, props.rowID)
+        props.onPress(props.rowData, props.rowID);
     }
 
     styles = StyleSheet.create({

@@ -345,14 +345,74 @@ RCT_EXPORT_METHOD(persistEQForSong:(NSDictionary *)eqSettings
                                                 [eqSettings valueForKey:@"freq16kHz"]
                                              ];
     
-    NSLog(@"SQL: %@",sql);
-    
+  
     
     [[MCDBManager sharedManager] execQuery:sql];
     callback(@[]);
 
 }
 
+RCT_EXPORT_METHOD(addNewPlaylist:(NSString *)playlistName
+                    withCallback:(RCTResponseSenderBlock)callback) {
+    
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM playlists where playlistName = \"%@\";", playlistName];
+
+    NSArray *playlists = [[MCDBManager sharedManager] execQuery:sql];
+    
+    if ([playlists count] > 0) {
+        callback(@[@NO]);
+    }
+    else {
+        sql = [NSString stringWithFormat:@"REPLACE INTO playlists (playlistName) values ('%@');", playlistName];
+        [[MCDBManager sharedManager] execQuery:sql];
+    
+        callback(@[@YES]);
+    }
+    
+}
+
+RCT_EXPORT_METHOD(getPlaylists:(RCTResponseSenderBlock)callback) {
+    NSString *sql = @"SELECT id, playlistName from playlists ORDER BY dateModified DESC;";
+    NSArray *results = [[MCDBManager sharedManager] execQuery:sql];
+    
+    if (results == nil) {
+        results = @[];
+    }
+    
+    callback(@[results]);
+}
+
+
+RCT_EXPORT_METHOD(addSongToPlaylist:(NSString *)id_md5
+                 withPlaylistId:(nonnull NSNumber *)playlistId
+                 andForce:(BOOL)forceAdd
+                 andCallback:(RCTResponseSenderBlock)callback) {
+    
+    
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM playlistSong where playlistId = '%@' and id_md5 = '%@';", playlistId, id_md5];
+    NSArray *results = [[MCDBManager sharedManager] execQuery:sql];
+
+    if ([results count] > 0 && ! forceAdd) {
+        callback(@[@NO]);
+    }
+    else {
+        sql = [NSString stringWithFormat:@"REPLACE INTO playlistSong (playlistId, id_md5) values ('%@', '%@');", playlistId, id_md5];
+        [[MCDBManager sharedManager] execQuery:sql];
+
+        callback(@[@YES]);
+    }
+}
+
+
+
+RCT_EXPORT_METHOD(getSongsForPlaylist:(nonnull NSNumber *)playlistId
+                  withCallback:(RCTResponseSenderBlock)callback) {
+    
+    NSString *sql = [NSString stringWithFormat:@"SELECT playlistId, songs.id_md5 as id_md5, song_name, name, file_name_short, directory, like_value, in_queue  FROM playlistSong  JOIN songs on playlistSong.id_md5 = songs.id_md5 where playlistId =  '%@';", playlistId];
+    NSArray *results = [[MCDBManager sharedManager] execQuery:sql];
+
+    callback(@[results]);
+}
 
 #pragma mark Utilities
 

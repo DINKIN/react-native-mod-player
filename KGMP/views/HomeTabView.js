@@ -24,18 +24,20 @@ import Navigation from './Navigation';
 import AnimatedPlayer from './player/AnimatedPlayer';
 import ListPlayer from './player/ListPlayer';
 import EQView from './AnimatedModal/EQView';
+import PlayListSelectorView from './AnimatedModal/PlayListSelectorView';
 
 
-const Icon             = require('react-native-vector-icons/Ionicons'),
+const INITIAL_TAB      = 2,
+      Icon             = require('react-native-vector-icons/Ionicons'),
       BaseView         = require('./BaseView'),
       BrowseList       = require('./List/BrowseList'),
+      Playlists        = require('./List/Playlists'),
       // FavsViewNav      = require('./List/FavoritesViewNavigator'),
       PlayController   = require('./PlayController'),
       TabNavigator     = require('react-native-tab-navigator').default,
       NavItem          = TabNavigator.Item,
       windowDimensions = require('Dimensions').get('window'),
-      BlurView         = require('react-native-blur').BlurView,
-      INITIAL_TAB      = 1;
+      BlurView         = require('react-native-blur').BlurView;
 
 let windowStyles = {
     white : '#FFFFFF',
@@ -151,7 +153,7 @@ class HomeTabView extends React.Component {
 
         // Automation for debugotron
         setTimeout(() => {
-            // return;
+            return;
 
             let song;
             // var song = {
@@ -175,13 +177,13 @@ class HomeTabView extends React.Component {
             // }
 
             song = {
-                "id_md5": "1bf2fe963ff603a32cc5bf44c4c3eed3",
-                "song_name": "kortis",
+                "id_md5": "f7c9fce68fbf2ff238533a7ed44db18b",
+                "song_name": "make%20me%20love%20it",
                 "like_value": 0,
                 "in_queue": 0,
-                "directory": "2000AD/",
-                "file_name_short": "Creatures%20To%20The%20Rescue%20+3%20trn.mod",
-                "name": "2000AD%20-%20Creatures%20To%20The%20Rescue%20+3%20trn.mod"
+                "directory": "ACME/",
+                "file_name_short": "Ancient%20Pledg%20intro.xm",
+                "name": "ACME%20-%20Ancient%20Pledg%20intro.xm"
             };
 
             PlayController.loadFile(song);
@@ -191,11 +193,11 @@ class HomeTabView extends React.Component {
             }, 500);
 
             setTimeout(function() {
-
-                // PlayController.emitShowEQScreen(song);
-
-            }, 1000);
+                PlayController.emitShowPlaylistSelectorScreen(song);
+            }, 1750);
         }, 1000)
+
+        // debugger;
 
         this.tabs = [
             // This sh*t is starting to get Sencha-like real quick!
@@ -204,9 +206,7 @@ class HomeTabView extends React.Component {
                 icon            : 'ios-folder-outline',
                 child           : BrowseList,
                 componentConfig : {
-                    bgColor    : '#002200',
-                    text       : 'Home',
-                    onRowPress : this.onRowPress,
+                    onRowPress : this.onBrowseListRowPress,
                     style      : {
                         paddingTop : 60,
                     }
@@ -215,10 +215,12 @@ class HomeTabView extends React.Component {
             {
                 title           : 'Playlists',
                 icon            : 'ios-list-outline',
-                child           : DummyView,
+                child           : Playlists,
                 componentConfig : {
-                    bgColor : '#220000',
-                    text    : 'Playlists'
+                    onRowPress : this.onPlaylistRowPress,
+                    style      : {
+                        paddingTop : 60,
+                    }
                 }
             },
             {
@@ -242,7 +244,7 @@ class HomeTabView extends React.Component {
         ];
     }
 
-    onRowPress = (fileRecord, rowID, childNavigator, ownerList) => {
+    onBrowseListRowPress = (fileRecord, rowID, childNavigator, ownerList) => {
         // Shuffle row
         if (fileRecord.isShuffleRow) {
 
@@ -254,46 +256,49 @@ class HomeTabView extends React.Component {
         }
         // For files and directories
         else {
-            var isDir = !! fileRecord.number_files,
-                title;
+            var title = unescape(fileRecord.name);
 
-            if (isDir) {
-                title = unescape(fileRecord.name);
-                getDirectories(fileRecord.name, (records)=> {
-                    // loadedDirectories = initialPaths; // for debug purposes
+            getDirectories(fileRecord.name, (records)=> {
 
-                    var route = {
-                        title           : title,
-                        component       : BrowseList,
-                        componentConfig : {
-                            initialPaths : records,
-                            onRowPress   : this.onRowPress,
-                            parentDir    : fileRecord,
-                            style        : { 
-                                paddingTop : 60,
-                                flex       : 1
-                            },
-                        }
-                    };
-
-                    childNavigator.push(route);
-                });
-
-            }
-            else {
-                PlayController.setBrowseType(0);
-                // debugger;
-                PlayController.loadFile(
-                    fileRecord,
-                    () => {
-                        // PlayController.pause();
-                        // this.refs.modPlayer.showForTheFirstTime();
+                var route = {
+                    title           : title,
+                    component       : BrowseList,
+                    componentConfig : {
+                        initialPaths : records,
+                        onRowPress   : this.onFileSelectForPlay,
+                        parentDir    : fileRecord,
+                        style        : { 
+                            paddingTop : 60,
+                            flex       : 1
+                        },
                     }
-                );
+                };
 
-            }
+                childNavigator.push(route);
+            });
         }
+    }
 
+    onFileSelectForPlay = (fileRecord, rowID) => {
+        PlayController.setBrowseType(0);
+        // debugger;
+        PlayController.loadFile(
+            fileRecord,
+            () => {
+                // PlayController.pause();
+                // this.refs.modPlayer.showForTheFirstTime();
+            }
+        );
+
+    }
+
+    onPlaylistRowPress = (fileRecord, rowID, childNavigator, ownerList) => {
+        console.log('onPlaylistRowPress', fileRecord, rowID);
+
+        MCModPlayerInterface.getSongsForPlaylist(fileRecord.id, (songs) => {
+            console.log('songs', JSON.stringify(songs, undefined, 4));
+
+        })
     }
 
     setTabState(tabNo) {
@@ -367,6 +372,7 @@ class HomeTabView extends React.Component {
                     {this.tabs.map((tabConfig, index) => this.buildTab(tabConfig, index + 1))}
                 </TabNavigator>
                 <EQView/>
+                <PlayListSelectorView/>
             </View>
         );
     }

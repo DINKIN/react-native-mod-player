@@ -267,20 +267,19 @@ class EQView extends AnimatedModal {
         return this.state.eqSettings; // Values are stored directly in state for simplicity.
     }
 
-    renderActionButton(text, handler, color) {
+    renderActionButton(iconType, handler, color) {
         return <TouchableOpacity onPress={handler} style={{justifyContent : 'center', alignItems:'center', flexDirection:'row', padding:10}}>
-                    <Text style={{fontSize : 18, color:color}}>
-                        {text}
-                    </Text>
+                    <Ionicons name={iconType} size={30} color={color}/>
+
                 </TouchableOpacity>
     }
 
     renderCancelButton() {
-        return this.renderActionButton('Cancel', this.onCancel, '#F66')
+        return this.renderActionButton('ios-close', this.onCancel, '#F66')
     }
 
     renderSaveButton() {
-        return this.renderActionButton('Save', this.onSave, '#4F4'); 
+        return this.renderActionButton('ios-checkmark', this.onSave, '#4D4'); 
     }
 
     onCancel = () => {
