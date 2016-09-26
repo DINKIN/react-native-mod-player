@@ -2,8 +2,8 @@
  */
 'use strict';
 
-var NativeMethodsMixin = require('NativeMethodsMixin');
-var PropTypes = require('ReactPropTypes');
+var NativeMethodsMixin = require('react/lib/NativeMethodsMixin');
+var PropTypes = require('react/lib/ReactPropTypes');
 var Platform = require('Platform');
 
 var RCTUIManager = require('NativeModules').UIManager;

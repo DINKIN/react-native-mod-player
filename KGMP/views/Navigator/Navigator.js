@@ -36,14 +36,14 @@ var PanResponder = require('PanResponder');
 var React = require('React');
 var StyleSheet = require('StyleSheet');
 var Subscribable = require('Subscribable');
-var TimerMixin = require('../../node_modules/react-native/node_modules/react-timer-mixin');
+var TimerMixin = require('react-timer-mixin');
 var View = require('View');
 
 var clamp = require('clamp');
 var deprecatedPropType = require('deprecatedPropType');
 var flattenStyle = require('flattenStyle');
-var invariant = require('../../node_modules/react-native/node_modules/fbjs/lib/invariant');
-var rebound = require('../../node_modules/react-native/node_modules/rebound');
+var invariant = require('invariant');
+var rebound = require('rebound');
 
 var PropTypes = React.PropTypes;
 

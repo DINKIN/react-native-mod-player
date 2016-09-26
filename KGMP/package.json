@@ -6,8 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "15.1.0-alpha.1",
-    "react-native": "^0.27.0-rc",
+    "react": "^15.3.0",
+    "react-native": "^0.34",
     "react-native-slider": "^0.9.0",
     "react-native-vector-icons": "^2.0.3"
   }
